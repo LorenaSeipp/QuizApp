@@ -10,8 +10,8 @@ Dieser Projektplan beschreibt die Entwicklung einer objektorientierten QuizApp i
 
 - **Programmiersprache:** C#
 - **GUI:** WPF (Windows Presentation Foundation)
-- **Datenbank:** Oracle DB
-- **Containerisierung:** Docker
+- **Datenbank:** JSON-File oder Oracle DB (optional)
+- **Containerisierung:** Docker (optional)
 - **Versionskontrolle:** GitLab
 - **Entwicklungsumgebung:** Rider, Visual Studio
 
@@ -31,7 +31,8 @@ Dieser Projektplan beschreibt die Entwicklung einer objektorientierten QuizApp i
   - Multiple Choice
   - Freitext
   - Schätzfragen (z. B. „Wie viele Einwohner hat XY?“)
-- Fragen & Antwortmöglichkeiten werden aus Datenbank geladen
+  - Richtig / Falsch 
+- Fragen & Antwortmöglichkeiten werden aus JSON File oder Datenbank geladen
 - Fragen-Editor für Admins (GUI)
 
 ### 🧠 Quiz-Funktion
