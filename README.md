@@ -82,5 +82,5 @@ Ziel ist eine QuizApp mit GUI, in der Benutzer Fragen aus verschiedenen Kategori
 
 ## 📘 Klassendiagramm
 
-![Klassendiagramm](docs/klassendiagramm.puml)
+![Klassendiagramm](docs/Klassendiagramm.png)
 
