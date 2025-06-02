@@ -1,0 +1,137 @@
+﻿@startuml
+
+' ========= Interfaces =========
+interface IFrage {
+    + anzeigen(): void
+    + pruefen(antwort: string): bool
+}
+
+interface IDatenbankService {
+    + ladeFragen(): List<IFrage>
+    + speichereErgebnis(ergebnis: Ergebnis): void
+}
+
+' ========= Benutzer =========
+class Benutzer {
+    - id: int
+    - name: string
+    - rolle: string
+
+    + quizStarten(): Quiz
+}
+
+class Admin extends Benutzer {
+    + frageHinzufuegen(frage: Frage): void
+    + frageLoeschen(frageId: int): void
+}
+
+class Player extends Benutzer {
+    - highscore: int
+    - historie: List<Quiz>
+}
+
+' ========= Fragen =========
+abstract class Frage implements IFrage {
+    - frageText: string
+    - kategorie: string
+    - schwierigkeitsgrad: int
+    + anzeigen(): void
+    + pruefen(antwort: string): bool
+}
+
+class MultipleChoice extends Frage {
+    - antworten: List<string>
+    - richtigeAntwort: int
+    + pruefen(antwort: string): bool
+}
+
+class Freitext extends Frage {
+    - richtigeAntwort: string
+    + pruefen(antwort: string): bool
+}
+
+class Schätzfrage extends Frage {
+    - richtigeZahl: int
+    + pruefen(antwort: string): bool
+}
+
+class RichtigFalschFrage extends Frage {
+    - istRichtig: bool
+    + pruefen(antwort: string): bool
+}
+
+' ========= Quiz und Ablauf =========
+class Quiz {
+    - fragen: List<IFrage>
+    - benutzer: Benutzer
+    - timer: Timer
+    - ergebnis: Ergebnis
+    + starten(): void
+    + auswerten(): Ergebnis
+}
+
+class Ergebnis {
+    - punkte: int
+    - dauer: int
+    - richtigBeantwortet: int
+    + anzeigen(): void
+}
+
+class Timer {
+    - startZeit: DateTime
+    - laufzeit: int
+    + starten(): void
+    + stoppen(): int
+}
+
+class QuizManager {
+    + quizErstellen(user: Player, kategorie: string, schwierigkeitsgrad: int, anzahl: int): Quiz
+}
+
+class DatenbankService implements IDatenbankService {
+    + ladeFragen(): List<IFrage>
+    + speichereErgebnis(ergebnis: Ergebnis): void
+    + ladeHighscores(): List<Benutzer>
+}
+
+' ========= Events (Delegates) =========
+class QuizEvents {
+    + event FrageBeantwortetHandler: delegate
+    + onFrageBeantwortet(): void
+}
+
+' ========= Exception Handling =========
+class UngueltigeAntwortException extends Exception {
+    + message: string
+}
+
+class KeineFragenVerfuegbarException extends Exception {
+    + message: string
+}
+
+class DatenbankVerbindungsException extends Exception {
+    + message: string
+}
+
+class BenutzerNichtGefundenException extends Exception {
+    + message: string
+}
+
+' ========= Beziehungen =========
+' Benutzer <|-- Admin
+' Frage <|-- MultipleChoice
+' Frage <|-- Freitext
+' Frage <|-- Schätzfrage
+' Frage <|-- RichtigFalschFrage
+' IFrage <|.. Frage
+
+Quiz --> "*" IFrage
+Quiz --> "1" Timer
+Quiz --> "1" Ergebnis
+Quiz --> "1" Benutzer
+QuizManager --> Quiz
+Admin --> Frage
+DatenbankService --> Frage
+QuizEvents --> Quiz
+
+@enduml

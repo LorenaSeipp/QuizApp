@@ -49,3 +49,7 @@ Schritte	Aufgabe
 8	Docker-Container erstellen, App testweise deployen und testen
 9	Finale Tests, Code Cleanup, Präsentationsvorbereitung
 
+## 📘 Klassendiagramm
+
+![Klassendiagramm](docs/klassendiagramm.puml)
+
