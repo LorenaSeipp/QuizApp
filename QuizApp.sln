@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic\Logic.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{BD46CB5E-C3DF-43EB-A472-F4689B88CEB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{07C8A3F9-CC14-4A8D-BFC8-824D08E78565}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{07C8A3F9-CC14-4A8D-BFC8-824D08E78565}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
