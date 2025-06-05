@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "OracleDb": "User Id=quiz;Password=quizpw;Data Source=localhost:1521/XE;"
+  }
+}
