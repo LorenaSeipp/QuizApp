@@ -10,8 +10,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Core\Core.csproj"/>
-        <ProjectReference Include="..\Logic\Logic.csproj"/>
+        <ProjectReference Include="..\Core\Core.csproj" />
+        <ProjectReference Include="..\Logic\Logic.csproj" />
     </ItemGroup>
 
 </Project>
