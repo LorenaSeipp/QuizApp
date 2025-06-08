@@ -1,0 +1,27 @@
+﻿version: '3.8'
+
+services:
+  oracle-db:
+    image: container-registry.oracle.com/database/express:21.3.0-xe
+    container_name: oracle-db
+    ports:
+      - "1521:1521"
+      - "5500:5500"  # Für Oracle Enterprise Manager 
+    environment:
+      - ORACLE_PWD=oraclepw        # Passwort für SYSTEM und PDBADMIN
+      - ORACLE_PDB=ORCLPDB1        # Name der Pluggable DB (Standard: ORCLPDB1)
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    networks:
+      - quiz-net
+    healthcheck:
+      test: ["CMD", "oracle", "healthcheck"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 10
+
+volumes:
+  oracle-data:
+
+networks:
+  quiz-net:
