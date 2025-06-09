@@ -1,0 +1,11 @@
+//Docker Compose zum Laufen bringen
+docker-compose up -d
+
+//Terminal innerhalb des Docker Containers
+docker exec -it oracle-db bash
+
+//SQLPlus-CLI für SQL Befehle (benutzer/pw)
+sqlplus system/oraclepw
+
+//Beispiel zum Einsehen der Question-Tabellen
+SELECT table_name FROM user_tables WHERE table_name LIKE '%QUESTION';

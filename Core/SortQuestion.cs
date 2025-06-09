@@ -14,7 +14,7 @@ public class SortQuestion : IQuestion
     
     public override string ToString()
     {
-        return $"SortQuestion: Id={Id}, Difficulty={Difficulty}, Category={Category}, " +
+        return $"SortQuestion: Id={Id}, Type={Typ}, Difficulty={Difficulty}, Category={Category}, " +
                $"Question=\"{Question}\", Places=[{Place1}, {Place2}, {Place3}, {Place4}]";
     }
 }
