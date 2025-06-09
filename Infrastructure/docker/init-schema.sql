@@ -52,4 +52,3 @@ CREATE TABLE OpenQuestion (
                               Answer VARCHAR2(255) 
 );
 
-COMMIT;

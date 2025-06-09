@@ -15,9 +15,9 @@ services:
     networks:
       - quiz-net
     healthcheck:
-      test: ["CMD", "oracle", "healthcheck"]
-      interval: 1m30s
-      timeout: 30s
+      test: [ "CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -s SYSTEM/oraclepw@localhost:1521/ORCLPDB1" ]
+      interval: 30s
+      timeout: 10s
       retries: 10
 
 volumes:
