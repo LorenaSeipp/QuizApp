@@ -6,3 +6,7 @@ Wie den NavigationStore auch den QuizManager on Startup mit übergeben (auch in d
 
 ## Quizfragen
 Nochmal das ganze in ein UserControl wrappen und dann je nach eingelesener Frage ein anderer ViewModel laden? (entsprechend des Fragetyps)
+
+## Control Flow
+
+HomePage > Settings > Questions (depending on type on top of question stack in QuizManager) > Result > Home ...

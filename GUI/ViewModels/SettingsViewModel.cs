@@ -12,6 +12,7 @@ namespace Meilenstein03.ViewModels
     public class SettingsViewModel : BaseViewModel
     {
         public ICommand NavigateQuizCommand{ get; }
+        public QuizManager Manager { get; set; }
         public SettingsViewModel(NavigationStore navigationStore) 
         {
             NavigateQuizCommand = new NavigateQuizCommand(navigationStore);

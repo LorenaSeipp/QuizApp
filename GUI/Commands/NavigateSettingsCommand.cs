@@ -17,6 +17,8 @@ namespace Meilenstein03.Commands
         }
         public override void Execute(object parameter)
         {
+            //Setup DB
+            //Give DB to Settings
             _navigationStore.CurrentViewModel = new SettingsViewModel(_navigationStore);
         }
     }
