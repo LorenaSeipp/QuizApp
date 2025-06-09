@@ -24,4 +24,45 @@ public class QuestionRepository : IQuestionRepository
             return questions;
         }
     }
+    
+    public List<MultipleChoiceQuestion> GetAllMultipleChoiceQuestions()
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = "SELECT * FROM MultipleChoiceQuestion";
+            List<MultipleChoiceQuestion> questions = db.Query<MultipleChoiceQuestion>(sql).AsList();
+            return questions;
+        }
+    }
+
+    public List<EstimateQuestion> GetAllEstimateQuestions()
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = "SELECT * FROM EstimateQuestion";
+            List<EstimateQuestion> questions = db.Query<EstimateQuestion>(sql).AsList();
+            return questions;
+        }
+    }
+
+    public List<TrueFalseQuestion> GetAllTrueFalseQuestions()
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = "SELECT * FROM TrueFalseQuestion";
+            List<TrueFalseQuestion> questions = db.Query<TrueFalseQuestion>(sql).AsList();
+            return questions;
+        }
+    }
+
+    public List<OpenQuestion> GetAllOpenQuestions()
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = "SELECT * FROM OpenQuestion";
+            List<OpenQuestion> questions = db.Query<OpenQuestion>(sql).AsList();
+            return questions;
+        }
+    }
+
 }

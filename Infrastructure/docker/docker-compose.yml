@@ -8,6 +8,7 @@ services:
       - "1521:1521"
       - "5500:5500"  # Für Oracle Enterprise Manager 
     environment:
+      - NLS_LANG=.AL32UTF8
       - ORACLE_PWD=oraclepw        # Passwort für SYSTEM und PDBADMIN
       - ORACLE_PDB=ORCLPDB1        # Name der Pluggable DB (Standard: ORCLPDB1)
     volumes:
