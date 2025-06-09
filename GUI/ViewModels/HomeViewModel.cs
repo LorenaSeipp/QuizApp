@@ -12,9 +12,11 @@ namespace Meilenstein03.ViewModels
     public class HomeViewModel : BaseViewModel
     {
         public ICommand NavigateSettingsCommand { get; }
+        public ICommand QuitCommand { get; }
         public HomeViewModel(NavigationStore navigationStore) 
         {
             NavigateSettingsCommand = new NavigateSettingsCommand(navigationStore);
+            QuitCommand = new QuitCommand();
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Meilenstein03
     {
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent(); 
         }
     }
 }

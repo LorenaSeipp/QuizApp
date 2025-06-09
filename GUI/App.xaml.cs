@@ -21,5 +21,4 @@ public partial class App : Application
         MainWindow.Show();
         base.OnStartup(e);
     }
-
 }
