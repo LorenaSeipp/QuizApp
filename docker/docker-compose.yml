@@ -1,0 +1,36 @@
+﻿version: '3.8'
+
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim
+    container_name: oracle-db
+    ports:
+      - "1521:1521"
+    environment:
+      - ORACLE_PASSWORD=oracle
+      - APP_USER=quiz
+      - APP_USER_PASSWORD=quizpw
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    networks:
+      - quiz-net
+
+  quizapp:
+    build: ./app
+    container_name: quizapp
+    depends_on:
+      - oracle-db
+    environment:
+      - DB_HOST=oracle-db
+      - DB_PORT=1521
+      - DB_USER=quiz
+      - DB_PASSWORD=quizpw
+      - DB_SERVICE=XE
+    networks:
+      - quiz-net
+
+volumes:
+  oracle-data:
+
+networks:
+  quiz-net:
