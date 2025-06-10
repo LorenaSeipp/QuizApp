@@ -1,5 +1,6 @@
-﻿using Meilenstein03.Commands;
+using Meilenstein03.Commands;
 using Meilenstein03.Stores;
+using QuizApp.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,13 @@ namespace Meilenstein03.ViewModels
     public class SettingsViewModel : BaseViewModel
     {
         public ICommand NavigateQuizCommand{ get; }
-        public QuizManager Manager { get; set; }
-        public SettingsViewModel(NavigationStore navigationStore) 
+        private QuizManager QuizManager { get; }
+        //public Difficulty => QuizManager.Difficulty;
+        //public NumberOfQuestions => QuizManager.NumberOfQuestions;
+        public SettingsViewModel(QuizManager quizManager, NavigationStore navigationStore) 
         {
             NavigateQuizCommand = new NavigateQuizCommand(navigationStore);
+            QuizManager = quizManager;
         }
     }
 }
