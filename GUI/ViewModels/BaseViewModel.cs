@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Meilenstein03.ViewModels
+namespace QuizApp.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {

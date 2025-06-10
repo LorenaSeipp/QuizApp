@@ -1,11 +1,11 @@
-﻿using Meilenstein03.ViewModels;
+﻿using QuizApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Meilenstein03.Stores
+namespace QuizApp.Stores
 {
     public class NavigationStore
     {

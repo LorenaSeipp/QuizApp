@@ -16,13 +16,11 @@ public partial class App : Application
 {
     protected override void OnStartup(StartupEventArgs e)
     {
-        base.OnStartup(e);
-
-        IConfigurationBuilder  builder = new ConfigurationBuilder()
+        /*IConfigurationBuilder  builder = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-        IConfiguration config = builder.Build();
+        /IConfiguration config = builder.Build();
 
         string connectionString = config.GetConnectionString("OracleDb");
         
@@ -36,6 +34,7 @@ public partial class App : Application
         {
             Console.WriteLine(question.ToString());
         }
+        */
 
 
         // SETUP UI

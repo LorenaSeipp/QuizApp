@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Meilenstein03.Commands
+namespace QuizApp.Commands
 {
     public abstract class CommandBase : ICommand
     {

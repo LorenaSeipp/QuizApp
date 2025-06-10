@@ -1,12 +1,12 @@
-﻿using Meilenstein03.Stores;
-using Meilenstein03.ViewModels;
+﻿using QuizApp.Stores;
+using QuizApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Meilenstein03.Commands
+namespace QuizApp.Commands
 {
     internal class NavigateHomeCommand : CommandBase
     {
