@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using QuizApp;
+using QuizApp.Stores;
+using QuizApp.ViewModels;
+using System.IO;
 using System.Windows;
 using Microsoft.Extensions.Configuration;
 using QuizApp.Core;
@@ -33,5 +36,16 @@ public partial class App : Application
         {
             Console.WriteLine(question.ToString());
         }
+
+
+        // SETUP UI
+        NavigationStore navigationStore = new NavigationStore();
+        navigationStore.CurrentViewModel = new HomeViewModel(navigationStore);
+        MainWindow = new MainWindow()
+        {
+            DataContext = new MainViewModel(navigationStore)
+        };
+        MainWindow.Show();
+        base.OnStartup(e);
     }
 }
