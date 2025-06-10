@@ -7,6 +7,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <UseWPF>true</UseWPF>
         <RootNamespace>Meilenstein03</RootNamespace>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,4 +17,20 @@
         <ProjectReference Include="..\Tests\Tests.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\applicationsettings.json">
+            <Link>appsettings.json</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\Infrastructure\docker\init-schema.sql">
+            <Link>init-schema.sql</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="..\Infrastructure\docker\init-data.sql">
+            <Link>init-data.sql</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 </Project>

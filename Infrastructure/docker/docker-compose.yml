@@ -8,6 +8,7 @@ services:
       - "1521:1521"
       - "5500:5500"  # Für Oracle Enterprise Manager 
     environment:
+      - NLS_LANG=.AL32UTF8
       - ORACLE_PWD=oraclepw        # Passwort für SYSTEM und PDBADMIN
       - ORACLE_PDB=ORCLPDB1        # Name der Pluggable DB (Standard: ORCLPDB1)
     volumes:
@@ -15,9 +16,9 @@ services:
     networks:
       - quiz-net
     healthcheck:
-      test: ["CMD", "oracle", "healthcheck"]
-      interval: 1m30s
-      timeout: 30s
+      test: [ "CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -s SYSTEM/oraclepw@localhost:1521/ORCLPDB1" ]
+      interval: 30s
+      timeout: 10s
       retries: 10
 
 volumes:
