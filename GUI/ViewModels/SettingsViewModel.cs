@@ -1,4 +1,4 @@
-﻿using Meilenstein03.Commands;
+using Meilenstein03.Commands;
 using Meilenstein03.Stores;
 using QuizApp.Infrastructure;
 using System;
