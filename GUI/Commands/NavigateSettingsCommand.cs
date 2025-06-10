@@ -1,5 +1,6 @@
 ﻿using Meilenstein03.Stores;
 using Meilenstein03.ViewModels;
+using QuizApp.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,11 @@ namespace Meilenstein03.Commands
         }
         public override void Execute(object parameter)
         {
-            _navigationStore.CurrentViewModel = new SettingsViewModel(_navigationStore);
+            QuizManager quizManager = new QuizManager()
+            {
+
+            };
+            _navigationStore.CurrentViewModel = new SettingsViewModel(quizManager, _navigationStore);
         }
     }
 }
