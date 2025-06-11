@@ -6,6 +6,7 @@ public class MultipleChoiceQuestion : IQuestion
         string falseAnswer1, string falseAnswer2, string falseAnswer3)
     {
         Question = question;
+        Typ = QuestionEnums.QuestionTyp.MultipleChoice;
         Difficulty = difficulty;
         Category = category;
         CorrectAnswer = correctAnswer;
@@ -16,7 +17,7 @@ public class MultipleChoiceQuestion : IQuestion
 
     public int Id { get; set; }
     public string Question { get; set; }
-    public QuestionEnums.QuestionTyp Typ => QuestionEnums.QuestionTyp.Sort;
+    public QuestionEnums.QuestionTyp Typ { get; set; }
     public int Difficulty { get; set; }
     public string Category { get; set; }
     public string CorrectAnswer { get; set; }

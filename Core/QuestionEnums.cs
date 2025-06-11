@@ -2,29 +2,27 @@ namespace QuizApp.Core;
 
 public class QuestionEnums
 {
-    public enum QuestionTyp
-    {
-        MultipleChoice,
-        Estimate,
-        TrueFalse,
-        Sort,
-        Open
-    }
-
     public enum Category
     {
         Informatik,
         Musik,
         Geografie,
         FunFacts,
-        
     }
-    
+
     public enum Difficulty
     {
         leicht = 0,
-        mittel =  1,
+        mittel = 1,
         schwer = 2
-        
+    }
+
+    public enum QuestionTyp
+    {
+        MultipleChoice = 0,
+        Estimate = 1,
+        TrueFalse = 2,
+        Sort = 3,
+        Open = 4
     }
 }

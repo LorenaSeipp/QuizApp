@@ -74,7 +74,8 @@ public class QuestionRepository : IQuestionRepository
                 INSERT INTO MultipleChoiceQuestion 
                     (QUESTION, TYP, DIFFICULTY, CATEGORY, RIGHTANSWER, FALSEANSWER1, FALSEANSWER2, FALSEANSWER3)
                 VALUES 
-                    (:question, :typ, :diffictulty, :category, :correctAnswer, :falseAnswer1, :falseAnswer2, :falseAnswer3)";
+                    (:question, :typ, :difficulty, :category, :correctAnswer, :falseAnswer1, :falseAnswer2, :falseAnswer3)";
+
 
             db.Execute(sql, new
             {
