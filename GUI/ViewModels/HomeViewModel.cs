@@ -1,22 +1,20 @@
-﻿using QuizApp.Commands;
+﻿using System.Windows.Input;
+using QuizApp.Commands;
 using QuizApp.Stores;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace QuizApp.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {
-        public ICommand NavigateSettingsCommand { get; }
-        public ICommand QuitCommand { get; }
-        public HomeViewModel(NavigationStore navigationStore) 
+        public HomeViewModel(NavigationStore navigationStore)
         {
             NavigateSettingsCommand = new NavigateSettingsCommand(navigationStore);
+            NavigateUserLoginCommand = new NavigateUserLoginCommand(navigationStore);
             QuitCommand = new QuitCommand();
         }
+
+        public ICommand NavigateSettingsCommand { get; }
+        public ICommand NavigateUserLoginCommand { get; }
+        public ICommand QuitCommand { get; }
     }
 }

@@ -1,27 +1,35 @@
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using QuizApp.Commands;
 using QuizApp.Core.Models;
 using QuizApp.Core.Models.utils;
 using QuizApp.Infrastructure;
-using QuizApp.Views;
+using QuizApp.Stores;
 
 namespace QuizApp.ViewModels;
 
-public class UserLoginViewModel : INotifyPropertyChanged
+public class UserLoginViewModel : BaseViewModel
 {
+    private readonly NavigationStore _navigationStore;
     private readonly UserService _userService;
     private string _password;
+    private QuizManager _quizmanager;
     private string _username;
 
-    public UserLoginViewModel()
+    public UserLoginViewModel(NavigationStore navigationStore)
     {
-        _userService = new UserService("OracleDb");
+        _navigationStore = navigationStore;
+        LoginCommand = new RelayCommand(LoginUser);
+        _userService = new UserService(App.ConnectionString);
         LoginCommand = new RelayCommand(LoginUser);
         RegisterPlayerCommand = new RelayCommand(RegisterPlayer);
+        NavigateSettingsCommand = new NavigateSettingsCommand(navigationStore);
+        QuitCommand = new QuitCommand();
     }
+
+    public ICommand NavigateSettingsCommand { get; }
+    public ICommand QuitCommand { get; }
 
     public string Username
     {
@@ -56,19 +64,16 @@ public class UserLoginViewModel : INotifyPropertyChanged
         {
             if (user.Role == UserRole.Admin)
             {
-                new AdminDashboardView().Show();
-                CloseCurrentWindow();
+                _navigationStore.CurrentViewModel = new AdminDashboardViewModel(App.ConnectionString);
             }
             else if (user.Role == UserRole.Player)
             {
-                //TODO Navigation zu QuizView mit Team klären 
-                new QuizView();
-                CloseCurrentWindow();
+                _navigationStore.CurrentViewModel = new SettingsViewModel(_quizmanager, _navigationStore);
             }
         }
         else
         {
-            MessageBox.Show("Login fehlgeschlagen. Bitte überprüfe Benutzername und Passwort.");
+            MessageBox.Show("Login fehlgeschlagen.");
         }
     }
 
@@ -95,21 +100,5 @@ public class UserLoginViewModel : INotifyPropertyChanged
 
         _userService.SavePlayer(newPlayer);
         MessageBox.Show("Registrierung erfolgreich. Du kannst dich jetzt einloggen.");
-    }
-
-
-    private void CloseCurrentWindow()
-    {
-        foreach (Window window in Application.Current.Windows)
-            if (window.DataContext == this)
-            {
-                window.Close();
-                break;
-            }
-    }
-
-    private void OnPropertyChanged([CallerMemberName] string name = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

@@ -21,7 +21,6 @@ CREATE TABLE Admins
     Id             NUMBER PRIMARY KEY,
     CreatedAt      TIMESTAMP,
     CreatedBy      VARCHAR2(255),
-    CanDeleteUsers NUMBER(1),
     IsActive       NUMBER(1),
     CONSTRAINT fk_admin_user FOREIGN KEY (Id) REFERENCES Users (UserId)
 );

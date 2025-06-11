@@ -19,10 +19,10 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <None Include="database\init-schema.sql">
+        <None Include="docker\init-schema.sql">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Include="database\init-data.sql">
+        <None Include="docker\init-data.sql">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>

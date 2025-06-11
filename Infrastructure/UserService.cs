@@ -158,7 +158,7 @@ public class UserService
             {
                 // Admin-Daten aus Admins laden
                 using OracleCommand? cmd2 = conn.CreateCommand();
-                cmd2.CommandText = "SELECT CreatedAt, CreatedBy, CanDeleteUsers, IsActive FROM Admins WHERE Id = :id";
+                cmd2.CommandText = "SELECT CreatedAt, CreatedBy, IsActive FROM Admins WHERE Id = :id";
                 cmd2.Parameters.Add(":id", id);
                 using OracleDataReader? reader2 = cmd2.ExecuteReader();
 
@@ -171,8 +171,7 @@ public class UserService
                 {
                     createdAt = reader2.IsDBNull(0) ? DateTime.UtcNow : reader2.GetDateTime(0);
                     createdBy = reader2.IsDBNull(1) ? "" : reader2.GetString(1);
-                    canDeleteUsers = reader2.IsDBNull(2) ? false : reader2.GetInt32(2) == 1;
-                    isActive = reader2.IsDBNull(3) ? false : reader2.GetInt32(3) == 1;
+                    isActive = reader2.IsDBNull(2) ? false : reader2.GetInt32(2) == 1;
                 }
 
                 return new Admin
