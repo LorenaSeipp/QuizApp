@@ -1,21 +1,25 @@
-namespace QuizApp.Core;
+namespace QuizApp.Core.Models;
 
 public class Player : User
 {
+    public int Score { get; set; }
     public int Highscore { get; set; }
 
-    // List of all quizzes the player has completed
-
-    public List<Quiz> History { get; set; } = new();
-
-    public void AddToHistory(Quiz quiz)
-    {
-        History.Add(quiz);
-    }
+    public int GamesPlayed { get; set; }
+    public double AverageScore { get; set; }
+    public DateTime? LastPlayed { get; set; }
 
     public void UpdateHighscore(int score)
     {
         if (score > Highscore)
             Highscore = score;
+    }
+
+    public void UpdateStats(int newScore)
+    {
+        GamesPlayed++;
+        AverageScore = (AverageScore * (GamesPlayed - 1) + newScore) / GamesPlayed;
+        LastPlayed = DateTime.Now;
+        UpdateHighscore(newScore);
     }
 }

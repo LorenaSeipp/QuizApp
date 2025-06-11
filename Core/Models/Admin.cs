@@ -1,17 +1,10 @@
-namespace QuizApp.Core;
+namespace QuizApp.Core.Models;
 
 public class Admin : User
 {
-    // Adds a new question to the question pool (database).
-    public void AddQuestion(Question question)
-    {
-        // TODO: connect to QuestionService
-    }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    // Removes a question from question pool (database) based on its ID.
-    public void DeleteQuestion(int questionId)
-    {
-        // TODO: connect to QuestionService
-        Console.WriteLine($"Question with ID {questionId} deleted.");
-    }
+    public string CreatedBy { get; set; }
+
+    public bool IsActive { get; set; } = true;
 }

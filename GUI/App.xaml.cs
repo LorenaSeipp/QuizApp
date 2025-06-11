@@ -1,34 +1,34 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.Configuration;
-using QuizApp.Core;
 using QuizApp.Infrastructure;
 
 namespace QuizApp;
 
 public partial class App : Application
 {
+    public static IConfiguration Configuration { get; private set; }
+    public static string ConnectionString { get; private set; }
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
 
         // 1. Konfiguration laden
-        IConfigurationRoot config = new ConfigurationBuilder()
+        var builder = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json", false, true)
-            .Build();
+            .AddJsonFile("appsettings.json", false, true);
 
-        string? connectionString = config.GetConnectionString("OracleDb");
+        Configuration = builder.Build();
+        ConnectionString = Configuration.GetConnectionString("OracleDb");
 
-        // 2. Service erstellen
-        UserService userService = new(connectionString);
+        // 2. Services erstellen
+        UserService userService = new(ConnectionString);
+        OracleDatabaseService dbService = new();
+        dbService.InitializeDatabase();
 
-        // 3. Test: Benutzer speichern und abrufen
-        userService.SavePlayer(new Player { Name = "Bob", Highscore = 150 });
-        List<User> users = userService.GetAllUsers();
+        QuestionRepository repository = new(ConnectionString);
 
-        foreach (User user in users) MessageBox.Show($"Name: {user.Name}, Role: {user.Role}");
-
-        // 4. Hauptfenster starten
+        // 3. Hauptfenster starten
         MainWindow mainWindow = new();
         mainWindow.Show();
     }
