@@ -55,7 +55,7 @@ INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
     ('Wie nennt man eine Gruppe von vier Musikern, die zusammen spielen?','Open', 0, 'Musik', 'Quartett');
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
-    ('Wie nennt man die Tonart mit einem Kreuz-Vorzeichen?','Open', 1, 'Musik', 'G-Dur');
+    ('Wie nennt man die Tonart mit einem Kreuz-Vorzeichen?','Open', 1, 'Musik', 'G-Dur;G Dur');
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
     ('Wie nennt man die Kompositionstechnik, bei der ein Thema rückwärts gespielt wird?','Open', 2, 'Musik', 'Krebs');
 
