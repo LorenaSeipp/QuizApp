@@ -10,18 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuizApp
+namespace QuizApp.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ResultView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ResultView : UserControl
     {
-        public MainWindow()
+        public ResultView()
         {
-            InitializeComponent(); 
+            InitializeComponent();
         }
     }
 }
