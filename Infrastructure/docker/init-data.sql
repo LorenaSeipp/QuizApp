@@ -42,33 +42,35 @@ INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, P
 
 -- OPEN QUESTIONS
 DELETE FROM OpenQuestion;
+
 -- Informatik
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
-    ('Wie nennt man den Bereich eines Computers, der Daten kurzfristig speichert?','Open', 1, 'Informatik', 'RAM;Arbeitsspeicher;Random Access Memory');
+    ('Wie nennt man den Bereich eines Computers, der Daten kurzfristig speichert?','Open', 0, 'Informatik', 'RAM;Arbeitsspeicher;Random Access Memory');
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
-    ('Welche Programmiersprache wird hauptsächlich für Webentwicklung verwendet und läuft im Browser?','Open', 2, 'Informatik', 'JavaScript;JS');
+    ('Welche Programmiersprache wird hauptsächlich für Webentwicklung verwendet und läuft im Browser?','Open', 1, 'Informatik', 'JavaScript;JS');
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
-    ('Wie heißt das Verschlüsselungsverfahren mit öffentlichem und privatem Schlüssel?','Open', 3, 'Informatik', 'Asymmetrisch;Asymmetrische Verschlüsselung');
+    ('Wie heißt das Verschlüsselungsverfahren mit öffentlichem und privatem Schlüssel?','Open', 2, 'Informatik', 'Asymmetrisch;Asymmetrische Verschlüsselung');
 
 -- Musik
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
-    ('Wie nennt man eine Gruppe von vier Musikern, die zusammen spielen?','Open', 1, 'Musik', 'Quartett');
+    ('Wie nennt man eine Gruppe von vier Musikern, die zusammen spielen?','Open', 0, 'Musik', 'Quartett');
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
-    ('Wie nennt man die Tonart mit einem Kreuz-Vorzeichen?','Open', 2, 'Musik', 'G-Dur');
+    ('Wie nennt man die Tonart mit einem Kreuz-Vorzeichen?','Open', 1, 'Musik', 'G-Dur');
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
-    ('Wie nennt man die Kompositionstechnik, bei der ein Thema rückwärts gespielt wird?','Open', 3, 'Musik', 'Krebs');
+    ('Wie nennt man die Kompositionstechnik, bei der ein Thema rückwärts gespielt wird?','Open', 2, 'Musik', 'Krebs');
 
 -- Geografie
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
-    ('','Open', 1, 'Geografie', '');
+    ('Welcher Kontinent liegt direkt südlich von Europa?','Open', 0, 'Geografie', 'Afrika');
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
-    ('Wie heißt der höchste Berg Afrikas?','Open', 2, 'Geografie', 'Kilimandscharo;Kilimanjaro');
+    ('Wie heißt der höchste Berg Afrikas?','Open', 1, 'Geografie', 'Kilimandscharo;Kilimanjaro');
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
-    ('In welchem Land liegt das geographische Zentrum Europas (laut einer Berechnung in der Nähe von Polotsk)?','Open', 3, 'Geografie', 'Belarus;Weißrussland');
+    ('In welchem Land liegt das geographische Zentrum Europas (laut einer Berechnung in der Nähe von Polotsk)?','Open', 2, 'Geografie', 'Belarus;Weißrussland');
+
 -- Fun-Facts
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
-    ('Welches Getränk enthält Koffein und wird häufig morgens getrunken?','Open', 1, 'FunFacts', 'Kaffee;Café');
+    ('Welches Getränk enthält Koffein und wird häufig morgens getrunken?','Open', 0, 'FunFacts', 'Kaffee;Café');
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
-    ('Welches Tier schläft am meisten pro Tag?','Open', 2, 'FunFacts', 'Faultier');
+    ('Welches Tier schläft am meisten pro Tag?','Open', 1, 'FunFacts', 'Faultier');
 INSERT INTO OpenQuestion (Question, Typ, Difficulty, Category, Answer) VALUES
-    ('Welcher chemische Stoff ist verantwortlich für den Geruch von frisch geschnittenem Gras?','Open', 3, 'FunFacts', 'Hexenal');
+    ('Welcher chemische Stoff ist verantwortlich für den Geruch von frisch geschnittenem Gras?','Open', 2, 'FunFacts', 'Hexenal');
