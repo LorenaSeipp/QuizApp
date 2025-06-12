@@ -1,34 +1,51 @@
 <UserControl x:Class="QuizApp.Views.MultipleChoiceQuestionView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Background="#FF1A1A40"
-             Foreground="White"
-             Padding="20">
-
+             Background="#FF1A1A40">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" /> <!-- Frage -->
-            <RowDefinition Height="20" />
-            <RowDefinition Height="*" /> <!-- Antworten -->
-        </Grid.RowDefinitions>
+        <Border CornerRadius="15"
+                Background="#FF1A1A40"
+                Padding="40"
+                MaxHeight="800"
+                MaxWidth="1200"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                <!-- Frage -->
+                <TextBlock Text="{Binding QuestionText}"
+                           FontSize="26"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center" />
 
-        <!-- Frage -->
-        <TextBlock Grid.Row="0"
-                   Text="{Binding QuestionText}"
-                   FontSize="20"
-                   FontWeight="Bold"
-                   TextWrapping="Wrap" />
+                <!-- Antworten -->
+                <StackPanel>
+                    <RadioButton Content="{Binding Answers[0]}" GroupName="Answers"
+                                 FontSize="18" Padding="10"
+                                 Style="{StaticResource QuizRadioButtonStyle}" />
+                    <RadioButton Content="{Binding Answers[1]}" GroupName="Answers"
+                                 FontSize="18" Padding="10"
+                                 Style="{StaticResource QuizRadioButtonStyle}" />
+                    <RadioButton Content="{Binding Answers[2]}" GroupName="Answers"
+                                 FontSize="18" Padding="10"
+                                 Style="{StaticResource QuizRadioButtonStyle}" />
+                    <RadioButton Content="{Binding Answers[3]}" GroupName="Answers"
+                                 FontSize="18" Padding="10"
+                                 Style="{StaticResource QuizRadioButtonStyle}" />
+                </StackPanel>
 
-        <!-- Antwortmöglichkeiten -->
-        <StackPanel Grid.Row="2" Margin="0,10,0,0" VerticalAlignment="Top">
-            <RadioButton Content="{Binding Answers[0]}" GroupName="Answers"
-                         Style="{StaticResource QuizRadioButtonStyle}" />
-            <RadioButton Content="{Binding Answers[1]}" GroupName="Answers"
-                         Style="{StaticResource QuizRadioButtonStyle}" />
-            <RadioButton Content="{Binding Answers[2]}" GroupName="Answers"
-                         Style="{StaticResource QuizRadioButtonStyle}" />
-            <RadioButton Content="{Binding Answers[3]}" GroupName="Answers"
-                         Style="{StaticResource QuizRadioButtonStyle}" />
-        </StackPanel>
+                <!-- Submit Button -->
+                <Button Content="Antwort einreichen"
+                        Command="{Binding SubmitAnswerCommand}"
+                        Background="#009688"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        Padding="12"
+                        Margin="0,20,0,0"
+                        Cursor="Hand"
+                        BorderThickness="0" />
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>
