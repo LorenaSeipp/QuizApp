@@ -32,7 +32,6 @@ public class MultipleChoiceQuestionViewModel : QuestionViewModel
 
     private void SubmitAnswer()
     {
-        // Bewertung, dann nächste Frage
         _navigationStore.CurrentViewModel = new QuizViewModel(_quizManager, _navigationStore);
     }
 }

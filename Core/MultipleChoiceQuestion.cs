@@ -2,10 +2,6 @@ namespace QuizApp.Core;
 
 public class MultipleChoiceQuestion : IQuestion
 {
-    public MultipleChoiceQuestion()
-    {
-    }
-
     public MultipleChoiceQuestion(string question, int difficulty, string category, string correctAnswer,
         string falseAnswer1, string falseAnswer2, string falseAnswer3)
     {
@@ -17,6 +13,10 @@ public class MultipleChoiceQuestion : IQuestion
         FalseAnswer1 = falseAnswer1;
         FalseAnswer2 = falseAnswer2;
         FalseAnswer3 = falseAnswer3;
+    }
+
+    public MultipleChoiceQuestion()
+    {
     }
 
     public int Id { get; set; }
