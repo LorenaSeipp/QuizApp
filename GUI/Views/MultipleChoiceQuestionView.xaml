@@ -1,0 +1,34 @@
+<UserControl x:Class="QuizApp.Views.MultipleChoiceQuestionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#FF1A1A40"
+             Foreground="White"
+             Padding="20">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" /> <!-- Frage -->
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" /> <!-- Antworten -->
+        </Grid.RowDefinitions>
+
+        <!-- Frage -->
+        <TextBlock Grid.Row="0"
+                   Text="{Binding QuestionText}"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   TextWrapping="Wrap" />
+
+        <!-- Antwortmöglichkeiten -->
+        <StackPanel Grid.Row="2" Margin="0,10,0,0" VerticalAlignment="Top">
+            <RadioButton Content="{Binding Answers[0]}" GroupName="Answers"
+                         Style="{StaticResource QuizRadioButtonStyle}" />
+            <RadioButton Content="{Binding Answers[1]}" GroupName="Answers"
+                         Style="{StaticResource QuizRadioButtonStyle}" />
+            <RadioButton Content="{Binding Answers[2]}" GroupName="Answers"
+                         Style="{StaticResource QuizRadioButtonStyle}" />
+            <RadioButton Content="{Binding Answers[3]}" GroupName="Answers"
+                         Style="{StaticResource QuizRadioButtonStyle}" />
+        </StackPanel>
+    </Grid>
+</UserControl>
