@@ -133,3 +133,46 @@ VALUES ('Wie viele Saiten hat ein Klavier?', 'Estimate', 1, 'Musik', '88');
 
 INSERT INTO EstimateQuestion (Question, Typ, Difficulty, Category, RightAnswer)
 VALUES ('Wie viele Länder haben eine Fläche größer als 1 Million km²?', 'Estimate', 2, 'Geografie', '17');
+
+
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Wer ist der Sänger der Band Queen?', 'MultipleChoice', 0, 'Musik', 'Freddie Mercury', 'Brian May',
+        'Roger Taylor', 'John Deacon');
+
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Was ist die Hauptstadt von Australien?', 'MultipleChoice', 1, 'Geografie', 'Canberra', 'Sydney', 'Melbourne',
+        'Brisbane');
+
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Welche Programmiersprache wird hauptsächlich für iOS-Apps verwendet?', 'MultipleChoice', 1, 'Informatik',
+        'Swift', 'Java', 'Python', 'C#');
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Welcher Musiker schrieb die Oper "Die Zauberflöte"?', 'MultipleChoice', 2, 'Musik', 'Wolfgang Amadeus Mozart',
+        'Ludwig van Beethoven', 'Johann Sebastian Bach', 'Franz Schubert');
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Welches Land hat die längste Küstenlinie?', 'MultipleChoice', 2, 'Geografie', 'Kanada', 'USA', 'Russland',
+        'China');
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Was bedeutet "HTML"?', 'MultipleChoice', 0, 'Informatik', 'HyperText Markup Language',
+        'HighText Machine Language', 'Hyperlinking Text Mark Language', 'Hyper Tool Multi Language');
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Welche Band veröffentlichte das Album "Abbey Road"?', 'MultipleChoice', 1, 'Musik', 'The Beatles',
+        'The Rolling Stones', 'Pink Floyd', 'Led Zeppelin');
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Wie viele Bundesstaaten hat Deutschland?', 'MultipleChoice', 0, 'Geografie', '16', '12', '14', '18');
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Welcher Algorithmus wird oft zum Sortieren verwendet?', 'MultipleChoice', 1, 'Informatik', 'Quicksort',
+        'Bubblesort', 'Mergesort', 'Heapsort');
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Was ist die chemische Formel für Wasser?', 'MultipleChoice', 0, 'Fun-Facts', 'H2O', 'CO2', 'NaCl', 'O2');
+
