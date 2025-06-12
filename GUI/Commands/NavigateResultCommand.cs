@@ -1,23 +1,22 @@
-﻿using QuizApp.Stores;
+﻿using QuizApp.Infrastructure;
+using QuizApp.Stores;
 using QuizApp.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizApp.Commands
 {
     internal class NavigateResultCommand : CommandBase
     {
         private readonly NavigationStore _navigationStore;
+        private readonly QuizManager _quizManager;
+
         public NavigateResultCommand(NavigationStore navigationStore)
         {
             _navigationStore = navigationStore;
         }
+
         public override void Execute(object parameter)
         {
-            _navigationStore.CurrentViewModel = new ResultViewModel(_navigationStore);
+            _navigationStore.CurrentViewModel = new ResultViewModel(_quizManager, _navigationStore);
         }
     }
 }

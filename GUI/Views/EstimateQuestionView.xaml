@@ -1,0 +1,12 @@
+<UserControl x:Class="QuizApp.Views.EstimateQuestionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#FF1A1A40" Foreground="White">
+    <StackPanel Margin="20">
+        <TextBlock Text="{Binding QuestionText}" FontSize="18" TextWrapping="Wrap" Margin="0,0,0,20" />
+        <TextBox Text="{Binding UserAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="30" />
+        <TextBlock FontSize="12" Foreground="LightGray" Margin="0,10,0,0">
+            Bitte schätze einen Wert ±{Binding AllowedMargin} ein.
+        </TextBlock>
+    </StackPanel>
+</UserControl>

@@ -1,28 +1,28 @@
-﻿using QuizApp.Stores;
-using QuizApp.ViewModels;
+﻿using System.Windows.Input;
 using QuizApp.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using QuizApp.Stores;
+using QuizApp.ViewModels;
 
 namespace QuizApp.Commands
 {
-    internal class NavigateQuizCommand : CommandBase
+    public class NavigateQuizCommand : ICommand
     {
         private readonly NavigationStore _navigationStore;
-        public NavigateQuizCommand(NavigationStore navigationStore)
+        private readonly QuizManager _quizManager;
+
+        public NavigateQuizCommand(NavigationStore navigationStore, QuizManager quizManager)
         {
             _navigationStore = navigationStore;
+            _quizManager = quizManager;
         }
-        public override void Execute(object parameter)
-        {
-            QuizManager quizManager = new QuizManager()
-            {
 
-            };
-            _navigationStore.CurrentViewModel = new QuizViewModel(quizManager, _navigationStore);
+        public event EventHandler CanExecuteChanged;
+
+        public bool CanExecute(object parameter) => true;
+
+        public void Execute(object parameter)
+        {
+            _navigationStore.CurrentViewModel = new QuizViewModel(_quizManager, _navigationStore);
         }
     }
 }

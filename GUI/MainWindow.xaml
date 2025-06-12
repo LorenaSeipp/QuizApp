@@ -23,10 +23,13 @@
             <DataTemplate DataType="{x:Type viewmodels:UserLoginViewModel}">
                 <views:UserLoginView />
             </DataTemplate>
-
             <DataTemplate DataType="{x:Type viewmodels:AdminDashboardViewModel}">
                 <views:AdminDashboardView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:MultipleChoiceQuestionViewModel}">
+                <views:MultipleChoiceQuestionView />
+            </DataTemplate>
+
         </ContentControl.Resources>
     </ContentControl>
 </Window>

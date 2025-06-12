@@ -68,6 +68,7 @@ public class UserLoginViewModel : BaseViewModel
             }
             else if (user.Role == UserRole.Player)
             {
+                _quizmanager = new QuizManager(App.ConnectionString);
                 _navigationStore.CurrentViewModel = new SettingsViewModel(_quizmanager, _navigationStore);
             }
         }

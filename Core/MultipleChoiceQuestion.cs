@@ -2,6 +2,10 @@ namespace QuizApp.Core;
 
 public class MultipleChoiceQuestion : IQuestion
 {
+    public MultipleChoiceQuestion()
+    {
+    }
+
     public MultipleChoiceQuestion(string question, int difficulty, string category, string correctAnswer,
         string falseAnswer1, string falseAnswer2, string falseAnswer3)
     {

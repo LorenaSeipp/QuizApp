@@ -1,20 +1,17 @@
-﻿using QuizApp.Commands;
+﻿using System.Windows.Input;
+using QuizApp.Commands;
+using QuizApp.Infrastructure;
 using QuizApp.Stores;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace QuizApp.ViewModels
 {
-   public class ResultViewModel : BaseViewModel
+    public class ResultViewModel : BaseViewModel
     {
-        public ICommand NavigateHomeCommand{ get; }
-        public ResultViewModel(NavigationStore navigationStore) 
+        public ResultViewModel(QuizManager quizmanager, NavigationStore navigationStore)
         {
             NavigateHomeCommand = new NavigateHomeCommand(navigationStore);
         }
+
+        public ICommand NavigateHomeCommand { get; }
     }
 }
