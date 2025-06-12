@@ -1,8 +1,9 @@
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
+using QuizApp.ViewModels;
 
-namespace QuizApp.ViewModels
+namespace QuizApp.GUI.ViewModels
 {
     public class OpenQuestionViewModel : QuestionViewModel
     {
@@ -33,5 +34,6 @@ namespace QuizApp.ViewModels
                 }
             }
         }
+        //TODO SubmitAnswer -> Button und Logik zur Überprüfung der Antwort 
     }
 }

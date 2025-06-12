@@ -18,20 +18,20 @@
                            TextAlignment="Center" />
 
                 <!-- Antworten -->
-                <StackPanel>
-                    <RadioButton Content="{Binding Answers[0]}" GroupName="Answers"
-                                 FontSize="18" Padding="10"
-                                 Style="{StaticResource QuizRadioButtonStyle}" />
-                    <RadioButton Content="{Binding Answers[1]}" GroupName="Answers"
-                                 FontSize="18" Padding="10"
-                                 Style="{StaticResource QuizRadioButtonStyle}" />
-                    <RadioButton Content="{Binding Answers[2]}" GroupName="Answers"
-                                 FontSize="18" Padding="10"
-                                 Style="{StaticResource QuizRadioButtonStyle}" />
-                    <RadioButton Content="{Binding Answers[3]}" GroupName="Answers"
-                                 FontSize="18" Padding="10"
-                                 Style="{StaticResource QuizRadioButtonStyle}" />
-                </StackPanel>
+                <ItemsControl ItemsSource="{Binding Answers}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <RadioButton Content="{Binding}" GroupName="Answers"
+                                         FontSize="18" Padding="10"
+                                         Style="{StaticResource QuizRadioButtonStyle}"
+                                         IsChecked="{Binding DataContext.SelectedAnswer, 
+                                     RelativeSource={RelativeSource AncestorType=UserControl}, 
+                                     Converter={StaticResource StringEqualityConverter}, 
+                                     ConverterParameter={Binding}}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
 
                 <!-- Submit Button -->
                 <Button Content="Antworten"

@@ -2,8 +2,9 @@ using System.Collections.ObjectModel;
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
+using QuizApp.ViewModels;
 
-namespace QuizApp.ViewModels;
+namespace QuizApp.GUI.ViewModels;
 
 public class SortQuestionViewModel : QuestionViewModel
 {

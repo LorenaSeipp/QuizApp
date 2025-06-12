@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using QuizApp.ViewModels;
+using QuizApp.GUI.ViewModels;
 
 namespace QuizApp.Views
 {
@@ -44,5 +44,7 @@ namespace QuizApp.Views
             list[indexA] = list[indexB];
             list[indexB] = temp;
         }
+
+        //TODO SubmitAnswer Button und Logik zur Überprüfung der Antwort 
     }
 }

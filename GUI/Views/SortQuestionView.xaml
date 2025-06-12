@@ -32,6 +32,17 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2">
             <Button Content="↑ Nach oben" Width="100" Click="MoveUp_Click" />
             <Button Content="↓ Nach unten" Width="100" Click="MoveDown_Click" />
+
+            <!-- Submit Button -->
+            <Button Content="Antworten"
+                    Command="{Binding SubmitAnswerCommand}"
+                    Background="#009688"
+                    Foreground="White"
+                    FontWeight="Bold"
+                    Padding="12"
+                    Margin="0,20,0,0"
+                    Cursor="Hand"
+                    BorderThickness="0" />
         </StackPanel>
     </Grid>
 </UserControl>

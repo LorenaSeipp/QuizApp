@@ -8,6 +8,8 @@ public class QuizViewModel : BaseViewModel
     private readonly NavigationStore _navigationStore;
     private readonly QuizManager _quizManager;
 
+    private QuestionViewModel? _currentQuestion;
+
     public QuizViewModel(QuizManager quizManager, NavigationStore navigationStore)
     {
         _quizManager = quizManager;
@@ -16,19 +18,26 @@ public class QuizViewModel : BaseViewModel
         LoadNextQuestion();
     }
 
+    public QuestionViewModel? CurrentQuestion
+    {
+        get => _currentQuestion;
+        set
+        {
+            _currentQuestion = value;
+            OnPropertyChanged();
+        }
+    }
+
     public void LoadNextQuestion()
     {
         IQuestion? nextQuestion = _quizManager.GetNextQuestion();
+
         if (nextQuestion == null)
         {
-            // Alle Fragen beantwortet – Navigation zum Score
             _navigationStore.CurrentViewModel = new ResultViewModel(_quizManager, _navigationStore);
             return;
         }
 
-        // Aktuelle Frage anzeigen
-        QuestionViewModel questionViewModel =
-            QuestionViewModelFactory.Create(nextQuestion, _quizManager, _navigationStore);
-        _navigationStore.CurrentViewModel = questionViewModel;
+        CurrentQuestion = QuestionViewModelFactory.Create(nextQuestion, _quizManager, _navigationStore);
     }
 }

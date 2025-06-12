@@ -10,6 +10,17 @@
             <RadioButton Content="False"
                          IsChecked="{Binding UserAnswer, Converter={StaticResource InverseBoolConverter}, Mode=TwoWay}"
                          GroupName="TrueFalseGroup" Tag="False" />
+
+            <!-- Submit Button -->
+            <Button Content="Antworten"
+                    Command="{Binding SubmitAnswerCommand}"
+                    Background="#009688"
+                    Foreground="White"
+                    FontWeight="Bold"
+                    Padding="12"
+                    Margin="0,20,0,0"
+                    Cursor="Hand"
+                    BorderThickness="0" />
         </StackPanel>
     </StackPanel>
 </UserControl>

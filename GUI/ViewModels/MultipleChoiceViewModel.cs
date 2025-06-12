@@ -5,6 +5,8 @@ using QuizApp.Infrastructure;
 using QuizApp.Stores;
 using QuizApp.ViewModels;
 
+namespace QuizApp.GUI.ViewModels;
+
 public class MultipleChoiceQuestionViewModel : QuestionViewModel
 {
     private readonly NavigationStore _navigationStore;

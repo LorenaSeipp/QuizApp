@@ -27,9 +27,6 @@
             <DataTemplate DataType="{x:Type viewmodels:AdminDashboardViewModel}">
                 <views:AdminDashboardView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type global:MultipleChoiceQuestionViewModel}">
-                <views:MultipleChoiceQuestionView />
-            </DataTemplate>
 
         </ContentControl.Resources>
     </ContentControl>
