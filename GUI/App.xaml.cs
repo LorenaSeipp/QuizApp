@@ -16,12 +16,12 @@ public partial class App : Application
 {
     protected override void OnStartup(StartupEventArgs e)
     {
-        /*
+        
         IConfigurationBuilder  builder = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-        /IConfiguration config = builder.Build();
+        IConfiguration config = builder.Build();
 
         string connectionString = config.GetConnectionString("OracleDb");
         
@@ -29,13 +29,20 @@ public partial class App : Application
         dbService.InitializeDatabase();
         
         QuestionRepository repository = new QuestionRepository(connectionString);
-        List<SortQuestion> questions = repository.GetAllSortQuestions();
+        List<SortQuestion> sortQuestions = repository.GetAllSortQuestions();
 
-        foreach (SortQuestion question in questions)
+        foreach (SortQuestion sq in sortQuestions)
         {
-            Console.WriteLine(question.ToString());
+            Console.WriteLine(sq.ToString());
         }
-        */
+
+        List<OpenQuestion> openQuestions = repository.GetAllOpenQuestions();
+
+        foreach (OpenQuestion oq in openQuestions)
+        {
+            Console.WriteLine(oq.ToString());
+        }
+        
 
 
         // SETUP UI

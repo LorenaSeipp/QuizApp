@@ -8,10 +8,10 @@ public class OpenQuestion
     public int Difficulty { get; set; } 
     public string Category { get; set; }
     //First part of the string is the expected guess, the ones following (seperated by ';') are synonyms
-    public string Answers { get; set; }
+    public string Answer { get; set; }
     public override string ToString()
     {
         return $"OpenQuestion: Id={Id}, Type={Typ}, Difficulty={Difficulty}, Category={Category}, " +
-            $"Question=\"{Question}\", PossibleAnswers={Answers}";
+            $"Question=\"{Question}\", PossibleAnswers={Answer}";
     }
 }
