@@ -1,5 +1,11 @@
+using System.Windows.Controls;
+
 namespace QuizApp.Views;
 
-public class MultipleChoiceQuestionView_xaml
+public partial class MultipleChoiceQuestionView : UserControl
 {
+    public MultipleChoiceQuestionView()
+    {
+        InitializeComponent();
+    }
 }

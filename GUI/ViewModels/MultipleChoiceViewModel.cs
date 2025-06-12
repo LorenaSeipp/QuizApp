@@ -5,7 +5,7 @@ using QuizApp.Stores;
 
 namespace QuizApp.ViewModels;
 
-public class MultipleChoiceQuestionViewModel //: QuestionViewModel
+public class MultipleChoiceQuestionViewModel : BaseViewModel
 {
     private readonly NavigationStore _navigationStore;
 
@@ -31,6 +31,7 @@ public class MultipleChoiceQuestionViewModel //: QuestionViewModel
 
     private void SubmitAnswer()
     {
+        //TODO auf SubmitAnswer des QuizManager zugreifen. Warte auf Implementierung 
         _navigationStore.CurrentViewModel = new QuizViewModel(_quizManager, _navigationStore);
     }
 }
