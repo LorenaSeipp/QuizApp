@@ -1,4 +1,4 @@
-namespace QuizApp.Core;
+using QuizApp.Core;
 
 public class MultipleChoiceQuestion : IQuestion
 {
@@ -13,6 +13,10 @@ public class MultipleChoiceQuestion : IQuestion
         FalseAnswer1 = falseAnswer1;
         FalseAnswer2 = falseAnswer2;
         FalseAnswer3 = falseAnswer3;
+    }
+
+    public MultipleChoiceQuestion()
+    {
     }
 
     public int Id { get; set; }
