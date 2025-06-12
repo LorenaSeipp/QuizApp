@@ -14,7 +14,7 @@ public class QuestionRepository : IQuestionRepository
         _connectionString = connectionString;
     }
 
-    
+
     public List<SortQuestion> GetAllSortQuestions()
     {
         using (IDbConnection db = new OracleConnection(_connectionString))
@@ -24,7 +24,7 @@ public class QuestionRepository : IQuestionRepository
             return questions;
         }
     }
-    
+
     public List<MultipleChoiceQuestion> GetAllMultipleChoiceQuestions()
     {
         using (IDbConnection db = new OracleConnection(_connectionString))
@@ -65,4 +65,31 @@ public class QuestionRepository : IQuestionRepository
         }
     }
 
+    // Methode zum Hinzufügen einer Multiple-Choice-Frage
+    public void AddMultipleChoiceQuestion(MultipleChoiceQuestion question)
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = @"
+                INSERT INTO MultipleChoiceQuestion 
+                    (QUESTION, TYP, DIFFICULTY, CATEGORY, RIGHTANSWER, FALSEANSWER1, FALSEANSWER2, FALSEANSWER3)
+                VALUES 
+                    (:question, :typ, :difficulty, :category, :correctAnswer, :falseAnswer1, :falseAnswer2, :falseAnswer3)";
+
+
+            db.Execute(sql, new
+            {
+                question.Question,
+                question.Typ,
+                question.Difficulty,
+                question.Category,
+                question.CorrectAnswer,
+                question.FalseAnswer1,
+                question.FalseAnswer2,
+                question.FalseAnswer3
+            });
+        }
+    }
+
+    //TODO Methoden zum Hinzufügen von anderen Fragearten
 }

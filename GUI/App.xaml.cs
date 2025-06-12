@@ -1,11 +1,8 @@
-﻿using QuizApp;
+﻿using System.Windows;
+using Microsoft.Extensions.Configuration;
+using QuizApp.Infrastructure;
 using QuizApp.Stores;
 using QuizApp.ViewModels;
-using System.IO;
-using System.Windows;
-using Microsoft.Extensions.Configuration;
-using QuizApp.Core;
-using QuizApp.Infrastructure;
 
 namespace QuizApp;
 
@@ -14,36 +11,29 @@ namespace QuizApp;
 /// </summary>
 public partial class App : Application
 {
+    public static IConfiguration Configuration { get; private set; }
+    public static string ConnectionString { get; private set; }
+
     protected override void OnStartup(StartupEventArgs e)
     {
-        
-        IConfigurationBuilder  builder = new ConfigurationBuilder()
-            .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+        // 1. Konfiguration laden
+        IConfigurationBuilder builder = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json", false, true);
 
-        IConfiguration config = builder.Build();
+        Configuration = builder.Build();
+        ConnectionString = Configuration.GetConnectionString("OracleDb");
 
-        string connectionString = config.GetConnectionString("OracleDb");
-        
-        var dbService = new OracleDatabaseService();
+        // 2. Services erstellen
+        UserService userService = new(ConnectionString);
+        OracleDatabaseService dbService = new();
         dbService.InitializeDatabase();
-        
-        QuestionRepository repository = new QuestionRepository(connectionString);
-        List<SortQuestion> sortQuestions = repository.GetAllSortQuestions();
 
-        foreach (SortQuestion sq in sortQuestions)
-        {
-            Console.WriteLine(sq.ToString());
-        }
+        QuestionRepository repository = new(ConnectionString);
 
-        List<OpenQuestion> openQuestions = repository.GetAllOpenQuestions();
-
-        foreach (OpenQuestion oq in openQuestions)
-        {
-            Console.WriteLine(oq.ToString());
-        }
-        
-
+        // Admin erstellen 
+        AdminCreator adminCreator = new(ConnectionString);
+        adminCreator.CreateAdmin("Admin", "admin123", "System");
 
         // SETUP UI
         NavigationStore navigationStore = new NavigationStore();
