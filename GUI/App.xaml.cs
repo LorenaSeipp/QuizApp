@@ -33,7 +33,7 @@ public partial class App : Application
 
         // Admin erstellen 
         AdminCreator adminCreator = new(ConnectionString);
-        adminCreator.CreateAdmin("Admin", "admin123", "System");
+        //adminCreator.CreateAdmin("Admin", "admin123", "System");
 
         // SETUP UI
         NavigationStore navigationStore = new NavigationStore();

@@ -1,33 +1,34 @@
-﻿using QuizApp.Infrastructure;
+﻿using QuizApp.Core;
+using QuizApp.Infrastructure;
 using QuizApp.Stores;
+using QuizApp.ViewModels;
 
-namespace QuizApp.ViewModels
+public class QuizViewModel : BaseViewModel
 {
-    public class QuizViewModel : BaseViewModel
+    private readonly NavigationStore _navigationStore;
+    private readonly QuizManager _quizManager;
+
+    public QuizViewModel(QuizManager quizManager, NavigationStore navigationStore)
     {
-        private readonly NavigationStore _navigationStore;
-        private readonly QuizManager _quizManager;
+        _quizManager = quizManager;
+        _navigationStore = navigationStore;
 
-        public QuizViewModel(QuizManager quizManager, NavigationStore navigationStore)
+        LoadNextQuestion();
+    }
+
+    public void LoadNextQuestion()
+    {
+        IQuestion? nextQuestion = _quizManager.GetNextQuestion();
+        if (nextQuestion == null)
         {
-            _quizManager = quizManager;
-            _navigationStore = navigationStore;
-
-            LoadNextQuestion();
+            // Alle Fragen beantwortet – Navigation zum Score
+            _navigationStore.CurrentViewModel = new ResultViewModel(_quizManager, _navigationStore);
+            return;
         }
 
-        private void LoadNextQuestion()
-        {
-            var nextQuestion = _quizManager.GetNextQuestion();
-            if (nextQuestion == null)
-            {
-                _navigationStore.CurrentViewModel = new ResultViewModel(_quizManager, _navigationStore);
-                return;
-            }
-
-            QuestionViewModel questionVM =
-                QuestionViewModelFactory.Create(nextQuestion, _quizManager, _navigationStore);
-            _navigationStore.CurrentViewModel = questionVM;
-        }
+        // Aktuelle Frage anzeigen
+        QuestionViewModel questionViewModel =
+            QuestionViewModelFactory.Create(nextQuestion, _quizManager, _navigationStore);
+        _navigationStore.CurrentViewModel = questionViewModel;
     }
 }

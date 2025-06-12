@@ -34,69 +34,8 @@ namespace QuizApp.Infrastructure
             return allQuestions;
         }
 
-        public void LoadAllQuestionsByCategory(QuestionRepository repo, string category, int difficulty)
-        {
-            var allQuestions = new List<IQuestion>();
 
-            if (category == "Gemischt")
-            {
-                // Alle Kategorien laden
-                allQuestions.AddRange(repo.GetAllMultipleChoiceQuestions());
-                allQuestions.AddRange(repo.GetAllTrueFalseQuestions());
-                allQuestions.AddRange(repo.GetAllEstimateQuestions());
-                allQuestions.AddRange(repo.GetAllSortQuestions());
-                allQuestions.AddRange(repo.GetAllOpenQuestions());
-            }
-            else
-            {
-                // Nur ausgewählte Kategorie laden
-                switch (category)
-                {
-                    case "Musik":
-                        allQuestions.AddRange(repo.GetMultipleChoiceQuestionsByCategory("Musik"));
-                        allQuestions.AddRange(repo.GetTrueFalseQuestionsByCategory("Musik"));
-                        allQuestions.AddRange(repo.GetEstimateQuestionsByCategory("Musik"));
-                        allQuestions.AddRange(repo.GetSortQuestionsByCategory("Musik"));
-                        allQuestions.AddRange(repo.GetOpenQuestionsByCategory("Musik"));
-                        break;
-                    case "Informatik":
-                        allQuestions.AddRange(repo.GetMultipleChoiceQuestionsByCategory("Informatik"));
-                        allQuestions.AddRange(repo.GetTrueFalseQuestionsByCategory("Informatik"));
-                        allQuestions.AddRange(repo.GetEstimateQuestionsByCategory("Informatik"));
-                        allQuestions.AddRange(repo.GetSortQuestionsByCategory("Informatik"));
-                        allQuestions.AddRange(repo.GetOpenQuestionsByCategory("Informatik"));
-                        break;
-                    case "Geografie":
-                        allQuestions.AddRange(repo.GetMultipleChoiceQuestionsByCategory("Geografie"));
-                        allQuestions.AddRange(repo.GetTrueFalseQuestionsByCategory("Geografie"));
-                        allQuestions.AddRange(repo.GetEstimateQuestionsByCategory("Geografie"));
-                        allQuestions.AddRange(repo.GetSortQuestionsByCategory("Geografie"));
-                        allQuestions.AddRange(repo.GetOpenQuestionsByCategory("Geografie"));
-                        break;
-                    case "Fun-Facts":
-                        allQuestions.AddRange(repo.GetMultipleChoiceQuestionsByCategory("Fun-Facts"));
-                        allQuestions.AddRange(repo.GetTrueFalseQuestionsByCategory("Fun-Facts"));
-                        allQuestions.AddRange(repo.GetEstimateQuestionsByCategory("Fun-Facts"));
-                        allQuestions.AddRange(repo.GetSortQuestionsByCategory("Fun-Facts"));
-                        allQuestions.AddRange(repo.GetOpenQuestionsByCategory("Fun-Facts"));
-                        break;
-                }
-            }
-
-            // Schwierigkeitslevel filtern, wenn nicht Gemischt
-            if (Enum.IsDefined(typeof(QuestionEnums.Difficulty), difficulty))
-            {
-                allQuestions = allQuestions.Where(q => q.Difficulty == (QuestionEnums.Difficulty)difficulty).ToList();
-            }
-
-
-            _allQuestions = allQuestions;
-            _questions = new Stack<IQuestion>(_allQuestions.OrderBy(q => Guid.NewGuid()));
-            Score = 0;
-        }
-
-
-        public void LoadQuestions(QuestionRepository repo, string category, int difficulty)
+        public void LoadQuestions(QuestionRepository repo, string category, QuestionEnums.Difficulty difficulty)
         {
             var allQuestions = new List<IQuestion>();
 

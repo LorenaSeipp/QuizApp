@@ -11,7 +11,6 @@ public class SortQuestionViewModel : QuestionViewModel
     private readonly SortQuestion _question;
     private readonly QuizManager _quizManager;
 
-    // UserSortOrder speichert die aktuelle Reihenfolge der Items (z.B. als Liste)
     private ObservableCollection<string> _userSortOrder;
 
     public SortQuestionViewModel(SortQuestion question, QuizManager quizManager, NavigationStore navigationStore)
@@ -47,6 +46,4 @@ public class SortQuestionViewModel : QuestionViewModel
     }
 
     public string QuestionText => _question.Question;
-
-    // Hier könntest du noch Commands hinzufügen, z.B. SubmitCommand oder ResetCommand
 }

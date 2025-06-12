@@ -34,7 +34,5 @@ namespace QuizApp.ViewModels
                 }
             }
         }
-
-        // Hier ggf. Commands und Logik zum Beantworten hinzufügen
     }
 }
