@@ -1,4 +1,4 @@
-namespace QuizApp.Core;
+using QuizApp.Core;
 
 public class MultipleChoiceQuestion : IQuestion
 {

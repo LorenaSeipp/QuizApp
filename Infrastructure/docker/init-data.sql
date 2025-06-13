@@ -1,3 +1,4 @@
+-- SORT QUESTIONS
 -- Informatik
 DELETE FROM SortQuestion;
 INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4) VALUES

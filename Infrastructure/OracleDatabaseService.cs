@@ -16,18 +16,15 @@ namespace QuizApp.Infrastructure
             "MultipleChoiceQuestion",
             "EstimateQuestion",
             "TrueFalseQuestion",
-            "OpenQuestion"
+            "OpenQuestion",
+            "Admins",
+            "Players",
+            "Users"
         };
 
-        public OracleDatabaseService()
+        public OracleDatabaseService(string _connectionString)
         {
-            IConfigurationBuilder  builder = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
-            IConfiguration config = builder.Build();
-
-            _connectionString = config.GetConnectionString("OracleDb");
+            this._connectionString = _connectionString;
         }
         
         public void InitializeDatabase()
@@ -38,7 +35,7 @@ namespace QuizApp.Infrastructure
                 Console.WriteLine("Database initialized successfully.");
             }
             runSQLScript("init-data.sql");
-            Console.WriteLine("One or more required tables already exist. Skipping initialization.");
+            Console.WriteLine("Data loaded successfully.");
         }
         
         public void runSQLScript(string fileName)
@@ -61,6 +58,11 @@ namespace QuizApp.Infrastructure
             for (int i = 0; i < commands.Length; i++)
             {
                 string commandText = commands[i].Trim();
+                if (commandText.EndsWith(";"))
+                {
+                    commandText = commandText.Substring(0, commandText.Length - 1);
+                }
+
                 if (commandText.Length > 0)
                 {
                     OracleCommand command = new OracleCommand(commandText, connection);
@@ -77,9 +79,10 @@ namespace QuizApp.Infrastructure
             connection.Open();
 
             string inClause = string.Join(",", _requiredTables.Select(t => $"'{t.ToUpper()}'"));
-            string sql = $"SELECT COUNT(*) FROM user_tables WHERE table_name IN ({inClause})";
-            int count = connection.ExecuteScalar<int>(sql);
-            return count > 0;
+            string sql = $"SELECT table_name FROM user_tables WHERE table_name IN ({inClause})";
+            List<string> existingTables = connection.Query<string>(sql).ToList();
+
+            return _requiredTables.All(table => existingTables.Contains(table.ToUpper()));
         }
     }
 }

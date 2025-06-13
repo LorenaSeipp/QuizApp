@@ -142,5 +142,90 @@ public class QuestionRepository : IQuestionRepository
         }
     }
 
-    //TODO Methoden zum Hinzufügen von anderen Fragearten
+    public void AddSortQuestion(SortQuestion question)
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = @"
+            INSERT INTO SortQuestion 
+                (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
+            VALUES 
+                (:Question, :Typ, :Difficulty, :Category, :Place1, :Place2, :Place3, :Place4)";
+
+            db.Execute(sql, new
+            {
+                question.Question,
+                typ = question.Typ.ToString(),
+                question.Difficulty,
+                question.Category,
+                question.Place1,
+                question.Place2,
+                question.Place3,
+                question.Place4
+            });
+        }
+    }
+
+    public void AddEstimateQuestion(EstimateQuestion question)
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = @"
+        INSERT INTO EstimateQuestion 
+            (Question, Typ, Difficulty, Category, RightAnswer)
+        VALUES 
+            (:Question, :Typ, :Difficulty, :Category, :RightAnswer)";
+
+            db.Execute(sql, new
+            {
+                /*question.Question,
+                typ = question.Typ.ToString(),
+                question.Difficulty,
+                question.Category,
+                question.RightAnswer*/
+            });
+        }
+    }
+
+    public void AddTrueFalseQuestion(TrueFalseQuestion question)
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = @"
+        INSERT INTO TrueFalseQuestion 
+            (Question, Typ, Difficulty, Category, TrueFalse)
+        VALUES 
+            (:Question, :Typ, :Difficulty, :Category, :TrueFalse)";
+
+            db.Execute(sql, new
+            {
+                /*question.Question,
+                typ = question.Typ.ToString(),
+                question.Difficulty,
+                question.Category,
+                TrueFalse = question.TrueFalse ? 1 : 0  */
+            });
+        }
+    }
+
+    public void AddOpenQuestion(OpenQuestion question)
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = @"
+        INSERT INTO OpenQuestion 
+            (Question, Typ, Difficulty, Category, Answer)
+        VALUES 
+            (:Question, :Typ, :Difficulty, :Category, :Answer)";
+
+            db.Execute(sql, new
+            {
+                question.Question,
+                typ = question.Typ.ToString(),
+                question.Difficulty,
+                question.Category,
+                question.Answer
+            });
+        }
+    }
 }

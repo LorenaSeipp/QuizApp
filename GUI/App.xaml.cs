@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.Configuration;
+using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
 using QuizApp.ViewModels;
@@ -25,11 +26,12 @@ public partial class App : Application
         ConnectionString = Configuration.GetConnectionString("OracleDb");
 
         // 2. Services erstellen
-        UserService userService = new(ConnectionString);
-        OracleDatabaseService dbService = new();
+        OracleDatabaseService dbService = new(ConnectionString);
         dbService.InitializeDatabase();
-
+        UserService userService = new(ConnectionString);
+        
         QuestionRepository repository = new(ConnectionString);
+        //repository.AddSortQuestion(new SortQuestion("Test", (int)QuestionEnums.Difficulty.leicht, QuestionEnums.Category.FunFacts.ToString(), "1", "2", "3", "4"));
 
         // Admin erstellen 
         AdminCreator adminCreator = new(ConnectionString);
