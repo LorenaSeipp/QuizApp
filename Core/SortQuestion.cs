@@ -2,7 +2,8 @@ namespace QuizApp.Core;
 
 public class SortQuestion : IQuestion
 {
-    public SortQuestion(string question, int difficulty, string category, string place1, string place2, string place3, string place4)
+    public SortQuestion(string question, int difficulty, string category, string place1, string place2, string place3,
+        string place4)
     {
         Question = question;
         Difficulty = difficulty;
@@ -11,6 +12,10 @@ public class SortQuestion : IQuestion
         Place2 = place2;
         Place3 = place3;
         Place4 = place4;
+    }
+
+    public SortQuestion()
+    {
     }
 
     public int Id { get; set; }
