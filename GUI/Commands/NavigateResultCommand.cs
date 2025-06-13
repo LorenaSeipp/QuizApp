@@ -9,14 +9,15 @@ namespace QuizApp.Commands
         private readonly NavigationStore _navigationStore;
         private readonly QuizManager _quizManager;
 
-        public NavigateResultCommand(NavigationStore navigationStore)
+        public NavigateResultCommand(NavigationStore navigationStore, QuizManager quizManager)
         {
+            _navigationStore = navigationStore;
             _navigationStore = navigationStore;
         }
 
         public override void Execute(object parameter)
         {
-            _navigationStore.CurrentViewModel = new ResultViewModel(_quizManager, _navigationStore);
+            _navigationStore.CurrentViewModel = new ResultViewModel(_navigationStore, _quizManager);
         }
     }
 }

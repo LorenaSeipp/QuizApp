@@ -28,6 +28,6 @@ public class NavigateQuizCommand : ICommand
         _quizManager.LoadQuestions(repo, _quizManager.Category, _quizManager.Difficulty);
 
         // Navigation starten
-        _navigationStore.CurrentViewModel = new QuizViewModel(_quizManager, _navigationStore);
+        _navigationStore.CurrentViewModel = new QuizViewModel(_navigationStore, _quizManager);
     }
 }

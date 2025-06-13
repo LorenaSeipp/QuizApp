@@ -7,9 +7,11 @@ namespace QuizApp.Commands
     internal class NavigateSettingsCommand : CommandBase
     {
         private readonly NavigationStore _navigationStore;
+        private readonly QuizManager _quizManager;
 
-        public NavigateSettingsCommand(NavigationStore navigationStore)
+        public NavigateSettingsCommand(NavigationStore navigationStore, QuizManager quizManager)
         {
+            _quizManager = quizManager;
             _navigationStore = navigationStore;
         }
 
@@ -18,7 +20,7 @@ namespace QuizApp.Commands
             QuizManager quizManager = new QuizManager(App.ConnectionString)
             {
             };
-            _navigationStore.CurrentViewModel = new SettingsViewModel(quizManager, _navigationStore);
+            _navigationStore.CurrentViewModel = new SettingsViewModel(_navigationStore, _quizManager);
         }
     }
 }

@@ -14,8 +14,8 @@ namespace QuizApp.GUI.ViewModels
         private readonly QuizManager _quizManager;
         private bool? _userAnswer;
 
-        public TrueFalseQuestionViewModel(TrueFalseQuestion question, QuizManager quizManager,
-            NavigationStore navigationStore)
+        public TrueFalseQuestionViewModel(TrueFalseQuestion question,
+            NavigationStore navigationStore, QuizManager quizManager)
         {
             _question = question;
             _quizManager = quizManager;
@@ -47,7 +47,7 @@ namespace QuizApp.GUI.ViewModels
         {
             if (UserAnswer.HasValue) _quizManager.SubmitAnswer(_question, UserAnswer.Value);
 
-            QuizViewModel quizViewModel = new(_quizManager, _navigationStore);
+            QuizViewModel quizViewModel = new(_navigationStore, _quizManager);
             _navigationStore.CurrentViewModel = quizViewModel;
         }
 

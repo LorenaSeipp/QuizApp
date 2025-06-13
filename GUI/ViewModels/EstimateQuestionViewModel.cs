@@ -14,8 +14,7 @@ namespace QuizApp.GUI.ViewModels
 
         private int? _userAnswer;
 
-        public EstimateQuestionViewModel(EstimateQuestion question, QuizManager quizManager,
-            NavigationStore navigationStore)
+        public EstimateQuestionViewModel(EstimateQuestion question, NavigationStore navigationStore, QuizManager quizManager)
         {
             _question = question;
             _quizManager = quizManager;
@@ -53,7 +52,7 @@ namespace QuizApp.GUI.ViewModels
         {
             _quizManager.SubmitAnswer(_question, SelectedAnswer ?? string.Empty);
 
-            QuizViewModel quizViewModel = new(_quizManager, _navigationStore);
+            QuizViewModel quizViewModel = new(_navigationStore, _quizManager);
             _navigationStore.CurrentViewModel = quizViewModel;
         }
 

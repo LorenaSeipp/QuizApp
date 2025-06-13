@@ -14,7 +14,7 @@ public class SortQuestionViewModel : QuestionViewModel
 
     private ObservableCollection<string> _userSortOrder;
 
-    public SortQuestionViewModel(SortQuestion question, QuizManager quizManager, NavigationStore navigationStore)
+    public SortQuestionViewModel(SortQuestion question, NavigationStore navigationStore,  QuizManager quizManager)
     {
         _question = question;
         _quizManager = quizManager;

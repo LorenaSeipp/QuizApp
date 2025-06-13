@@ -13,7 +13,7 @@ namespace QuizApp.GUI.ViewModels
 
         private string _userAnswer;
 
-        public OpenQuestionViewModel(OpenQuestion question, QuizManager quizManager, NavigationStore navigationStore)
+        public OpenQuestionViewModel(OpenQuestion question, NavigationStore navigationStore, QuizManager quizManager)
         {
             _question = question;
             _quizManager = quizManager;

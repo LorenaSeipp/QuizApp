@@ -16,7 +16,7 @@ namespace QuizApp.ViewModels
 
         private string _selectedDifficulty;
 
-        public SettingsViewModel(QuizManager quizManager, NavigationStore navigationStore)
+        public SettingsViewModel(NavigationStore navigationStore, QuizManager quizManager)
         {
             _quizManager = quizManager;
             _navigationStore = navigationStore;

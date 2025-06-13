@@ -6,15 +6,15 @@ using QuizApp.ViewModels;
 
 public static class QuestionViewModelFactory
 {
-    public static QuestionViewModel Create(object question, QuizManager quizManager, NavigationStore navigationStore)
+    public static QuestionViewModel Create(object question, NavigationStore navigationStore, QuizManager quizManager)
     {
         return question switch
         {
-            MultipleChoiceQuestion mcq => new MultipleChoiceQuestionViewModel(mcq, quizManager, navigationStore),
-            TrueFalseQuestion tfq => new TrueFalseQuestionViewModel(tfq, quizManager, navigationStore),
-            EstimateQuestion eq => new EstimateQuestionViewModel(eq, quizManager, navigationStore),
-            SortQuestion sq => new SortQuestionViewModel(sq, quizManager, navigationStore),
-            OpenQuestion oq => new OpenQuestionViewModel(oq, quizManager, navigationStore),
+            MultipleChoiceQuestion mcq => new MultipleChoiceQuestionViewModel(mcq, navigationStore, quizManager),
+            TrueFalseQuestion tfq => new TrueFalseQuestionViewModel(tfq, navigationStore, quizManager),
+            EstimateQuestion eq => new EstimateQuestionViewModel(eq, navigationStore, quizManager),
+            SortQuestion sq => new SortQuestionViewModel(sq, navigationStore, quizManager),
+            OpenQuestion oq => new OpenQuestionViewModel(oq, navigationStore, quizManager),
             _ => throw new ArgumentException("Unbekannter Fragetyp")
         };
     }

@@ -50,38 +50,11 @@ namespace QuizApp.Infrastructure
             }
             else
             {
-                // Nur ausgewählte Kategorie laden
-                switch (category)
-                {
-                    case "Musik":
-                        allQuestions.AddRange(repo.GetMultipleChoiceQuestionsByCategory("Musik"));
-                        allQuestions.AddRange(repo.GetTrueFalseQuestionsByCategory("Musik"));
-                        allQuestions.AddRange(repo.GetEstimateQuestionsByCategory("Musik"));
-                        allQuestions.AddRange(repo.GetSortQuestionsByCategory("Musik"));
-                        allQuestions.AddRange(repo.GetOpenQuestionsByCategory("Musik"));
-                        break;
-                    case "Informatik":
-                        allQuestions.AddRange(repo.GetMultipleChoiceQuestionsByCategory("Informatik"));
-                        allQuestions.AddRange(repo.GetTrueFalseQuestionsByCategory("Informatik"));
-                        allQuestions.AddRange(repo.GetEstimateQuestionsByCategory("Informatik"));
-                        allQuestions.AddRange(repo.GetSortQuestionsByCategory("Informatik"));
-                        allQuestions.AddRange(repo.GetOpenQuestionsByCategory("Informatik"));
-                        break;
-                    case "Geografie":
-                        allQuestions.AddRange(repo.GetMultipleChoiceQuestionsByCategory("Geografie"));
-                        allQuestions.AddRange(repo.GetTrueFalseQuestionsByCategory("Geografie"));
-                        allQuestions.AddRange(repo.GetEstimateQuestionsByCategory("Geografie"));
-                        allQuestions.AddRange(repo.GetSortQuestionsByCategory("Geografie"));
-                        allQuestions.AddRange(repo.GetOpenQuestionsByCategory("Geografie"));
-                        break;
-                    case "Fun-Facts":
-                        allQuestions.AddRange(repo.GetMultipleChoiceQuestionsByCategory("Fun-Facts"));
-                        allQuestions.AddRange(repo.GetTrueFalseQuestionsByCategory("Fun-Facts"));
-                        allQuestions.AddRange(repo.GetEstimateQuestionsByCategory("Fun-Facts"));
-                        allQuestions.AddRange(repo.GetSortQuestionsByCategory("Fun-Facts"));
-                        allQuestions.AddRange(repo.GetOpenQuestionsByCategory("Fun-Facts"));
-                        break;
-                }
+                allQuestions.AddRange(repo.GetMultipleChoiceQuestionsByCategory(category));
+                allQuestions.AddRange(repo.GetTrueFalseQuestionsByCategory(category));
+                allQuestions.AddRange(repo.GetEstimateQuestionsByCategory(category));
+                allQuestions.AddRange(repo.GetSortQuestionsByCategory(category));
+                allQuestions.AddRange(repo.GetOpenQuestionsByCategory(category));
             }
 
             // Schwierigkeitslevel filtern, wenn nicht Gemischt

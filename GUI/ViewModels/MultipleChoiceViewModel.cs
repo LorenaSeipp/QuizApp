@@ -15,8 +15,7 @@ public class MultipleChoiceQuestionViewModel : QuestionViewModel
 
     private string _selectedAnswer;
 
-    public MultipleChoiceQuestionViewModel(MultipleChoiceQuestion question, QuizManager quizManager,
-        NavigationStore navigationStore)
+    public MultipleChoiceQuestionViewModel(MultipleChoiceQuestion question, NavigationStore navigationStore, QuizManager quizManager)
     {
         _question = question;
         _quizManager = quizManager;
@@ -49,6 +48,6 @@ public class MultipleChoiceQuestionViewModel : QuestionViewModel
     private void SubmitAnswer()
     {
         _quizManager.SubmitAnswer(_question, SelectedAnswer);
-        _navigationStore.CurrentViewModel = new QuizViewModel(_quizManager, _navigationStore);
+        _navigationStore.CurrentViewModel = new QuizViewModel(_navigationStore, _quizManager);
     }
 }

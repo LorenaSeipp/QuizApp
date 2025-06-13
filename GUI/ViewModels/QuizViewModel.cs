@@ -10,7 +10,7 @@ public class QuizViewModel : BaseViewModel
 
     private QuestionViewModel? _currentQuestion;
 
-    public QuizViewModel(QuizManager quizManager, NavigationStore navigationStore)
+    public QuizViewModel(NavigationStore navigationStore, QuizManager quizManager)
     {
         _quizManager = quizManager;
         _navigationStore = navigationStore;
@@ -34,10 +34,10 @@ public class QuizViewModel : BaseViewModel
 
         if (nextQuestion == null)
         {
-            _navigationStore.CurrentViewModel = new ResultViewModel(_quizManager, _navigationStore);
+            _navigationStore.CurrentViewModel = new ResultViewModel(_navigationStore, _quizManager);
             return;
         }
 
-        CurrentQuestion = QuestionViewModelFactory.Create(nextQuestion, _quizManager, _navigationStore);
+        CurrentQuestion = QuestionViewModelFactory.Create(nextQuestion, _navigationStore, _quizManager);
     }
 }
