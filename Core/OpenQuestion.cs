@@ -1,6 +1,4 @@
-namespace QuizApp.Core;
-
-public class OpenQuestion
+namespace QuizApp.Core
 {
     public int Id { get; set; }
     public string Question { get; set; }

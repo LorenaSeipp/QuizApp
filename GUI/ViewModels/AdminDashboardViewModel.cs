@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Input;
 using QuizApp.Commands;
 using QuizApp.Core;
+using QuizApp.Infrastructure;
 using QuizApp.Logic;
 
 namespace QuizApp.ViewModels;
@@ -9,6 +10,7 @@ namespace QuizApp.ViewModels;
 public class AdminDashboardViewModel : BaseViewModel
 {
     private readonly QuestionService _questionService;
+    private readonly QuizManager _quizManager;
 
     private int _difficulty;
 
@@ -17,8 +19,9 @@ public class AdminDashboardViewModel : BaseViewModel
     // TrueFalse Property
     private string _trueFalseAnswer;
 
-    public AdminDashboardViewModel(string connectionString)
+    public AdminDashboardViewModel(string connectionString, QuizManager quizManager)
     {
+        _quizManager = quizManager;
         _questionService = new QuestionService(connectionString);
         SaveQuestionCommand = new RelayCommand(SaveQuestion, CanSaveQuestion);
     }

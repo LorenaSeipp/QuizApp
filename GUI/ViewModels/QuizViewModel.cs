@@ -1,21 +1,43 @@
-﻿using QuizApp.Commands;
-using QuizApp.Stores;
+﻿using QuizApp.Core;
 using QuizApp.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+using QuizApp.Stores;
+using QuizApp.ViewModels;
 
-namespace QuizApp.ViewModels
+public class QuizViewModel : BaseViewModel
 {
-    public class QuizViewModel : BaseViewModel
+    private readonly NavigationStore _navigationStore;
+    private readonly QuizManager _quizManager;
+
+    private QuestionViewModel? _currentQuestion;
+
+    public QuizViewModel(NavigationStore navigationStore, QuizManager quizManager)
     {
-        public ICommand NavigateResultCommand{ get; }
-        public QuizViewModel(QuizManager quizManager, NavigationStore navigationStore) 
+        _quizManager = quizManager;
+        _navigationStore = navigationStore;
+
+        LoadNextQuestion();
+    }
+
+    public QuestionViewModel? CurrentQuestion
+    {
+        get => _currentQuestion;
+        set
         {
-            NavigateResultCommand= new NavigateResultCommand(navigationStore);
+            _currentQuestion = value;
+            OnPropertyChanged();
         }
+    }
+
+    public void LoadNextQuestion()
+    {
+        IQuestion? nextQuestion = _quizManager.GetNextQuestion();
+
+        if (nextQuestion == null)
+        {
+            _navigationStore.CurrentViewModel = new ResultViewModel(_navigationStore, _quizManager);
+            return;
+        }
+
+        CurrentQuestion = QuestionViewModelFactory.Create(nextQuestion, _navigationStore, _quizManager);
     }
 }

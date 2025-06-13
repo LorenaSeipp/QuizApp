@@ -1,15 +1,20 @@
 ﻿using System.Windows.Input;
 using QuizApp.Commands;
+using QuizApp.Infrastructure;
 using QuizApp.Stores;
 
 namespace QuizApp.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {
-        public HomeViewModel(NavigationStore navigationStore)
+        private readonly NavigationStore _navigationStore;
+        private readonly QuizManager _quizManager;
+        public HomeViewModel(NavigationStore navigationStore, QuizManager quizManager)
         {
-            NavigateSettingsCommand = new NavigateSettingsCommand(navigationStore);
-            NavigateUserLoginCommand = new NavigateUserLoginCommand(navigationStore);
+            _navigationStore = navigationStore;
+            _quizManager = quizManager;
+            NavigateSettingsCommand = new NavigateSettingsCommand(_navigationStore, _quizManager);
+            NavigateUserLoginCommand = new NavigateUserLoginCommand(_navigationStore, _quizManager);
             QuitCommand = new QuitCommand();
         }
 

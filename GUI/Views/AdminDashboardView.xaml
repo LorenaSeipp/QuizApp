@@ -27,7 +27,7 @@
                 <ComboBoxItem Content="Fun-Facts" />
             </ComboBox>
 
-            <TextBlock Text="Schwierigkeitsgrad (0=leicht,1=mittel,2=schwer):" />
+            <TextBlock Text="Schwierigkeitsgrad:" />
             <ComboBox Width="100" Margin="0,0,0,10"
                       SelectedValue="{Binding Difficulty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       SelectedValuePath="Content">

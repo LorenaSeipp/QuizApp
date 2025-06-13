@@ -1,37 +1,53 @@
 using System.Windows.Input;
 using QuizApp.Commands;
+using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
+using QuizApp.ViewModels;
 
-namespace QuizApp.ViewModels;
+namespace QuizApp.GUI.ViewModels;
 
-public class MultipleChoiceQuestionViewModel : BaseViewModel
+public class MultipleChoiceQuestionViewModel : QuestionViewModel
 {
     private readonly NavigationStore _navigationStore;
-
+    private readonly MultipleChoiceQuestion _question;
     private readonly QuizManager _quizManager;
 
-    public MultipleChoiceQuestionViewModel(MultipleChoiceQuestion question, QuizManager quizManager,
-        NavigationStore navigationStore)
+    private string _selectedAnswer;
+
+    public MultipleChoiceQuestionViewModel(MultipleChoiceQuestion question, NavigationStore navigationStore, QuizManager quizManager)
     {
+        _question = question;
+        _quizManager = quizManager;
+        _navigationStore = navigationStore;
+
         QuestionText = question.Question;
         Answers = new List<string>
             { question.CorrectAnswer, question.FalseAnswer1, question.FalseAnswer2, question.FalseAnswer3 };
         Answers = Answers.OrderBy(_ => Guid.NewGuid()).ToList();
-        _quizManager = quizManager;
-        _navigationStore = navigationStore;
 
-        SubmitAnswerCommand = new RelayCommand(SubmitAnswer);
+        SubmitAnswerCommand = new RelayCommand(SubmitAnswer, () => !string.IsNullOrEmpty(SelectedAnswer));
     }
 
     public string QuestionText { get; }
     public List<string> Answers { get; }
 
+    public string SelectedAnswer
+    {
+        get => _selectedAnswer;
+        set
+        {
+            _selectedAnswer = value;
+            OnPropertyChanged();
+            CommandManager.InvalidateRequerySuggested();
+        }
+    }
+
     public ICommand SubmitAnswerCommand { get; }
 
     private void SubmitAnswer()
     {
-        //TODO auf SubmitAnswer des QuizManager zugreifen. Warte auf Implementierung 
-        _navigationStore.CurrentViewModel = new QuizViewModel(_quizManager, _navigationStore);
+        _quizManager.SubmitAnswer(_question, SelectedAnswer);
+        _navigationStore.CurrentViewModel = new QuizViewModel(_navigationStore, _quizManager);
     }
 }
