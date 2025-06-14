@@ -90,9 +90,6 @@ namespace QuizApp.Infrastructure
                 _ => false
             };
 
-            OpenQuestion test = (OpenQuestion)question;
-            bool test_b = test.Answer.Trim().ToLower().Split(",").Contains(userAnswer.ToString()?.Trim().ToLower());
-
             if (isCorrect)
             {
                 Score++;
