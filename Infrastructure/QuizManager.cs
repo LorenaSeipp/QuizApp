@@ -82,10 +82,10 @@ namespace QuizApp.Infrastructure
             bool isCorrect = question switch
             {
                 MultipleChoiceQuestion mcq => mcq.CorrectAnswer.Equals(userAnswer),
-                TrueFalseQuestion tfq => tfq.IsTrue == (bool)userAnswer,
+                TrueFalseQuestion tfq => tfq.IsTrue() == (bool)userAnswer,
                 EstimateQuestion eq => Math.Abs(eq.CorrectValue - (int)userAnswer) <= eq.AllowedMargin,
-                OpenQuestion oq => oq.Answer.Trim()
-                    .Equals(userAnswer.ToString()?.Trim(), StringComparison.OrdinalIgnoreCase),
+                OpenQuestion oq => oq.Answer.Trim().ToLower().Split(",")
+                    .Contains(userAnswer.ToString()?.Trim().ToLower()),
                 SortQuestion sq => sq.CorrectOrder.SequenceEqual((List<string>)userAnswer),
                 _ => false
             };

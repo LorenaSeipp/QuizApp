@@ -38,7 +38,6 @@ namespace QuizApp.GUI.ViewModels
                 }
             }
         }
-        //TODO SubmitAnswer -> Button und Logik zur Überprüfung der Antwort 
         public ICommand SubmitAnswerCommand { get; }
         public void SubmitAnswer()
         {
