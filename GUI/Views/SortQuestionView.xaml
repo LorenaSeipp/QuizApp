@@ -1,79 +1,143 @@
 <UserControl x:Class="QuizApp.Views.SortQuestionView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Background="#FF1A1A40">
+             Background="#FF1A1A40"
+             MinWidth="400" MinHeight="500">
     <Grid>
         <Border CornerRadius="15"
                 Background="#FF1A1A40"
-                Padding="40"
+                Padding="20"
                 MaxHeight="800"
                 MaxWidth="1200"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Center">
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                VerticalAlignment="Top">
+            <Grid Width="400">
+                <Grid.RowDefinitions >
+                    <RowDefinition Height="Auto"/>       <!-- Frage -->
+                    <RowDefinition Height="*"/>          <!-- Antworten -->
+                    <RowDefinition Height="Auto"/>       <!-- Buttons für Verschieben -->
+                    <RowDefinition Height="Auto"/>       <!-- Antworten Button -->
+                </Grid.RowDefinitions>
 
                 <!-- Frage -->
                 <TextBlock Text="{Binding QuestionText}"
-                           FontSize="26"
-                           FontWeight="Bold"
+                           FontSize="18"
+                           FontWeight="Normal"
                            Foreground="White"
                            TextWrapping="Wrap"
-                           TextAlignment="Center" />
+                           TextAlignment="Left"
+                           Grid.Row="0" />
 
-                <!-- Sortierbare Antworten -->
-                <ItemsControl ItemsSource="{Binding ObservableCollection}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="2"
-                                    Margin="0,5"
-                                    Padding="5"
-                                    CornerRadius="5">
-                                <Border.Style>
-                                    <Style TargetType="Border">
-                                        <Setter Property="BorderBrush" Value="Transparent"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsCorrect}" Value="True">
-                                                <Setter Property="BorderBrush" Value="Green"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsCorrect}" Value="False">
-                                                <Setter Property="BorderBrush" Value="Red"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
+                <!-- Antworten -->
+                <ListBox ItemsSource="{Binding ObservableCollection}"
+                         SelectedItem="{Binding SelectedAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         DisplayMemberPath="QuestionText"
+                         Margin="0,20,0,0"
+                         Background="Transparent"
+                         Foreground="White"
+                         BorderThickness="0"
+                         Grid.Row="1"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         MaxHeight="300">  <!-- max Höhe, damit scrollbar -->
 
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding QuestionText}"
-                                               FontSize="18"
-                                               Foreground="White"
-                                               Width="300"
-                                               VerticalAlignment="Center" />
-                                    <Button Content="↑"
-                                            Command="{Binding DataContext.MoveAnswerUpCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Margin="10,0"
-                                            Width="30"/>
-                                    <Button Content="↓"
-                                            Command="{Binding DataContext.MoveAnswerDownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Width="30"/>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Margin" Value="0,5"/>
+                            <Setter Property="Padding" Value="10"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+                            <Setter Property="Background" Value="#333355"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
 
-                <!-- Submit Button -->
-                <Button Content="Antwort einreichen"
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsCorrect}" Value="True">
+                                    <Setter Property="BorderBrush" Value="Green"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsCorrect}" Value="False">
+                                    <Setter Property="BorderBrush" Value="Red"/>
+                                </DataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True"/>
+                                        <Condition Binding="{Binding DataContext.HasAnswered, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="BorderBrush" Value="Yellow"/>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+
+                <!-- Buttons für Verschieben -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0" Grid.Row="2">
+                    <Button Content="↑"
+                            Command="{Binding MoveAnswerUpCommand}"
+                            CommandParameter="{Binding SelectedAnswer}"
+                            Width="70"
+                            Height="30"
+                            FontSize="20"
+                            Margin="5,0" />
+                    <Button Content="↓"
+                            Command="{Binding MoveAnswerDownCommand}"
+                            CommandParameter="{Binding SelectedAnswer}"
+                            Width="70"
+                            Height="30"
+                            FontSize="20"
+                            Margin="5,0" />
+                </StackPanel>
+
+                <!-- Antworten Button -->
+                <Button Content="Antworten"
                         Command="{Binding CheckAnswerCommand}"
-                        Background="#009688"
-                        Foreground="White"
                         FontWeight="Bold"
-                        Padding="12"
+                        FontSize="16"
+                        Height="40"
                         Margin="0,20,0,0"
+                        Foreground="White"
+                        BorderThickness="0"
                         Cursor="Hand"
-                        BorderThickness="0" />
-            </StackPanel>
+                        Grid.Row="3">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#009688"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border"
+                                                Background="{TemplateBinding Background}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                BorderBrush="{TemplateBinding BorderBrush}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="border" Property="Background" Value="Gray"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Cursor" Value="Arrow"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+            </Grid>
         </Border>
     </Grid>
 </UserControl>
