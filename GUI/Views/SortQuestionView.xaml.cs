@@ -2,7 +2,7 @@ using System.Windows.Controls;
 
 namespace QuizApp.Views;
 
-public partial class SortQuestionView : Page
+public partial class SortQuestionView : UserControl
 {
     public SortQuestionView()
     {

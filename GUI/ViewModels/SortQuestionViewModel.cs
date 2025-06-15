@@ -3,80 +3,130 @@ using System.Windows.Input;
 using QuizApp.Commands;
 using QuizApp.Core;
 using QuizApp.Core.exceptions;
-
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 namespace QuizApp.ViewModels;
 
-public class SortQuestionViewModel : BaseViewModel
+public partial class SortQuestionViewModel : BaseViewModel
 {
-    SortQuestion sortQuestion {get; set;}
-    string currentItem {get; set;}
+    public class SortQuestionAnswer : ObservableObject
+    {
+        public string QuestionText { get; set; }
 
-    private ObservableCollection<string> answersShuffled;
-    private string[] answersInCorrectOrder;
-    public ICommand MoveUpCommand => new RelayCommand(() => MoveAnswerUp(currentItem));
-    public ICommand MoveDownCommand => new RelayCommand(() => MoveAnswerDown(currentItem));
+        private bool? _isCorrect = false;
+        public bool? IsCorrect
+        {
+            get => _isCorrect;
+            set => SetProperty(ref _isCorrect, value);
+        }
+    }
+    
+    private bool _hasAnswered = false;
+    public bool HasAnswered
+    {
+        get => _hasAnswered;
+        set
+        {
+            if (_hasAnswered != value)
+            {
+                _hasAnswered = value;
+                OnPropertyChanged(nameof(HasAnswered));
+            }
+        }
+    }
+
+    SortQuestion sortQuestion {get; set;}
+    public string QuestionText => sortQuestion.Question;
+    public ObservableCollection<SortQuestionAnswer> ObservableCollection { get; set; }
+    private readonly SortQuestionAnswer[] answersInCorrectOrder;
     
     public SortQuestionViewModel(SortQuestion sortQuestion)
     {
         this.sortQuestion = sortQuestion;
         answersInCorrectOrder = new []{
-            sortQuestion.Place1,
-            sortQuestion.Place2,
-            sortQuestion.Place3,
-            sortQuestion.Place4
+            new SortQuestionAnswer { QuestionText = sortQuestion.Place1 },
+            new SortQuestionAnswer { QuestionText  = sortQuestion.Place2 },
+            new SortQuestionAnswer { QuestionText  = sortQuestion.Place3 },
+            new SortQuestionAnswer { QuestionText  = sortQuestion.Place4 }
         };
-        answersShuffled = new ObservableCollection<string>(ShuffleAnswers(answersInCorrectOrder));
+        SortQuestionAnswer[] answersInWrongOrder = ShuffleAnswers(answersInCorrectOrder);
+        ObservableCollection = new ObservableCollection<SortQuestionAnswer>(answersInWrongOrder);
     }
 
-    public void MoveAnswerUp(string answer)
+    private bool CanMoveAnswerUp(SortQuestionAnswer answer)
     {
-        currentItem = answer;
-        int indexOfAnswer = answersShuffled.IndexOf(answer);
+        if (HasAnswered) return false;
+        int index = ObservableCollection.IndexOf(answer);
+        return index > 0;
+    }
+
+    private bool CanMoveAnswerDown(SortQuestionAnswer answer)
+    {
+        if (HasAnswered) return false;
+        int index = ObservableCollection.IndexOf(answer);
+        return index < ObservableCollection.Count - 1;
+    }
+    private void NotifyCommands()
+    {
+        MoveAnswerUpCommand.NotifyCanExecuteChanged();
+        MoveAnswerDownCommand.NotifyCanExecuteChanged();
+    }
+    
+    [RelayCommand(CanExecute = nameof(CanMoveAnswerUp))]
+    public void MoveAnswerUp(SortQuestionAnswer answer)
+    {
+        int indexOfAnswer = ObservableCollection.IndexOf(answer);
         if (indexOfAnswer - 1 < 0)
         {
             throw new InvalidMoveException("Das Element kann nicht nach oben verschoben werden.");
         }
-        string temp = answersShuffled[indexOfAnswer-1];
-        answersShuffled[indexOfAnswer-1] = answer;
-        answersShuffled[indexOfAnswer] = temp;
+        ObservableCollection.Move(indexOfAnswer, indexOfAnswer - 1);
+        NotifyCommands();
     }
     
-    public void MoveAnswerDown(string answer)
+    
+    [RelayCommand(CanExecute = nameof(CanMoveAnswerDown))]
+    public void MoveAnswerDown(SortQuestionAnswer answer)
     {
-        currentItem = answer;
-        int indexOfAnswer = answersShuffled.IndexOf(answer);
-        if (indexOfAnswer + 1 > 3)
+        int indexOfAnswer = ObservableCollection.IndexOf(answer);
+        /*if (indexOfAnswer + 1 > 3)
         {
             throw new InvalidMoveException("Das Element kann nicht nach unten verschoben werden.");
-        }
-        string temp = answersShuffled[indexOfAnswer+1];
-        answersShuffled[indexOfAnswer+1] = answer;
-        answersShuffled[indexOfAnswer] = temp;
+        }*/
+        ObservableCollection.Move(indexOfAnswer, indexOfAnswer + 1);
+        NotifyCommands();
     }
 
-    public string[] ShuffleAnswers(string[] array)
+    public SortQuestionAnswer[] ShuffleAnswers(SortQuestionAnswer[] array)
     {
         Random random = new Random();
         for (int i = array.Length - 1; i > 0; i--)
         {
             //von 0 bis einschließlich i
             int j = random.Next(i + 1); 
-            string temp = array[i];
+            SortQuestionAnswer temp = array[i];
             array[i] = array[j];
             array[j] = temp;
         }
         return array;
     }
 
-    public bool isRightOrder()
+    private bool CanCheckAnswer()
     {
-        for (int i = 0; i < answersShuffled.Count; i++)
+        return !HasAnswered; 
+    }
+    
+    [RelayCommand(CanExecute = nameof(CanCheckAnswer))]
+    public void CheckAnswer()
+    {
+        if (CanCheckAnswer())
         {
-            if (answersShuffled[i] != answersInCorrectOrder[i])
+            for (int i = 0; i < ObservableCollection.Count; i++)
             {
-                return false;
+                ObservableCollection[i].IsCorrect = ObservableCollection[i].QuestionText == answersInCorrectOrder[i].QuestionText;   
             }
+            HasAnswered = true;
+            CheckAnswerCommand.NotifyCanExecuteChanged();
         }
-        return true;
     }
 }
