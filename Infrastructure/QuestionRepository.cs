@@ -65,6 +65,57 @@ public class QuestionRepository : IQuestionRepository
         }
     }
 
+    public List<MultipleChoiceQuestion> GetMultipleChoiceQuestionsByCategory(string category)
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = "SELECT * FROM MultipleChoiceQuestion WHERE Category = @Category";
+            List<MultipleChoiceQuestion> questions = db.Query<MultipleChoiceQuestion>(sql).AsList();
+            return questions;
+        }
+    }
+
+    public List<OpenQuestion> GetOpenQuestionsByCategory(string category)
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = "SELECT * FROM OpenQuestion WHERE Category = @Category";
+            List<OpenQuestion> questions = db.Query<OpenQuestion>(sql).AsList();
+            return questions;
+        }
+    }
+
+    public List<EstimateQuestion> GetEstimateQuestionsByCategory(string category)
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = "SELECT * FROM EstimateQuestion WHERE Category = @Category";
+            List<EstimateQuestion> questions = db.Query<EstimateQuestion>(sql).AsList();
+            return questions;
+        }
+    }
+
+    public List<TrueFalseQuestion> GetTrueFalseQuestionsByCategory(string category)
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = "SELECT * FROM TrueFalseQuestion WHERE Category = @Category";
+            List<TrueFalseQuestion> questions = db.Query<TrueFalseQuestion>(sql).AsList();
+            return questions;
+        }
+    }
+
+    public List<SortQuestion> GetSortQuestionsByCategory(string category)
+    {
+        using (IDbConnection db = new OracleConnection(_connectionString))
+        {
+            string sql = "SELECT * FROM SortQuestion WHERE Category = @Category";
+            List<SortQuestion> questions = db.Query<SortQuestion>(sql).AsList();
+            return questions;
+        }
+    }
+
+
     // Methode zum Hinzufügen einer Multiple-Choice-Frage
     public void AddMultipleChoiceQuestion(MultipleChoiceQuestion question)
     {

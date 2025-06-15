@@ -14,17 +14,18 @@ public class UserLoginViewModel : BaseViewModel
     private readonly NavigationStore _navigationStore;
     private readonly UserService _userService;
     private string _password;
-    private QuizManager _quizmanager;
+    private readonly QuizManager _quizManager;
     private string _username;
 
-    public UserLoginViewModel(NavigationStore navigationStore)
+    public UserLoginViewModel(NavigationStore navigationStore, QuizManager quizManager)
     {
+        _quizManager = quizManager;
         _navigationStore = navigationStore;
         LoginCommand = new RelayCommand(LoginUser);
         _userService = new UserService(App.ConnectionString);
         LoginCommand = new RelayCommand(LoginUser);
         RegisterPlayerCommand = new RelayCommand(RegisterPlayer);
-        NavigateSettingsCommand = new NavigateSettingsCommand(navigationStore);
+        NavigateSettingsCommand = new NavigateSettingsCommand(_navigationStore, _quizManager);
         QuitCommand = new QuitCommand();
     }
 
@@ -64,11 +65,11 @@ public class UserLoginViewModel : BaseViewModel
         {
             if (user.Role == UserRole.Admin)
             {
-                _navigationStore.CurrentViewModel = new AdminDashboardViewModel(App.ConnectionString);
+                _navigationStore.CurrentViewModel = new AdminDashboardViewModel(App.ConnectionString, _quizManager);
             }
             else if (user.Role == UserRole.Player)
             {
-                _navigationStore.CurrentViewModel = new SettingsViewModel(_quizmanager, _navigationStore);
+                _navigationStore.CurrentViewModel = new SettingsViewModel(_navigationStore, _quizManager);
             }
         }
         else

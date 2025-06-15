@@ -15,6 +15,10 @@ public class MultipleChoiceQuestion : IQuestion
         FalseAnswer3 = falseAnswer3;
     }
 
+    public MultipleChoiceQuestion()
+    {
+    }
+
     public int Id { get; set; }
     public string Question { get; set; }
     public QuestionEnums.QuestionTyp Typ { get; set; }

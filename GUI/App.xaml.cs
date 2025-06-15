@@ -33,14 +33,17 @@ public partial class App : Application
         
         // Admin erstellen 
         AdminCreator adminCreator = new(ConnectionString);
-        adminCreator.CreateAdmin("Admin", "admin123", "System");
-        
+        //adminCreator.CreateAdmin("Admin", "admin123", "System");
+
         // SETUP UI
+        
+        QuizManager quizManager = new(ConnectionString);
+        
         NavigationStore navigationStore = new NavigationStore();
-        navigationStore.CurrentViewModel = new HomeViewModel(navigationStore);
+        navigationStore.CurrentViewModel = new HomeViewModel(navigationStore, quizManager);
         MainWindow = new MainWindow()
         {
-            DataContext = new MainViewModel(navigationStore)
+            DataContext = new MainViewModel(navigationStore, quizManager)
         };
         MainWindow.Show();
         base.OnStartup(e);
