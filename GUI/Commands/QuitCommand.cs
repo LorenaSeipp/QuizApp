@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Meilenstein03.Commands
+namespace QuizApp.Commands
 {
     internal class QuitCommand : CommandBase
     {

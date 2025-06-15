@@ -1,22 +1,25 @@
-﻿using Meilenstein03.Commands;
-using Meilenstein03.Stores;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using QuizApp.Commands;
+using QuizApp.Infrastructure;
+using QuizApp.Stores;
 
-namespace Meilenstein03.ViewModels
+namespace QuizApp.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {
-        public ICommand NavigateSettingsCommand { get; }
-        public ICommand QuitCommand { get; }
-        public HomeViewModel(NavigationStore navigationStore) 
+        private readonly NavigationStore _navigationStore;
+        private readonly QuizManager _quizManager;
+        public HomeViewModel(NavigationStore navigationStore, QuizManager quizManager)
         {
-            NavigateSettingsCommand = new NavigateSettingsCommand(navigationStore);
+            _navigationStore = navigationStore;
+            _quizManager = quizManager;
+            NavigateSettingsCommand = new NavigateSettingsCommand(_navigationStore, _quizManager);
+            NavigateUserLoginCommand = new NavigateUserLoginCommand(_navigationStore, _quizManager);
             QuitCommand = new QuitCommand();
         }
+
+        public ICommand NavigateSettingsCommand { get; }
+        public ICommand NavigateUserLoginCommand { get; }
+        public ICommand QuitCommand { get; }
     }
 }

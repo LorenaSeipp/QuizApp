@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Meilenstein03.Views
+namespace QuizApp.Views
 {
     /// <summary>
     /// Interaction logic for HomeView.xaml

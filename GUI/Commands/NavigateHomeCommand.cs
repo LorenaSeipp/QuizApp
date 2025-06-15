@@ -1,23 +1,26 @@
-﻿using Meilenstein03.Stores;
-using Meilenstein03.ViewModels;
+﻿using QuizApp.Stores;
+using QuizApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QuizApp.Infrastructure;
 
-namespace Meilenstein03.Commands
+namespace QuizApp.Commands
 {
     internal class NavigateHomeCommand : CommandBase
     {
         private readonly NavigationStore _navigationStore;
-        public NavigateHomeCommand(NavigationStore navigationStore)
+        private readonly QuizManager _quizManager;
+        public NavigateHomeCommand(NavigationStore navigationStore, QuizManager quizManager)
         {
+            _quizManager = quizManager;
             _navigationStore = navigationStore;
         }
         public override void Execute(object parameter)
         {
-            _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore);
+            _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore, _quizManager);
         }
     }
 }

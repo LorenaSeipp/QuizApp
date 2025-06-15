@@ -1,18 +1,21 @@
-﻿using Meilenstein03.Stores;
+﻿using QuizApp.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QuizApp.Infrastructure;
 
-namespace Meilenstein03.ViewModels
+namespace QuizApp.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+        private readonly QuizManager _quizManager;
         private readonly NavigationStore _navigationStore;
         public BaseViewModel CurrentViewModel => _navigationStore.CurrentViewModel;
-        public MainViewModel(NavigationStore navigationStore)
+        public MainViewModel(NavigationStore navigationStore, QuizManager quizManager)
         {
+            _quizManager = quizManager;
             _navigationStore = navigationStore;
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
         }

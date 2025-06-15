@@ -1,23 +1,33 @@
-﻿using Meilenstein03.Stores;
-using Meilenstein03.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows.Input;
+using QuizApp;
+using QuizApp.Infrastructure;
+using QuizApp.Stores;
 
-namespace Meilenstein03.Commands
+public class NavigateQuizCommand : ICommand
 {
-    internal class NavigateQuizCommand : CommandBase
+    private readonly NavigationStore _navigationStore;
+    private readonly QuizManager _quizManager;
+
+    public NavigateQuizCommand(NavigationStore navigationStore, QuizManager quizManager)
     {
-        private readonly NavigationStore _navigationStore;
-        public NavigateQuizCommand(NavigationStore navigationStore)
-        {
-            _navigationStore = navigationStore;
-        }
-        public override void Execute(object parameter)
-        {
-            _navigationStore.CurrentViewModel = new QuizViewModel(_navigationStore);
-        }
+        _navigationStore = navigationStore;
+        _quizManager = quizManager;
+    }
+
+    public event EventHandler CanExecuteChanged;
+
+    public bool CanExecute(object parameter)
+    {
+        return true;
+    }
+
+    public void Execute(object parameter)
+    {
+        // Quiz mit ausgewählten Einstellungen laden
+        QuestionRepository repo = new(App.ConnectionString);
+        _quizManager.LoadQuestions(repo, _quizManager.Category, _quizManager.Difficulty);
+
+        // Navigation starten
+        _navigationStore.CurrentViewModel = new QuizViewModel(_navigationStore, _quizManager);
     }
 }
