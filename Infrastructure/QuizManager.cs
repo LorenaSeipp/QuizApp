@@ -8,6 +8,7 @@ namespace QuizApp.Infrastructure
         private Stack<IQuestion> _questions;
         
         private readonly IQuizTimer _timer;
+        public IQuizTimer Timer => _timer;
 
         public QuizManager(string connectionString, IQuizTimer timer)
         {
@@ -85,8 +86,13 @@ namespace QuizApp.Infrastructure
             return null;
         }
 
-        public void SubmitAnswer(IQuestion question, object userAnswer)
+        public void SubmitAnswer(IQuestion question, object? userAnswer, bool wasTimeUp= false)
         {
+            _timer.Stop();
+            if (wasTimeUp)
+            {
+                return;
+            }
             switch (question)
             {
                 case EstimateQuestion eq:
@@ -117,12 +123,10 @@ namespace QuizApp.Infrastructure
             }
 
             Score += _timer.RemainingSeconds;
-            _timer.Stop();
+            
         }
 
         private void OnTimeUp()
-        {
-            
-        }
+        { }
     }
 }

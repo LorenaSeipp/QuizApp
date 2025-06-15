@@ -8,6 +8,7 @@
     <Application.Resources>
         <utils:StringEqualityConverter x:Key="StringEqualityConverter" />
         <utils1:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <utils:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <Style x:Key="QuizRadioButtonStyle" TargetType="RadioButton">
             <Setter Property="Foreground" Value="White" />
             <Setter Property="FontSize" Value="16" />
