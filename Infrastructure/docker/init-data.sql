@@ -1,44 +1,55 @@
 -- SORT QUESTIONS
 -- Informatik
-DELETE FROM SortQuestion;
-INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4) VALUES
-    ('Ordne diese Programmiersprachen nach ihrem Erscheinungsjahr (alt → neu):', 'Sort', 0, 'Informatik', 'C', 'Java', 'Python', 'Go');
+INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
+VALUES ('Ordne diese Programmiersprachen nach ihrem Erscheinungsjahr (alt → neu):', 'Sort', 0, 'Informatik', 'C',
+        'Java', 'Python', 'Go');
 
-INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4) VALUES
-    ('Ordne diese Datenstrukturen nach ihrer Zugriffskomplexität (einfach → komplex):', 'Sort', 1, 'Informatik', 'Array', 'Linked List', 'Stack', 'Heap');
+INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
+VALUES ('Ordne diese Datenstrukturen nach ihrer Zugriffskomplexität (einfach → komplex):', 'Sort', 1, 'Informatik',
+        'Array', 'Linked List', 'Stack', 'Heap');
 
-INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4) VALUES
-    ('Ordne diese Erfindungen der Informatik zeitlich (früh → spät):', 'Sort', 2, 'Informatik', 'Transistor', 'Mikroprozessor', 'Internet', 'Smartphone');
+INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
+VALUES ('Ordne diese Erfindungen der Informatik zeitlich (früh → spät):', 'Sort', 2, 'Informatik', 'Transistor',
+        'Mikroprozessor', 'Internet', 'Smartphone');
 
 -- Musik
-INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4) VALUES
-    ('Ordne diese Musikrichtungen nach Entstehung (früh → spät):', 'Sort', 0, 'Musik', 'Klassik', 'Jazz', 'Rock', 'Hip-Hop');
+INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
+VALUES ('Ordne diese Musikrichtungen nach Entstehung (früh → spät):', 'Sort', 0, 'Musik', 'Klassik', 'Jazz', 'Rock',
+        'Hip-Hop');
 
-INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4) VALUES
-    ('Ordne diese Komponisten nach Geburtsjahr (früh → spät):', 'Sort', 1, 'Musik', 'Bach', 'Mozart', 'Beethoven', 'Schumann');
+INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
+VALUES ('Ordne diese Komponisten nach Geburtsjahr (früh → spät):', 'Sort', 1, 'Musik', 'Bach', 'Mozart', 'Beethoven',
+        'Schumann');
 
-INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4) VALUES
-    ('Ordne diese Alben nach ihrem Erscheinungsjahr (alt → neu):', 'Sort', 2, 'Musik', 'Thriller', 'Nevermind', 'Back to Black', '25');
+INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
+VALUES ('Ordne diese Alben nach ihrem Erscheinungsjahr (alt → neu):', 'Sort', 2, 'Musik', 'Thriller', 'Nevermind',
+        'Back to Black', '25');
 
 -- Geografie
-INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4) VALUES
-    ('Ordne diese Länder nach ihrer Fläche (klein → groß):', 'Sort', 0, 'Geografie', 'Niederlande', 'Deutschland', 'Brasilien', 'Russland');
+INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
+VALUES ('Ordne diese Länder nach ihrer Fläche (klein → groß):', 'Sort', 0, 'Geografie', 'Niederlande', 'Deutschland',
+        'Brasilien', 'Russland');
 
-INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4) VALUES
-    ('Ordne diese Flüsse nach ihrer Länge (kurz → lang):', 'Sort', 1, 'Geografie', 'Elbe', 'Donau', 'Amazonas', 'Nil');
+INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
+VALUES ('Ordne diese Flüsse nach ihrer Länge (kurz → lang):', 'Sort', 1, 'Geografie', 'Elbe', 'Donau', 'Amazonas',
+        'Nil');
 
-INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4) VALUES
-    ('Ordne diese Hauptstädte geografisch (Westen → Osten):', 'Sort', 2, 'Geografie', 'Lissabon', 'Berlin', 'Moskau', 'Tokio');
+INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
+VALUES ('Ordne diese Hauptstädte geografisch (Westen → Osten):', 'Sort', 2, 'Geografie', 'Lissabon', 'Berlin', 'Moskau',
+        'Tokio');
 
 -- Fun-Facts
-INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4) VALUES
-    ('Ordne diese Tiere nach ihrer Geschwindigkeit (langsam → schnell):', 'Sort', 0, 'FunFacts', 'Faultier', 'Mensch', 'Hund', 'Gepard');
+INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
+VALUES ('Ordne diese Tiere nach ihrer Geschwindigkeit (langsam → schnell):', 'Sort', 0, 'FunFacts', 'Faultier',
+        'Mensch', 'Hund', 'Gepard');
 
-INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4) VALUES
-    ('Ordne diese Snacks nach Kalorien (wenig → viel):', 'Sort', 1, 'FunFacts', 'Apfel', 'Popcorn', 'Schokolade', 'Erdnussbutter');
+INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
+VALUES ('Ordne diese Snacks nach Kalorien (wenig → viel):', 'Sort', 1, 'FunFacts', 'Apfel', 'Popcorn', 'Schokolade',
+        'Erdnussbutter');
 
-INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4) VALUES
-    ('Ordne diese Länder nach Anzahl der Feiertage pro Jahr (wenig → viel):', 'Sort', 2, 'FunFacts', 'USA', 'Deutschland', 'Indien', 'Japan');
+INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
+VALUES ('Ordne diese Länder nach Anzahl der Feiertage pro Jahr (wenig → viel):', 'Sort', 2, 'FunFacts', 'USA',
+        'Deutschland', 'Indien', 'Japan');
 
 
 
@@ -135,45 +146,78 @@ VALUES ('Wie viele Saiten hat ein Klavier?', 'Estimate', 1, 'Musik', '88');
 INSERT INTO EstimateQuestion (Question, Typ, Difficulty, Category, RightAnswer)
 VALUES ('Wie viele Länder haben eine Fläche größer als 1 Million km²?', 'Estimate', 2, 'Geografie', '17');
 
-
-INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+-- Musik 
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
                                     FalseAnswer3)
 VALUES ('Wer ist der Sänger der Band Queen?', 'MultipleChoice', 0, 'Musik', 'Freddie Mercury', 'Brian May',
         'Roger Taylor', 'John Deacon');
 
-INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Welcher Musiker schrieb die Oper "Die Zauberflöte"?', 'MultipleChoice', 2, 'Musik', 'Wolfgang Amadeus Mozart',
+        'Ludwig van Beethoven', 'Johann Sebastian Bach', 'Franz Schubert');
+
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Welche Band veröffentlichte das Album "Abbey Road"?', 'MultipleChoice', 1, 'Musik', 'The Beatles',
+        'The Rolling Stones', 'Pink Floyd', 'Led Zeppelin');
+
+-- Geografie
+
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
                                     FalseAnswer3)
 VALUES ('Was ist die Hauptstadt von Australien?', 'MultipleChoice', 1, 'Geografie', 'Canberra', 'Sydney', 'Melbourne',
         'Brisbane');
 
-INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
-                                    FalseAnswer3)
-VALUES ('Welche Programmiersprache wird hauptsächlich für iOS-Apps verwendet?', 'MultipleChoice', 1, 'Informatik',
-        'Swift', 'Java', 'Python', 'C#');
-INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
-                                    FalseAnswer3)
-VALUES ('Welcher Musiker schrieb die Oper "Die Zauberflöte"?', 'MultipleChoice', 2, 'Musik', 'Wolfgang Amadeus Mozart',
-        'Ludwig van Beethoven', 'Johann Sebastian Bach', 'Franz Schubert');
-INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
                                     FalseAnswer3)
 VALUES ('Welches Land hat die längste Küstenlinie?', 'MultipleChoice', 2, 'Geografie', 'Kanada', 'USA', 'Russland',
         'China');
-INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
+
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Wie viele Bundesländer hat Deutschland?', 'MultipleChoice', 0, 'Geografie', '16', '12', '14', '18');
+
+-- Informatik 
+
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Welche Programmiersprache wird hauptsächlich für iOS-Apps verwendet?', 'MultipleChoice', 1, 'Informatik',
+        'Swift', 'Java', 'Python', 'C#');
+
+
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
                                     FalseAnswer3)
 VALUES ('Was bedeutet "HTML"?', 'MultipleChoice', 0, 'Informatik', 'HyperText Markup Language',
         'HighText Machine Language', 'Hyperlinking Text Mark Language', 'Hyper Tool Multi Language');
-INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
-                                    FalseAnswer3)
-VALUES ('Welche Band veröffentlichte das Album "Abbey Road"?', 'MultipleChoice', 1, 'Musik', 'The Beatles',
-        'The Rolling Stones', 'Pink Floyd', 'Led Zeppelin');
-INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
-                                    FalseAnswer3)
-VALUES ('Wie viele Bundesstaaten hat Deutschland?', 'MultipleChoice', 0, 'Geografie', '16', '12', '14', '18');
-INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
-                                    FalseAnswer3)
-VALUES ('Welcher Algorithmus wird oft zum Sortieren verwendet?', 'MultipleChoice', 1, 'Informatik', 'Quicksort',
-        'Bubblesort', 'Mergesort', 'Heapsort');
-INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, RightAnswer, FalseAnswer1, FalseAnswer2,
-                                    FalseAnswer3)
-VALUES ('Was ist die chemische Formel für Wasser?', 'MultipleChoice', 0, 'Fun-Facts', 'H2O', 'CO2', 'NaCl', 'O2');
 
+
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Was beschreibt der Begriff „Big O“ in der Informatik?',
+        'MultipleChoice',
+        2,
+        'Informatik',
+        'Die asymptotische Laufzeitanalyse von Algorithmen',
+        'Die Größe von Objekten im Arbeitsspeicher',
+        'Die Stromaufnahme eines Prozessors',
+        'Die Anzahl der Operationen in einem Programm');
+
+
+-- Fun-Facts 
+
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Welche Tierart nutzt ihren eigenen Po als Notfall-Atemgerät?', 'MultipleChoice', 0, 'Fun-Facts',
+        'Die Schildkröte', 'Der Delfin', 'Der Seestern', 'Die Giraffe');
+
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Was passiert, wenn man eine Banane mit einem Geigerzähler untersucht?', 'MultipleChoice', 0, 'Fun-Facts',
+        'Sie zeigt eine geringe Radioaktivität', 'Sie explodiert bei 88 Bananen pro Stunde',
+        'Sie sendet Morsezeichen aus', 'Sie wird plötzlich grün vor Neid');
+
+INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
+                                    FalseAnswer3)
+VALUES ('Welche Tierart kann Monate ohne Kopf weiterleben?', 'MultipleChoice', 0, 'Fun-Facts', 'Kakerlaken', 'Frösche',
+        'Mäuse', 'Kolibris');
