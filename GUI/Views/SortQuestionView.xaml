@@ -79,7 +79,7 @@
                     </ListBox.ItemContainerStyle>
                 </ListBox>
 
-                <!-- Buttons für Verschieben-->
+                <!-- Buttons für Verschieben -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0" Grid.Row="2">
                     <Button Content="↑"
                             Command="{Binding MoveAnswerUpCommand}"
