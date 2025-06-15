@@ -21,7 +21,6 @@ public partial class App : Application
         IConfigurationBuilder builder = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("appsettings.json", false, true);
-
         Configuration = builder.Build();
         ConnectionString = Configuration.GetConnectionString("OracleDb");
 
