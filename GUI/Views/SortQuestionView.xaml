@@ -60,7 +60,6 @@
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
-
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsCorrect}" Value="True">
                                     <Setter Property="BorderBrush" Value="Green"/>

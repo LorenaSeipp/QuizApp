@@ -93,8 +93,7 @@ public partial class SortQuestionViewModel : BaseViewModel
         ObservableCollection.Move(indexOfAnswer, indexOfAnswer - 1);
         NotifyCommands();
     }
-
-
+    
     [RelayCommand(CanExecute = nameof(CanMoveAnswerDown))]
     public void MoveAnswerDown(SortQuestionAnswer answer)
     {
