@@ -95,7 +95,6 @@ namespace QuizApp.Infrastructure
                     }
                 }
             }
-
             connection.Close();
         }
 
