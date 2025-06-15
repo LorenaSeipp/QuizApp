@@ -2,6 +2,8 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using QuizApp.Core;
+using QuizApp.Infrastructure;
+using QuizApp.Stores;
 
 namespace QuizApp.ViewModels;
 
@@ -46,15 +48,19 @@ public partial class SortQuestionViewModel : BaseViewModel
             }
         }
     }
-    
+    private readonly NavigationStore _navigationStore;
+    private readonly QuizManager _quizManager;
     SortQuestion SortQuestion { get; set; }
     public string QuestionText => SortQuestion.Question;
+    public bool IsRightOrder {get; set;}
     public ObservableCollection<SortQuestionAnswer> ObservableCollection { get; set; }
     private readonly SortQuestionAnswer[] _answersInCorrectOrder;
 
-    public SortQuestionViewModel(SortQuestion sortQuestion)
+    public SortQuestionViewModel(SortQuestion sortQuestion, NavigationStore navigationStore, QuizManager quizManager)
     {
-        this.SortQuestion = sortQuestion;
+        _quizManager = quizManager;
+        _navigationStore = navigationStore;
+        SortQuestion = sortQuestion;
         _answersInCorrectOrder = new[]
         {
             new SortQuestionAnswer { QuestionText = sortQuestion.Place1 },
@@ -126,12 +132,18 @@ public partial class SortQuestionViewModel : BaseViewModel
     {
         if (CanCheckAnswer())
         {
+            IsRightOrder = true;
             for (int i = 0; i < ObservableCollection.Count; i++)
             {
                 string correctOrder = _answersInCorrectOrder[i].QuestionText.Trim();
                 string userOrder = ObservableCollection[i].QuestionText.Trim();
-                ObservableCollection[i].IsCorrect =
-                    string.Equals(correctOrder, userOrder, StringComparison.OrdinalIgnoreCase);
+                bool isCorrect = string.Equals(correctOrder, userOrder, StringComparison.OrdinalIgnoreCase);
+                ObservableCollection[i].IsCorrect = isCorrect;
+                
+                if (!isCorrect)
+                {
+                    IsRightOrder = false;
+                }
             }
             HasAnswered = true;
             SelectedAnswer = null;
