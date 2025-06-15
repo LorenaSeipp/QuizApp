@@ -126,7 +126,7 @@ public partial class SortQuestionViewModel : BaseViewModel
     {
         return !HasAnswered;
     }
-
+    
     [RelayCommand(CanExecute = nameof(CanCheckAnswer))]
     public void CheckAnswer()
     {
