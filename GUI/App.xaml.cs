@@ -38,12 +38,13 @@ public partial class App : Application
         //adminCreator.CreateAdmin("Admin", "admin123", "System");
 
         SortQuestion sortQuestion = new SortQuestion(
-            "Bringe diese Ereignisse in die richtige Reihenfolge:", 2,
-            category: "Geschichte",
-            place1: "1.",
-            place2: "2.",
-            place3: "3.",
-            place4: "4."
+            "Ordne diese berühmten Betriebssysteme nach ihrem Erscheinungsjahr (früh → spät):",
+            difficulty: 3,
+            category: "Informatik",
+            place1: "MS-DOS",
+            place2: "Windows 95",
+            place3: "macOS X",
+            place4: "Windows 11"
         );
 
         

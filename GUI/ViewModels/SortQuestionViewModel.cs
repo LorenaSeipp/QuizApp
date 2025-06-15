@@ -47,22 +47,22 @@ public partial class SortQuestionViewModel : BaseViewModel
         }
     }
     
-    SortQuestion sortQuestion { get; set; }
-    public string QuestionText => sortQuestion.Question;
+    SortQuestion SortQuestion { get; set; }
+    public string QuestionText => SortQuestion.Question;
     public ObservableCollection<SortQuestionAnswer> ObservableCollection { get; set; }
-    private readonly SortQuestionAnswer[] answersInCorrectOrder;
+    private readonly SortQuestionAnswer[] _answersInCorrectOrder;
 
     public SortQuestionViewModel(SortQuestion sortQuestion)
     {
-        this.sortQuestion = sortQuestion;
-        answersInCorrectOrder = new[]
+        this.SortQuestion = sortQuestion;
+        _answersInCorrectOrder = new[]
         {
             new SortQuestionAnswer { QuestionText = sortQuestion.Place1 },
             new SortQuestionAnswer { QuestionText = sortQuestion.Place2 },
             new SortQuestionAnswer { QuestionText = sortQuestion.Place3 },
             new SortQuestionAnswer { QuestionText = sortQuestion.Place4 }
         };
-        SortQuestionAnswer[] answersInWrongOrder = ShuffleAnswers(answersInCorrectOrder.ToArray());
+        SortQuestionAnswer[] answersInWrongOrder = ShuffleAnswers(_answersInCorrectOrder.ToArray());
         ObservableCollection = new ObservableCollection<SortQuestionAnswer>(answersInWrongOrder);
     }
 
@@ -128,7 +128,7 @@ public partial class SortQuestionViewModel : BaseViewModel
         {
             for (int i = 0; i < ObservableCollection.Count; i++)
             {
-                string correctOrder = answersInCorrectOrder[i].QuestionText.Trim();
+                string correctOrder = _answersInCorrectOrder[i].QuestionText.Trim();
                 string userOrder = ObservableCollection[i].QuestionText.Trim();
                 ObservableCollection[i].IsCorrect =
                     string.Equals(correctOrder, userOrder, StringComparison.OrdinalIgnoreCase);
