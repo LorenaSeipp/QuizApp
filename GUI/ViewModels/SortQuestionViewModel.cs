@@ -145,6 +145,7 @@ public partial class SortQuestionViewModel : BaseViewModel
                     IsRightOrder = false;
                 }
             }
+            
             HasAnswered = true;
             SelectedAnswer = null;
             CheckAnswerCommand.NotifyCanExecuteChanged();
