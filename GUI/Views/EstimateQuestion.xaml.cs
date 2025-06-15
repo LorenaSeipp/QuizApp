@@ -1,4 +1,5 @@
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace QuizApp.Views
 {
@@ -8,5 +9,11 @@ namespace QuizApp.Views
         {
             InitializeComponent();
         }
+        
+        private void NumberOnlyInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !int.TryParse(e.Text, out _);
+        }
+
     }
 }

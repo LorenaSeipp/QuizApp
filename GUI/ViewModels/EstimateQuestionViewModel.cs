@@ -1,3 +1,5 @@
+using System.Windows.Input;
+using QuizApp.Commands;
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
@@ -10,9 +12,10 @@ namespace QuizApp.GUI.ViewModels
         private readonly NavigationStore _navigationStore;
         private readonly EstimateQuestion _question;
         private readonly QuizManager _quizManager;
-        private string? _selectedAnswer;
 
         private int? _userAnswer;
+        
+        public ICommand SubmitCommand => new RelayCommand(SubmitAnswer, () => UserAnswer.HasValue);
 
         public EstimateQuestionViewModel(EstimateQuestion question, NavigationStore navigationStore, QuizManager quizManager)
         {
@@ -21,19 +24,9 @@ namespace QuizApp.GUI.ViewModels
             _navigationStore = navigationStore;
         }
 
-        public string? SelectedAnswer
-        {
-            get => _selectedAnswer;
-            set
-            {
-                _selectedAnswer = value;
-                OnPropertyChanged();
-            }
-        }
+
 
         public string QuestionText => _question.Question;
-
-        public int AllowedMargin => _question.AllowedMargin;
 
         public int? UserAnswer
         {
@@ -50,12 +43,15 @@ namespace QuizApp.GUI.ViewModels
 
         private void SubmitAnswer()
         {
-            _quizManager.SubmitAnswer(_question, SelectedAnswer ?? string.Empty);
+            if (UserAnswer == null)
+                return; // oder Fehler anzeigen
+
+            _quizManager.SubmitAnswer(_question, UserAnswer.Value);
 
             QuizViewModel quizViewModel = new(_navigationStore, _quizManager);
             _navigationStore.CurrentViewModel = quizViewModel;
         }
-
-        //TODO SubmitAnswer -> Button und Logik zur Überprüfung der Antwort (Abweichung UserAntwort zu korrektem Wert berechnen
+        
+     //TODO SubmitAnswer -> Button und Logik zur Überprüfung der Antwort (Abweichung UserAntwort zu korrektem Wert berechnen
     }
 }

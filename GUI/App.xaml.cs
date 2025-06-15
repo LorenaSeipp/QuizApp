@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
+using QuizApp.utils;
 using QuizApp.ViewModels;
 
 namespace QuizApp;
@@ -38,8 +39,8 @@ public partial class App : Application
         //adminCreator.CreateAdmin("Admin", "admin123", "System");
 
         // SETUP UI
-        
-        QuizManager quizManager = new(ConnectionString);
+        QuizTimer quizTimer = new QuizTimer(30);
+        QuizManager quizManager = new(ConnectionString, quizTimer);
         
         NavigationStore navigationStore = new NavigationStore();
         navigationStore.CurrentViewModel = new HomeViewModel(navigationStore, quizManager);

@@ -1,8 +1,9 @@
 ﻿using System.Windows.Threading;
+using QuizApp.Infrastructure;
 
-namespace QuizApp.Infrastructure;
+namespace QuizApp.utils;
 
-public class QuizTimer
+public class QuizTimer: IQuizTimer
 {
     private readonly DispatcherTimer _timer;
     

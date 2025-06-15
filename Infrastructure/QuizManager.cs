@@ -6,13 +6,18 @@ namespace QuizApp.Infrastructure
     {
         private List<IQuestion> _allQuestions;
         private Stack<IQuestion> _questions;
+        
+        private readonly IQuizTimer _timer;
 
-        public QuizManager(string connectionString)
+        public QuizManager(string connectionString, IQuizTimer timer)
         {
             QuestionRepository questionRepo = new QuestionRepository(connectionString);
             _allQuestions = LoadAllQuestions(questionRepo);
             _questions = new Stack<IQuestion>(_allQuestions.OrderBy(q => Guid.NewGuid()));
             Score = 0;
+            
+            _timer = timer;
+            _timer.TimeUp += OnTimeUp;
         }
 
         public int Score { get; private set; }
@@ -71,29 +76,53 @@ namespace QuizApp.Infrastructure
 
         public IQuestion? GetNextQuestion()
         {
-            if (_questions.Count == 0)
-                return null;
+            while (_questions.Count > 0)
+            {
+                _timer.Reset();
+                return _questions.Pop();
+            }
 
-            return _questions.Pop();
+            return null;
         }
 
         public void SubmitAnswer(IQuestion question, object userAnswer)
         {
-            bool isCorrect = question switch
+            switch (question)
             {
-                MultipleChoiceQuestion mcq => mcq.CorrectAnswer.Equals(userAnswer),
-                TrueFalseQuestion tfq => tfq.IsTrue == (bool)userAnswer,
-                EstimateQuestion eq => Math.Abs(eq.CorrectValue - (int)userAnswer) <= eq.AllowedMargin,
-                OpenQuestion oq => oq.Answer.Trim()
-                    .Equals(userAnswer.ToString()?.Trim(), StringComparison.OrdinalIgnoreCase),
-                SortQuestion sq => sq.CorrectOrder.SequenceEqual((List<string>)userAnswer),
-                _ => false
-            };
+                case EstimateQuestion eq:
+                    int points = eq.CalculatePoints((int)userAnswer);
+                    Score += points;
+                    break;
 
-            if (isCorrect)
-            {
-                Score++;
+                case MultipleChoiceQuestion mcq:
+                    if (mcq.CorrectAnswer.Equals(userAnswer))
+                        Score += 10;
+                    break;
+
+                case TrueFalseQuestion tfq:
+                    if (tfq.IsTrue == (bool)userAnswer)
+                        Score += 10;
+                    break;
+
+                case OpenQuestion oq:
+                    if (oq.Answer.Trim()
+                        .Equals(userAnswer.ToString()?.Trim(), StringComparison.OrdinalIgnoreCase))
+                        Score += 10;
+                    break;
+
+                case SortQuestion sq:
+                    if (sq.CorrectOrder.SequenceEqual((List<string>)userAnswer))
+                        Score += 10;
+                    break;
             }
+
+            Score += _timer.RemainingSeconds;
+            _timer.Stop();
+        }
+
+        private void OnTimeUp()
+        {
+            
         }
     }
 }
