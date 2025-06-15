@@ -2,10 +2,22 @@ namespace QuizApp.Core
 {
     public class OpenQuestion : IQuestion
     {
+        public OpenQuestion()
+        {
+        }
+
+        public OpenQuestion(string question, QuestionEnums.Difficulty difficulty, string category, string answer)
+        {
+            Question = question;
+            Difficulty = difficulty;
+            Category = category;
+            Answer = answer;
+        }
+
         public int Id { get; set; }
         public string Question { get; set; }
         public QuestionEnums.QuestionTyp Typ => QuestionEnums.QuestionTyp.Open;
-        public int Difficulty { get; set; }
+        public QuestionEnums.Difficulty Difficulty { get; set; }
 
         public string Category { get; set; }
 
