@@ -106,8 +106,11 @@ namespace QuizApp.Infrastructure
                         PointsPerRound += 10;
                     break;
                 case OpenQuestion oq:
-                    if (oq.Answer.Trim().Equals(userAnswer?.ToString()?.Trim(), StringComparison.OrdinalIgnoreCase))
-                        PointsPerRound += 10;
+                    if (userAnswer != null)
+                    {
+                        if (oq.Answer.Trim().ToLower().Split(',').Contains(userAnswer?.ToString().Trim().ToLower()))
+                            PointsPerRound += 10;
+                    }
                     break;
                 case SortQuestion sq:
                     if ((bool)userAnswer)
