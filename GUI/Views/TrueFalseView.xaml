@@ -3,52 +3,50 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Background="#FF1A1A40" Foreground="White">
     <Grid>
-        <StackPanel Margin="20">
-            <TextBlock Text="{Binding QuestionText}" FontSize="18" TextWrapping="Wrap" Margin="0,0,0,20" />
+        <StackPanel Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="{Binding QuestionText}" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,20" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                 <RadioButton Content="True" IsChecked="{Binding UserAnswer, Mode=TwoWay}" GroupName="TrueFalseGroup"
-                             Tag="True" Margin="0,0,10,0" Foreground="White" />
+                             Tag="True" Margin="0,0,10,0" Foreground="White" VerticalContentAlignment="Center"/>
                 <RadioButton Content="False"
                              IsChecked="{Binding UserAnswer, Converter={StaticResource InverseBoolConverter}, Mode=TwoWay}"
-                             GroupName="TrueFalseGroup" Tag="False" Foreground="White" />
-
+                             GroupName="TrueFalseGroup" Tag="False" Foreground="White" VerticalContentAlignment="Center"/>
+            </StackPanel>
                 <!-- Submit Button -->
                 <Button Content="Antworten"
                         Command="{Binding SubmitAnswerCommand}"
                         Margin="0,20,0,0"
                         Padding="12"
                         Background="#009688"
-                        Foreground="White"
-                        FontWeight="Bold" />
+                        Foreground="White" />
                 <TextBlock Text="{Binding RemainingSeconds, StringFormat='Restzeit: {0} Sekunden'}"
-                           FontSize="16"
+                           FontSize="30"
                            FontWeight="Bold"
                            Foreground="Orange"
                            TextAlignment="Right"
                            Margin="0,0,0,20" />
-            </StackPanel>
         </StackPanel>
         <Border Background="#AA000000"
                 Visibility="{Binding IsFeedbackVisible, Converter={StaticResource BoolToVisibilityConverter}}"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Border Background="White" Padding="20" CornerRadius="10"
+            <Border Background="White" Padding="30" CornerRadius="10"
                     HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel>
                     <TextBlock Text="{Binding EarnedPoints, StringFormat='Erhaltene Punkte: +{0}'}"
-                               FontSize="16"
+                               FontSize="30"
                                Foreground="#009688"
                                TextAlignment="Center"
                                Margin="0,10,0,0" />
 
                     <TextBlock Text="{Binding TotalPoints, StringFormat='Gesamtpunktzahl: {0}'}"
-                               FontSize="16"
+                               FontSize="30"
                                FontWeight="Bold"
                                Foreground="Orange"
                                TextAlignment="Center"
                                Margin="0,5,0,20" />
-                    <TextBlock Text="{Binding FeedbackMessage}" Foreground="Black" FontSize="20" FontWeight="Bold"
+                    <TextBlock Text="{Binding FeedbackMessage}" Foreground="Black" FontSize="30" FontWeight="Bold"
                                TextAlignment="Center" />
-                    <TextBlock Text="Zeit abgelaufen!" FontSize="16" Foreground="Red" TextAlignment="Center"
+                    <TextBlock Text="Zeit abgelaufen!" FontSize="30" Foreground="Red" TextAlignment="Center"
                                Visibility="{Binding WasTimeUp, Converter={StaticResource BoolToVisibilityConverter}}" />
                 </StackPanel>
             </Border>

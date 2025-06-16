@@ -17,7 +17,7 @@
     <Grid Margin="20">
         <StackPanel>
 
-            <TextBlock Text="Kategorie auswählen:" FontSize="18" Margin="0,0,0,10" />
+            <TextBlock Text="Kategorie auswählen:" Margin="0,0,0,10" />
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                 <ItemsControl ItemsSource="{Binding Categories}">
@@ -46,7 +46,7 @@
                 </ItemsControl>
             </StackPanel>
 
-            <TextBlock Text="Schwierigkeitslevel auswählen:" FontSize="18" Margin="0,0,0,10" />
+            <TextBlock Text="Schwierigkeitslevel auswählen:" Margin="0,0,0,10" />
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                 <ItemsControl ItemsSource="{Binding Difficulties}">
@@ -75,7 +75,7 @@
                 </ItemsControl>
             </StackPanel>
 
-            <TextBlock Text="Anzahl Fragen auswählen:" FontSize="18" Margin="0,0,0,10" />
+            <TextBlock Text="Anzahl Fragen auswählen:" Margin="0,0,0,10" />
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                 <ItemsControl ItemsSource="{Binding QuestionCounts}">
@@ -106,7 +106,7 @@
 
             <Button Content="Quiz starten"
                     Command="{Binding NavigateQuizCommand}"
-                    Width="150" Height="40" HorizontalAlignment="Center"
+                    Width="Auto" Height="Auto" HorizontalAlignment="Center"
                     IsEnabled="{Binding CanStartQuiz}" />
         </StackPanel>
     </Grid>

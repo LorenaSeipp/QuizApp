@@ -11,7 +11,6 @@
             <StackPanel>
                 <!-- Frage anzeigen -->
                 <TextBlock Text="{Binding QuestionText}"
-                           FontSize="24"
                            FontWeight="Bold"
                            Foreground="White"
                            TextWrapping="Wrap"
@@ -20,12 +19,10 @@
 
                 <!-- Eingabefeld für Zahl -->
                 <TextBlock Text="Deine Schätzung:"
-                           FontSize="16"
                            Foreground="White"
                            Margin="0,0,0,5" />
 
                 <TextBox Text="{Binding UserAnswer, UpdateSourceTrigger=PropertyChanged}"
-                         FontSize="18"
                          Padding="5"
                          PreviewTextInput="NumberOnlyInput"
                          HorizontalAlignment="Stretch"
@@ -40,7 +37,7 @@
                         Foreground="White"
                         FontWeight="Bold" />
                 <TextBlock Text="{Binding RemainingSeconds, StringFormat='Restzeit: {0} Sekunden'}"
-                           FontSize="16"
+                           FontSize="30"
                            FontWeight="Bold"
                            Foreground="Orange"
                            TextAlignment="Right"
@@ -54,20 +51,20 @@
                     HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel>
                     <TextBlock Text="{Binding EarnedPoints, StringFormat='Erhaltene Punkte: +{0}'}"
-                               FontSize="16"
+                               FontSize="30"
                                Foreground="#009688"
                                TextAlignment="Center"
                                Margin="0,10,0,0" />
 
                     <TextBlock Text="{Binding TotalPoints, StringFormat='Gesamtpunktzahl: {0}'}"
-                               FontSize="16"
+                               FontSize="30"
                                FontWeight="Bold"
                                Foreground="Orange"
                                TextAlignment="Center"
                                Margin="0,5,0,20" />
-                    <TextBlock Text="{Binding FeedbackMessage}" Foreground="Black" FontSize="20" FontWeight="Bold"
+                    <TextBlock Text="{Binding FeedbackMessage}" Foreground="Black" FontSize="30" FontWeight="Bold"
                                TextAlignment="Center" />
-                    <TextBlock Text="Zeit abgelaufen!" FontSize="16" Foreground="Red" TextAlignment="Center"
+                    <TextBlock Text="Zeit abgelaufen!" FontSize="30" Foreground="Red" TextAlignment="Center"
                                Visibility="{Binding WasTimeUp, Converter={StaticResource BoolToVisibilityConverter}}" />
                 </StackPanel>
             </Border>
