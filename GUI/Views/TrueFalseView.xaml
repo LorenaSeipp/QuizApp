@@ -6,10 +6,10 @@
         <TextBlock Text="{Binding QuestionText}" FontSize="18" TextWrapping="Wrap" Margin="0,0,0,20" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
             <RadioButton Content="True" IsChecked="{Binding UserAnswer, Mode=TwoWay}" GroupName="TrueFalseGroup"
-                         Tag="True" Margin="0,0,10,0" />
+                         Tag="True" Margin="0,0,10,0" Foreground="White" />
             <RadioButton Content="False"
                          IsChecked="{Binding UserAnswer, Converter={StaticResource InverseBoolConverter}, Mode=TwoWay}"
-                         GroupName="TrueFalseGroup" Tag="False" />
+                         GroupName="TrueFalseGroup" Tag="False" Foreground="White"/>
 
             <!-- Submit Button -->
             <Button Content="Antworten"

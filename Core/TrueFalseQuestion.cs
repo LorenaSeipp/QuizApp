@@ -9,6 +9,6 @@ namespace QuizApp.Core
         public string Category { get; set; }
         public bool TrueFalse { get; set; }
 
-        public bool IsTrue { get; set; }
+        public bool IsTrue() => TrueFalse; 
     }
 }
