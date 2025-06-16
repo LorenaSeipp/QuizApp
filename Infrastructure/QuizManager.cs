@@ -1,14 +1,19 @@
 ﻿using QuizApp.Core;
+using QuizApp.Core.Models;
+using QuizApp.Logic;
 
 namespace QuizApp.Infrastructure
 {
     public class QuizManager
     {
         private List<IQuestion> _allQuestions;
-        private Stack<IQuestion> _questions;
-        public List<IQuestion> allQuestions = new();
 
-        public QuizManager(string connectionString, IQuizTimer timer)
+        //*********** SPIELER ÄNDERUNGEN (SPIELER VON LOGIN MERKEN & Score va EndGame Methode durchreichen)*************
+        private Stack<IQuestion> _questions;
+        private readonly UserService _userService;
+        public List<IQuestion> AllQuestions = new();
+
+        public QuizManager(string connectionString, IQuizTimer timer, UserService userService)
         {
             QuestionRepository questionRepo = new QuestionRepository(connectionString);
             _allQuestions = LoadAllQuestions(questionRepo);
@@ -17,7 +22,9 @@ namespace QuizApp.Infrastructure
 
             Timer = timer;
             Timer.TimeUp += OnTimeUp;
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
+
 
         public IQuizTimer Timer { get; }
 
@@ -28,6 +35,7 @@ namespace QuizApp.Infrastructure
         public QuestionEnums.Difficulty Difficulty { get; set; }
         public QuestionEnums.Category Category { get; set; }
         public int NumberOfQuestions { get; set; } = 5;
+        public Player CurrentPlayer { get; private set; }
 
         private List<IQuestion> LoadAllQuestions(QuestionRepository repo)
         {
@@ -80,7 +88,11 @@ namespace QuizApp.Infrastructure
         public IQuestion? GetNextQuestion()
         {
             if (_questions.Count == 0)
+            {
+                int finalScore = Score;
+                _userService.UpdatePlayerStats(CurrentPlayer.id, finalScore);
                 return null;
+            }
 
             Timer.Reset();
             return _questions.Pop();
@@ -121,8 +133,14 @@ namespace QuizApp.Infrastructure
             Score += PointsPerRound;
         }
 
+
         private void OnTimeUp()
         {
+        }
+
+        public void SetCurrentPlayer(Player player)
+        {
+            CurrentPlayer = player;
         }
     }
 }

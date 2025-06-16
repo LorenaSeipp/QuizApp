@@ -2,6 +2,7 @@ namespace QuizApp.Core.Models;
 
 public class Player : User
 {
+    public int id { get; init; }
     public int Score { get; set; }
     public int Highscore { get; set; }
 
