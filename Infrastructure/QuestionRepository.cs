@@ -123,7 +123,7 @@ public class QuestionRepository : IQuestionRepository
         {
             string sql = @"
                 INSERT INTO MultipleChoiceQuestion 
-                    (QUESTION, TYP, DIFFICULTY, CATEGORY, RIGHTANSWER, FALSEANSWER1, FALSEANSWER2, FALSEANSWER3)
+                    (QUESTION, TYP, DIFFICULTY, CATEGORY, CORRECTANSWER, FALSEANSWER1, FALSEANSWER2, FALSEANSWER3)
                 VALUES 
                     (:question, :typ, :difficulty, :category, :correctAnswer, :falseAnswer1, :falseAnswer2, :falseAnswer3)";
 
@@ -178,11 +178,11 @@ public class QuestionRepository : IQuestionRepository
 
             db.Execute(sql, new
             {
-                /*question.Question,
+                question.Question,
                 typ = question.Typ.ToString(),
                 question.Difficulty,
                 question.Category,
-                question.RightAnswer*/
+                question.RightAnswer
             });
         }
     }
@@ -199,11 +199,11 @@ public class QuestionRepository : IQuestionRepository
 
             db.Execute(sql, new
             {
-                /*question.Question,
+                question.Question,
                 typ = question.Typ.ToString(),
                 question.Difficulty,
                 question.Category,
-                TrueFalse = question.TrueFalse ? 1 : 0  */
+                TrueFalse = question.TrueFalse ? 1 : 0
             });
         }
     }

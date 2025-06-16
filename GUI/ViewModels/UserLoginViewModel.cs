@@ -1,21 +1,26 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using Oracle.ManagedDataAccess.Client;
 using QuizApp.Commands;
 using QuizApp.Core.Models;
 using QuizApp.Core.Models.utils;
 using QuizApp.Infrastructure;
+using QuizApp.Logic;
 using QuizApp.Stores;
 
 namespace QuizApp.ViewModels;
 
 public class UserLoginViewModel : BaseViewModel
 {
+    private const int MaxLoginAttempts = 3;
     private readonly NavigationStore _navigationStore;
-    private readonly UserService _userService;
-    private string _password;
     private readonly QuizManager _quizManager;
+    private readonly UserService _userService;
+    private int _loginAttempts;
+    private string _password;
     private string _username;
+
 
     public UserLoginViewModel(NavigationStore navigationStore, QuizManager quizManager)
     {
@@ -27,10 +32,13 @@ public class UserLoginViewModel : BaseViewModel
         RegisterPlayerCommand = new RelayCommand(RegisterPlayer);
         NavigateSettingsCommand = new NavigateSettingsCommand(_navigationStore, _quizManager);
         QuitCommand = new QuitCommand();
+        NavigateHomeCommand = new NavigateHomeCommand(_navigationStore, _quizManager);
     }
 
     public ICommand NavigateSettingsCommand { get; }
     public ICommand QuitCommand { get; }
+    public ICommand NavigateHomeCommand { get; }
+
 
     public string Username
     {
@@ -59,24 +67,56 @@ public class UserLoginViewModel : BaseViewModel
 
     private void LoginUser()
     {
-        User user = _userService.GetUserByName(Username);
-
-        if (user != null && PasswordHelper.VerifyPassword(Password, user.Password))
+        try
         {
+            if (_loginAttempts >= MaxLoginAttempts)
+            {
+                MessageBox.Show("Zu viele Fehlversuche. Bitte Anwendung neu starten.");
+                return;
+            }
+
+            User user = _userService.GetUserByName(Username);
+
+            if (user == null)
+            {
+                _loginAttempts++;
+                MessageBox.Show(
+                    $"Benutzer nicht gefunden. Versuche verbleibend: {MaxLoginAttempts - _loginAttempts} Neuer Nutzer? Registrieren klicken!");
+                return;
+            }
+
+            if (!PasswordHelper.VerifyPassword(Password, user.Password))
+            {
+                _loginAttempts++;
+                MessageBox.Show($"Falsches Passwort. Versuche verbleibend: {MaxLoginAttempts - _loginAttempts}");
+                return;
+            }
+
+            // Login erfolgreich
+            _loginAttempts = 0;
+
             if (user.Role == UserRole.Admin)
             {
-                _navigationStore.CurrentViewModel = new AdminDashboardViewModel(App.ConnectionString, _quizManager);
+                _navigationStore.CurrentViewModel =
+                    new AdminDashboardViewModel(App.ConnectionString, _quizManager, _navigationStore);
             }
             else if (user.Role == UserRole.Player)
             {
                 _navigationStore.CurrentViewModel = new SettingsViewModel(_navigationStore, _quizManager);
             }
         }
-        else
+        catch (OracleException ex)
         {
-            MessageBox.Show("Login fehlgeschlagen.");
+            MessageBox.Show("Datenbankfehler beim Login");
+            _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore, _quizManager);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Fehler beim Login");
+            _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore, _quizManager);
         }
     }
+
 
     private void RegisterPlayer()
     {
