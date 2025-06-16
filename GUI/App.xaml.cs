@@ -33,8 +33,8 @@ public partial class App : Application
         QuestionRepository repository = new(ConnectionString);
 
         // Admin erstellen 
-        AdminCreator adminCreator = new(ConnectionString);
-        adminCreator.CreateAdmin("admin", "admin", "System");
+        /* AdminCreator adminCreator = new(ConnectionString);
+        adminCreator.CreateAdmin("admin", "admin", "System"); */
 
         // SETUP UI
         QuizTimer quizTimer = new QuizTimer(30);
