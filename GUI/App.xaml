@@ -3,9 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:views="clr-namespace:QuizApp.Views"
              xmlns:vm="clr-namespace:QuizApp.GUI.ViewModels"
-             xmlns:utils="clr-namespace:QuizApp.GUI.utils">
+             xmlns:utils1="clr-namespace:QuizApp.GUI.utils"
+             xmlns:converters="clr-namespace:QuizApp.Converters">
     <Application.Resources>
-        <utils:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <utils:StringEqualityConverter x:Key="StringEqualityConverter" />
+        <utils1:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <utils:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:EqualityToBrushMultiConverter x:Key="EqualityToBrushConverter" />
         <Style x:Key="QuizRadioButtonStyle" TargetType="RadioButton">
             <Setter Property="Foreground" Value="White" />
             <Setter Property="FontSize" Value="16" />

@@ -1,3 +1,5 @@
+using System.Windows.Input;
+using QuizApp.Commands;
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
@@ -5,35 +7,33 @@ using QuizApp.ViewModels;
 
 namespace QuizApp.GUI.ViewModels
 {
-    public class EstimateQuestionViewModel : QuestionViewModel
+    public class EstimateQuestionViewModel : TimedQuestionViewModel
     {
         private readonly NavigationStore _navigationStore;
         private readonly EstimateQuestion _question;
         private readonly QuizManager _quizManager;
-        private string? _selectedAnswer;
-
+        
         private int? _userAnswer;
+        
+        private int _earnedPoints;
+        public int EarnedPoints => _quizManager.PointsPerRound;
+
+        public int TotalPoints => _quizManager.Score;
+        
+        public ICommand SubmitCommand => new RelayCommand(SubmitAnswer, () => UserAnswer.HasValue);
 
         public EstimateQuestionViewModel(EstimateQuestion question, NavigationStore navigationStore, QuizManager quizManager)
+        :base(quizManager.Timer)
         {
             _question = question;
             _quizManager = quizManager;
             _navigationStore = navigationStore;
+            
         }
 
-        public string? SelectedAnswer
-        {
-            get => _selectedAnswer;
-            set
-            {
-                _selectedAnswer = value;
-                OnPropertyChanged();
-            }
-        }
+
 
         public string QuestionText => _question.Question;
-
-        public int AllowedMargin => _question.AllowedMargin;
 
         public int? UserAnswer
         {
@@ -48,14 +48,31 @@ namespace QuizApp.GUI.ViewModels
             }
         }
 
-        private void SubmitAnswer()
+        private async void SubmitAnswer()
         {
-            _quizManager.SubmitAnswer(_question, SelectedAnswer ?? string.Empty);
+            if (UserAnswer == null)
+                return; // oder Fehler anzeigen
 
-            QuizViewModel quizViewModel = new(_navigationStore, _quizManager);
-            _navigationStore.CurrentViewModel = quizViewModel;
+            _quizManager.SubmitAnswer(_question, UserAnswer.Value);
+            OnPropertyChanged(nameof(EarnedPoints));
+            OnPropertyChanged(nameof(TotalPoints));
+            WasTimeUp = false;
+
+            string message = $"Richtige Antwort: {_question.RightAnswer}\nPunkte: {EarnedPoints}";
+            await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
         }
+        
 
-        //TODO SubmitAnswer -> Button und Logik zur Überprüfung der Antwort (Abweichung UserAntwort zu korrektem Wert berechnen
+        protected override async void OnTimeUp()
+        {
+            _quizManager.SubmitAnswer(_question, null, wasTimeUp: true);
+
+            OnPropertyChanged(nameof(EarnedPoints));
+            OnPropertyChanged(nameof(TotalPoints));
+            
+            WasTimeUp = true;
+            string message = $"Zeit abgelaufen!\nRichtige Antwort: {_question.RightAnswer}\nPunkte: {EarnedPoints}";
+            await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
+        }
     }
 }

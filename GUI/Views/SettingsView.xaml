@@ -3,25 +3,111 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:QuizApp.Converters"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800" Background="#FF1A1A40" Foreground="White">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="#FF1A1A40" Foreground="White">
+
+    <UserControl.Resources>
+        <local:EqualityToBrushMultiConverter x:Key="EqualityToBrushMultiConverter"
+                                             TrueBrush="DodgerBlue"
+                                             FalseBrush="Gray"/>
+    </UserControl.Resources>
 
     <Grid Margin="20">
         <StackPanel>
-            <TextBlock Text="Kategorie auswählen:" FontSize="18" Foreground="White" Margin="0,0,0,10" />
-            <ComboBox ItemsSource="{Binding Categories}"
-                      SelectedItem="{Binding SelectedCategory}"
-                      Width="200" Height="30" />
 
-            <TextBlock Text="Schwierigkeitslevel auswählen:" FontSize="18" Foreground="White" Margin="0,20,0,10" />
-            <ComboBox ItemsSource="{Binding Difficulties}"
-                      SelectedItem="{Binding SelectedDifficulty}"
-                      Width="200" Height="30" />
+            <TextBlock Text="Kategorie auswählen:" FontSize="18" Margin="0,0,0,10" />
 
-            <Button Command="{Binding NavigateQuizCommand}"
-                    Content="Quiz starten"
-                    Width="150" Height="40" Margin="0,40,0,0"
-                    HorizontalAlignment="Center" />
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <ItemsControl ItemsSource="{Binding Categories}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding}"
+                                    Command="{Binding DataContext.SelectCategoryCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
+                                    Margin="5,0"
+                                    Padding="10,5"
+                                    Foreground="White">
+                                <Button.Background>
+                                    <MultiBinding Converter="{StaticResource EqualityToBrushMultiConverter}">
+                                        <Binding Path="DataContext.SelectedCategory" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                        <Binding />
+                                    </MultiBinding>
+                                </Button.Background>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <TextBlock Text="Schwierigkeitslevel auswählen:" FontSize="18" Margin="0,0,0,10" />
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <ItemsControl ItemsSource="{Binding Difficulties}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding}"
+                                    Command="{Binding DataContext.SelectDifficultyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
+                                    Margin="5,0"
+                                    Padding="10,5"
+                                    Foreground="White">
+                                <Button.Background>
+                                    <MultiBinding Converter="{StaticResource EqualityToBrushMultiConverter}">
+                                        <Binding Path="DataContext.SelectedDifficulty" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                        <Binding />
+                                    </MultiBinding>
+                                </Button.Background>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <TextBlock Text="Anzahl Fragen auswählen:" FontSize="18" Margin="0,0,0,10" />
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <ItemsControl ItemsSource="{Binding QuestionCounts}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding}"
+                                    Command="{Binding DataContext.SelectQuestionCountCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
+                                    Margin="5,0"
+                                    Padding="10,5"
+                                    Foreground="White">
+                                <Button.Background>
+                                    <MultiBinding Converter="{StaticResource EqualityToBrushMultiConverter}">
+                                        <Binding Path="DataContext.SelectedQuestionCount" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                        <Binding />
+                                    </MultiBinding>
+                                </Button.Background>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <Button Content="Quiz starten"
+                    Command="{Binding NavigateQuizCommand}"
+                    Width="150" Height="40" HorizontalAlignment="Center"
+                    IsEnabled="{Binding CanStartQuiz}" />
         </StackPanel>
     </Grid>
 </UserControl>

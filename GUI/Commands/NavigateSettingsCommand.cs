@@ -17,9 +17,6 @@ namespace QuizApp.Commands
 
         public override void Execute(object parameter)
         {
-            QuizManager quizManager = new QuizManager(App.ConnectionString)
-            {
-            };
             _navigationStore.CurrentViewModel = new SettingsViewModel(_navigationStore, _quizManager);
         }
     }
