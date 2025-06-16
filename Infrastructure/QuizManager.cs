@@ -6,11 +6,11 @@ namespace QuizApp.Infrastructure
 {
     public class QuizManager
     {
+        private readonly UserService _userService;
         private List<IQuestion> _allQuestions;
 
         //*********** SPIELER ÄNDERUNGEN (SPIELER VON LOGIN MERKEN & Score va EndGame Methode durchreichen)*************
         private Stack<IQuestion> _questions;
-        private readonly UserService _userService;
         public List<IQuestion> AllQuestions = new();
 
         public QuizManager(string connectionString, IQuizTimer timer, UserService userService)
@@ -90,7 +90,7 @@ namespace QuizApp.Infrastructure
             if (_questions.Count == 0)
             {
                 int finalScore = Score;
-                _userService.UpdatePlayerStats(CurrentPlayer.id, finalScore);
+                _userService.UpdatePlayerStats(CurrentPlayer.Id, finalScore);
                 return null;
             }
 
