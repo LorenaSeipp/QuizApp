@@ -21,9 +21,6 @@ namespace QuizApp.Core
         public string Category { get; set; }
         public bool TrueFalse { get; set; }
 
-        public bool IsTrue()
-        {
-            return TrueFalse;
-        }
+        public bool IsTrue() => TrueFalse; 
     }
 }
