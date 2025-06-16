@@ -22,10 +22,13 @@ namespace QuizApp.Infrastructure
         }
 
         public int Score { get; private set; }
+        public int PointsPerRound { get; private set; }
         public int TotalQuestions => _allQuestions.Count;
         public int QuestionsAnswered => TotalQuestions - _questions.Count;
         public QuestionEnums.Difficulty Difficulty { get; set; }
         public string Category { get; set; } = "Gemischt"; // z.B. "Musik", "Informatik", "Gemischt"
+        public int NumberOfQuestions { get; set; } = 5; // Default Wert
+
 
         private List<IQuestion> LoadAllQuestions(QuestionRepository repo)
         {
@@ -68,62 +71,67 @@ namespace QuizApp.Infrastructure
             {
                 allQuestions = allQuestions.Where(q => q.Difficulty == (QuestionEnums.Difficulty)difficulty).ToList();
             }
+            
+            _allQuestions = allQuestions.OrderBy(q => Guid.NewGuid())
+                .Take(NumberOfQuestions)
+                .ToList();
 
-            _allQuestions = allQuestions;
-            _questions = new Stack<IQuestion>(_allQuestions.OrderBy(q => Guid.NewGuid()));
+            _questions = new Stack<IQuestion>(_allQuestions);
             Score = 0;
         }
 
 
         public IQuestion? GetNextQuestion()
         {
-            while (_questions.Count > 0)
-            {
-                _timer.Reset();
-                return _questions.Pop();
-            }
+            if (_questions.Count == 0)
+                return null;
 
-            return null;
+            _timer.Reset();
+            return _questions.Pop();
         }
 
         public void SubmitAnswer(IQuestion question, object? userAnswer, bool wasTimeUp= false)
         {
             _timer.Stop();
+            PointsPerRound = 0;
             if (wasTimeUp)
             {
                 return;
             }
+            
+            PointsPerRound += _timer.RemainingSeconds/3;;
+            
             switch (question)
             {
                 case EstimateQuestion eq:
                     int points = eq.CalculatePoints((int)userAnswer);
-                    Score += points;
+                    PointsPerRound += points;
                     break;
 
                 case MultipleChoiceQuestion mcq:
                     if (mcq.CorrectAnswer.Equals(userAnswer))
-                        Score += 10;
+                        PointsPerRound += 10;
                     break;
 
                 case TrueFalseQuestion tfq:
                     if (tfq.IsTrue == (bool)userAnswer)
-                        Score += 10;
+                        PointsPerRound += 10;
                     break;
 
                 case OpenQuestion oq:
                     if (oq.Answer.Trim()
                         .Equals(userAnswer.ToString()?.Trim(), StringComparison.OrdinalIgnoreCase))
-                        Score += 10;
+                        PointsPerRound += 10;
                     break;
 
                 case SortQuestion sq:
                     if (sq.CorrectOrder.SequenceEqual((List<string>)userAnswer))
-                        Score += 10;
+                        PointsPerRound += 10;
                     break;
             }
 
-            Score += _timer.RemainingSeconds;
-            
+            Score += PointsPerRound;
+
         }
 
         private void OnTimeUp()

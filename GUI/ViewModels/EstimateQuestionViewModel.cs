@@ -16,19 +16,7 @@ namespace QuizApp.GUI.ViewModels
         private int? _userAnswer;
         
         private int _earnedPoints;
-        public int EarnedPoints
-        {
-            get => _earnedPoints;
-            set
-            {
-                if (_earnedPoints != value)
-                {
-                    _earnedPoints = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(TotalPoints));
-                }
-            }
-        }
+        public int EarnedPoints => _quizManager.PointsPerRound;
 
         public int TotalPoints => _quizManager.Score;
         
@@ -66,7 +54,7 @@ namespace QuizApp.GUI.ViewModels
                 return; // oder Fehler anzeigen
 
             _quizManager.SubmitAnswer(_question, UserAnswer.Value);
-            EarnedPoints = _question.CalculatePoints(UserAnswer.Value);
+            OnPropertyChanged(nameof(EarnedPoints));
             OnPropertyChanged(nameof(TotalPoints));
             WasTimeUp = false;
 
@@ -79,7 +67,7 @@ namespace QuizApp.GUI.ViewModels
         {
             _quizManager.SubmitAnswer(_question, null, wasTimeUp: true);
 
-            EarnedPoints = 0;
+            OnPropertyChanged(nameof(EarnedPoints));
             OnPropertyChanged(nameof(TotalPoints));
             
             WasTimeUp = true;
