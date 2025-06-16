@@ -6,7 +6,7 @@
         xmlns:viewmodels="clr-namespace:QuizApp.ViewModels" xmlns:views="clr-namespace:QuizApp.Views"
         xmlns:global="clr-namespace:"
         mc:Ignorable="d"
-        Title="Quiz App" Height="450" Width="800">
+        Title="Quiz App" Width="1920" Height="1080" FontSize="42">
     <ContentControl Content="{Binding CurrentViewModel}">
         <ContentControl.Resources>
             <DataTemplate DataType="{x:Type viewmodels:HomeViewModel}">

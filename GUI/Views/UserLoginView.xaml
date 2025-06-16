@@ -14,11 +14,10 @@
                            Margin="0,0,0,20" />
 
                 <TextBlock Text="Benutzername" Foreground="White" Margin="0,0,0,5" />
-                <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" FontSize="16" Padding="5" />
+                <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Padding="5" />
 
                 <TextBlock Text="Passwort" Foreground="White" Margin="0,10,0,5" />
-                <PasswordBox x:Name="PasswordBox" FontSize="16" Padding="5"
-                             PasswordChanged="PasswordBox_PasswordChanged" />
+                <PasswordBox x:Name="PasswordBox" Padding="5" PasswordChanged="PasswordBox_PasswordChanged" />
 
                 <Button Content="Login"
                         Command="{Binding LoginCommand}"

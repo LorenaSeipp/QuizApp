@@ -7,11 +7,11 @@
         <Border CornerRadius="15"
                 Background="#FF1A1A40"
                 Padding="20"
-                MaxHeight="800"
+                MaxHeight="1000"
                 MaxWidth="1200"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top">
-            <Grid Width="400">
+            <Grid Width="400" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />       <!-- Frage -->
                     <RowDefinition Height="*" />          <!-- Antworten -->
@@ -22,7 +22,6 @@
 
                 <!-- Frage -->
                 <TextBlock Text="{Binding QuestionText}"
-                           FontSize="18"
                            FontWeight="Normal"
                            Foreground="White"
                            TextWrapping="Wrap"
@@ -39,7 +38,7 @@
                          BorderThickness="0"
                          Grid.Row="1"
                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                         MaxHeight="300">  <!-- max Höhe, damit scrollbar -->
+                         MaxHeight="800">  <!-- max Höhe, damit scrollbar -->
 
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
@@ -89,15 +88,13 @@
                             Command="{Binding MoveAnswerUpCommand}"
                             CommandParameter="{Binding SelectedAnswer}"
                             Width="70"
-                            Height="30"
-                            FontSize="20"
+                            FontSize="30"
                             Margin="5,0" />
                     <Button Content="↓"
                             Command="{Binding MoveAnswerDownCommand}"
                             CommandParameter="{Binding SelectedAnswer}"
                             Width="70"
-                            Height="30"
-                            FontSize="20"
+                            FontSize="30"
                             Margin="5,0" />
                 </StackPanel>
 
@@ -105,8 +102,6 @@
                 <Button Content="Antworten"
                         Command="{Binding SubmitAnswerCommand}"
                         FontWeight="Bold"
-                        FontSize="16"
-                        Height="40"
                         Margin="0,20,0,0"
                         Foreground="White"
                         BorderThickness="0"
@@ -140,7 +135,7 @@
                     </Button.Style>
                 </Button>
                 <TextBlock Text="{Binding RemainingSeconds, StringFormat='Restzeit: {0} Sekunden'}"
-                           FontSize="16"
+                           FontSize="30"
                            FontWeight="Bold"
                            Foreground="Orange"
                            TextAlignment="Right"
