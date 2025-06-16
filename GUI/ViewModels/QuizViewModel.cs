@@ -8,7 +8,7 @@ public class QuizViewModel : BaseViewModel
     private readonly NavigationStore _navigationStore;
     private readonly QuizManager _quizManager;
 
-    private QuestionViewModel? _currentQuestion;
+    private TimedQuestionViewModel? _currentQuestion;
 
     public QuizViewModel(NavigationStore navigationStore, QuizManager quizManager)
     {
@@ -18,7 +18,7 @@ public class QuizViewModel : BaseViewModel
         LoadNextQuestion();
     }
 
-    public QuestionViewModel? CurrentQuestion
+    public TimedQuestionViewModel? CurrentQuestion
     {
         get => _currentQuestion;
         set

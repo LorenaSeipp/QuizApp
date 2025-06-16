@@ -37,7 +37,8 @@ namespace QuizApp.Infrastructure
                 }
                 catch (FileNotFoundException ex)
                 {
-                    throw new DatabaseInitializationException("SQL-Skript zum Initialisieren der Datenbank nicht gefunden.", ex);
+                    throw new DatabaseInitializationException(
+                        "SQL-Skript zum Initialisieren der Datenbank nicht gefunden.", ex);
                 }
                 catch (Exception ex)
                 {
@@ -47,7 +48,7 @@ namespace QuizApp.Infrastructure
 
             try
             {
-                runSQLScript("init-data.sql");
+                //runSQLScript("init-data.sql");
                 Console.WriteLine("Data loaded successfully.");
             }
             catch (FileNotFoundException ex)
@@ -70,7 +71,7 @@ namespace QuizApp.Infrastructure
 
             string sqlScript = File.ReadAllText(sqlFilePath, Encoding.UTF8);
             string[] commands = sqlScript.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            
+
             using OracleConnection connection = new OracleConnection(_connectionString);
             connection.Open();
 
@@ -95,6 +96,7 @@ namespace QuizApp.Infrastructure
                     }
                 }
             }
+
             connection.Close();
         }
 

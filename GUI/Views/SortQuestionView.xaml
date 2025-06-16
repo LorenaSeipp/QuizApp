@@ -12,11 +12,12 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top">
             <Grid Width="400">
-                <Grid.RowDefinitions >
-                    <RowDefinition Height="Auto"/>       <!-- Frage -->
-                    <RowDefinition Height="*"/>          <!-- Antworten -->
-                    <RowDefinition Height="Auto"/>       <!-- Buttons für Verschieben -->
-                    <RowDefinition Height="Auto"/>       <!-- Antworten Button -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />       <!-- Frage -->
+                    <RowDefinition Height="*" />          <!-- Antworten -->
+                    <RowDefinition Height="Auto" />       <!-- Buttons für Verschieben -->
+                    <RowDefinition Height="Auto" />       <!-- Antworten Button -->
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <!-- Frage -->
@@ -42,12 +43,12 @@
 
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="Margin" Value="0,5"/>
-                            <Setter Property="Padding" Value="10"/>
-                            <Setter Property="BorderThickness" Value="2"/>
-                            <Setter Property="Background" Value="#333355"/>
-                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Margin" Value="0,5" />
+                            <Setter Property="Padding" Value="10" />
+                            <Setter Property="BorderThickness" Value="2" />
+                            <Setter Property="Background" Value="#333355" />
+                            <Setter Property="BorderBrush" Value="Transparent" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListBoxItem">
@@ -62,17 +63,20 @@
                             </Setter>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsCorrect}" Value="True">
-                                    <Setter Property="BorderBrush" Value="Green"/>
+                                    <Setter Property="BorderBrush" Value="Green" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsCorrect}" Value="False">
-                                    <Setter Property="BorderBrush" Value="Red"/>
+                                    <Setter Property="BorderBrush" Value="Red" />
                                 </DataTrigger>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True"/>
-                                        <Condition Binding="{Binding DataContext.HasAnswered, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="False"/>
+                                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}"
+                                                   Value="True" />
+                                        <Condition
+                                            Binding="{Binding DataContext.HasAnswered, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            Value="False" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter Property="BorderBrush" Value="Yellow"/>
+                                    <Setter Property="BorderBrush" Value="Yellow" />
                                 </MultiDataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -99,7 +103,7 @@
 
                 <!-- Antworten Button -->
                 <Button Content="Antworten"
-                        Command="{Binding CheckAnswerCommand}"
+                        Command="{Binding SubmitAnswerCommand}"
                         FontWeight="Bold"
                         FontSize="16"
                         Height="40"
@@ -110,9 +114,9 @@
                         Grid.Row="3">
                     <Button.Style>
                         <Style TargetType="Button">
-                            <Setter Property="Background" Value="#009688"/>
-                            <Setter Property="Foreground" Value="White"/>
-                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Background" Value="#009688" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Cursor" Value="Hand" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="Button">
@@ -120,13 +124,13 @@
                                                 Background="{TemplateBinding Background}"
                                                 BorderThickness="{TemplateBinding BorderThickness}"
                                                 BorderBrush="{TemplateBinding BorderBrush}">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsEnabled" Value="False">
-                                                <Setter TargetName="border" Property="Background" Value="Gray"/>
-                                                <Setter Property="Foreground" Value="White"/>
-                                                <Setter Property="Cursor" Value="Arrow"/>
+                                                <Setter TargetName="border" Property="Background" Value="Gray" />
+                                                <Setter Property="Foreground" Value="White" />
+                                                <Setter Property="Cursor" Value="Arrow" />
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -135,8 +139,41 @@
                         </Style>
                     </Button.Style>
                 </Button>
+                <TextBlock Text="{Binding RemainingSeconds, StringFormat='Restzeit: {0} Sekunden'}"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           Foreground="Orange"
+                           TextAlignment="Right"
+                           Margin="0,0,0,20"
+                           Grid.Row="4" />
+
 
             </Grid>
+        </Border>
+        <Border Background="#AA000000"
+                Visibility="{Binding IsFeedbackVisible, Converter={StaticResource BoolToVisibilityConverter}}"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Border Background="White" Padding="20" CornerRadius="10"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel>
+                    <TextBlock Text="{Binding EarnedPoints, StringFormat='Erhaltene Punkte: +{0}'}"
+                               FontSize="16"
+                               Foreground="#009688"
+                               TextAlignment="Center"
+                               Margin="0,10,0,0" />
+
+                    <TextBlock Text="{Binding TotalPoints, StringFormat='Gesamtpunktzahl: {0}'}"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="Orange"
+                               TextAlignment="Center"
+                               Margin="0,5,0,20" />
+                    <TextBlock Text="{Binding FeedbackMessage}" Foreground="Black" FontSize="20" FontWeight="Bold"
+                               TextAlignment="Center" />
+                    <TextBlock Text="Zeit abgelaufen!" FontSize="16" Foreground="Red" TextAlignment="Center"
+                               Visibility="{Binding WasTimeUp, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </StackPanel>
+            </Border>
         </Border>
     </Grid>
 </UserControl>

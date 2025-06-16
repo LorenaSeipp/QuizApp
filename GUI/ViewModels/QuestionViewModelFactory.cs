@@ -6,7 +6,8 @@ using QuizApp.ViewModels;
 
 public static class QuestionViewModelFactory
 {
-    public static QuestionViewModel Create(object question, NavigationStore navigationStore, QuizManager quizManager)
+    public static TimedQuestionViewModel Create(object question, NavigationStore navigationStore,
+        QuizManager quizManager)
     {
         return question switch
         {

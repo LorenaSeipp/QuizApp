@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
@@ -14,8 +14,8 @@
         <ProjectReference Include="..\Core\Core.csproj" />
         <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
         <ProjectReference Include="..\Logic\Logic.csproj" />
-      <Folder Include="ViewModels\Questions\" />
-      <Folder Include="Views\Questions\" />
+        <Folder Include="ViewModels"/>
+        <Folder Include="Views"/>
         <ProjectReference Include="..\Tests\Tests.csproj"/>
     </ItemGroup>
 

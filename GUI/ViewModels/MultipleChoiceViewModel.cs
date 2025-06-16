@@ -6,18 +6,20 @@ using QuizApp.ViewModels;
 
 namespace QuizApp.GUI.ViewModels;
 
-public class MultipleChoiceQuestionViewModel : QuestionViewModel
+public class MultipleChoiceQuestionViewModel : TimedQuestionViewModel
 {
     private readonly NavigationStore _navigationStore;
     private readonly MultipleChoiceQuestion _question;
     private readonly QuizManager _quizManager;
+    private int _earnedPoints;
 
     private string _selectedAnswer;
+    public string FeedbackMessage = "";
 
     public MultipleChoiceQuestionViewModel(
         MultipleChoiceQuestion question,
         NavigationStore navigationStore,
-        QuizManager quizManager)
+        QuizManager quizManager) : base(quizManager.Timer)
     {
         _question = question;
         _quizManager = quizManager;
@@ -34,6 +36,10 @@ public class MultipleChoiceQuestionViewModel : QuestionViewModel
 
         SubmitAnswerCommand = new RelayCommand(SubmitAnswer, () => !string.IsNullOrEmpty(SelectedAnswer));
     }
+
+    public int EarnedPoints => _quizManager.PointsPerRound;
+
+    public int TotalPoints => _quizManager.Score;
 
     public string QuestionText => _question.Question;
 
@@ -52,9 +58,25 @@ public class MultipleChoiceQuestionViewModel : QuestionViewModel
 
     public ICommand SubmitAnswerCommand { get; }
 
-    public override void SubmitAnswer()
+    public override async void SubmitAnswer()
     {
         _quizManager.SubmitAnswer(_question, SelectedAnswer);
-        _navigationStore.CurrentViewModel = new QuizViewModel(_navigationStore, _quizManager);
+        OnPropertyChanged(nameof(EarnedPoints));
+        OnPropertyChanged(nameof(TotalPoints));
+        WasTimeUp = false;
+        string message = $"Richtige Antwort: {_question.CorrectAnswer} \nPunkte: {EarnedPoints}";
+        FeedbackMessage = message;
+        await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
+    }
+
+    protected override async void OnTimeUp()
+    {
+        OnPropertyChanged(nameof(EarnedPoints));
+        OnPropertyChanged(nameof(TotalPoints));
+
+        WasTimeUp = true;
+        string message = $"Richtige Antwort: {_question.CorrectAnswer} \n Zeit abgelaufen!\nPunkte: {EarnedPoints}";
+        FeedbackMessage = message;
+        await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
     }
 }

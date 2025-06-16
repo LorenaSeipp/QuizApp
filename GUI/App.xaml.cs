@@ -22,7 +22,7 @@ public partial class App : Application
         IConfigurationBuilder builder = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("appsettings.json", false, true);
-        
+
         Configuration = builder.Build();
         ConnectionString = Configuration.GetConnectionString("OracleDb");
 
@@ -31,15 +31,15 @@ public partial class App : Application
         dbService.InitializeDatabase();
         UserService userService = new(ConnectionString);
         QuestionRepository repository = new(ConnectionString);
-        
+
         // Admin erstellen 
         AdminCreator adminCreator = new(ConnectionString);
-        //adminCreator.CreateAdmin("Admin", "admin123", "System");
+        adminCreator.CreateAdmin("admin", "admin", "System");
 
         // SETUP UI
         QuizTimer quizTimer = new QuizTimer(30);
         QuizManager quizManager = new(ConnectionString, quizTimer);
-        
+
         NavigationStore navigationStore = new NavigationStore();
         navigationStore.CurrentViewModel = new HomeViewModel(navigationStore, quizManager);
         MainWindow = new MainWindow()

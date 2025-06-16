@@ -3,13 +3,30 @@ using QuizApp.Stores;
 
 namespace QuizApp.ViewModels;
 
-public abstract class TimedQuestionViewModel: QuestionViewModel
+public abstract class TimedQuestionViewModel : BaseViewModel
 {
     protected readonly IQuizTimer _timer;
-    
-    public int RemainingSeconds => _timer.RemainingSeconds;
-    
+
+    private string _feedbackMessage;
+
     private bool _isFeedbackVisible;
+
+    private bool _wasTimeUp;
+
+    public TimedQuestionViewModel()
+    {
+    }
+
+    public TimedQuestionViewModel(IQuizTimer timer)
+    {
+        _timer = timer;
+        _timer.TimerTick += OnTimerTick;
+        _timer.TimeUp += OnTimeUp;
+        _timer.Start();
+    }
+
+    public int RemainingSeconds => _timer.RemainingSeconds;
+
     public bool IsFeedbackVisible
     {
         get => _isFeedbackVisible;
@@ -20,7 +37,6 @@ public abstract class TimedQuestionViewModel: QuestionViewModel
         }
     }
 
-    private string _feedbackMessage;
     public string FeedbackMessage
     {
         get => _feedbackMessage;
@@ -31,7 +47,6 @@ public abstract class TimedQuestionViewModel: QuestionViewModel
         }
     }
 
-    private bool _wasTimeUp;
     public bool WasTimeUp
     {
         get => _wasTimeUp;
@@ -42,14 +57,6 @@ public abstract class TimedQuestionViewModel: QuestionViewModel
         }
     }
 
-    public TimedQuestionViewModel(IQuizTimer timer)
-    {
-        _timer = timer;
-        _timer.TimerTick += OnTimerTick;
-        _timer.TimeUp += OnTimeUp;
-        _timer.Start();
-    }
-    
     private void OnTimerTick()
     {
         OnPropertyChanged(nameof(RemainingSeconds));
@@ -57,9 +64,8 @@ public abstract class TimedQuestionViewModel: QuestionViewModel
 
     protected virtual void OnTimeUp()
     {
-        
     }
-    
+
     protected async Task ShowFeedbackAndLoadNextAsync(string message, NavigationStore navStore, QuizManager quizManager)
     {
         FeedbackMessage = message;
@@ -69,4 +75,6 @@ public abstract class TimedQuestionViewModel: QuestionViewModel
 
         navStore.CurrentViewModel = new QuizViewModel(navStore, quizManager);
     }
+
+    public abstract void SubmitAnswer();
 }

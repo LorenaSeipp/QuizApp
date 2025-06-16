@@ -6,9 +6,6 @@ namespace QuizApp.Infrastructure
     {
         private List<IQuestion> _allQuestions;
         private Stack<IQuestion> _questions;
-        
-        private readonly IQuizTimer _timer;
-        public IQuizTimer Timer => _timer;
 
         public QuizManager(string connectionString, IQuizTimer timer)
         {
@@ -16,10 +13,12 @@ namespace QuizApp.Infrastructure
             _allQuestions = LoadAllQuestions(questionRepo);
             _questions = new Stack<IQuestion>(_allQuestions.OrderBy(q => Guid.NewGuid()));
             Score = 0;
-            
-            _timer = timer;
-            _timer.TimeUp += OnTimeUp;
+
+            Timer = timer;
+            Timer.TimeUp += OnTimeUp;
         }
+
+        public IQuizTimer Timer { get; }
 
         public int Score { get; private set; }
         public int PointsPerRound { get; private set; }
@@ -71,7 +70,7 @@ namespace QuizApp.Infrastructure
             {
                 allQuestions = allQuestions.Where(q => q.Difficulty == (QuestionEnums.Difficulty)difficulty).ToList();
             }
-            
+
             _allQuestions = allQuestions.OrderBy(q => Guid.NewGuid())
                 .Take(NumberOfQuestions)
                 .ToList();
@@ -86,21 +85,19 @@ namespace QuizApp.Infrastructure
             if (_questions.Count == 0)
                 return null;
 
-            _timer.Reset();
+            Timer.Reset();
             return _questions.Pop();
         }
 
-        public void SubmitAnswer(IQuestion question, object? userAnswer, bool wasTimeUp= false)
+        public void SubmitAnswer(IQuestion question, object? userAnswer, bool wasTimeUp = false)
         {
-            _timer.Stop();
+            Timer.Stop();
             PointsPerRound = 0;
             if (wasTimeUp)
             {
                 return;
             }
-            
-            PointsPerRound += _timer.RemainingSeconds/3;;
-            
+
             switch (question)
             {
                 case EstimateQuestion eq:
@@ -114,7 +111,7 @@ namespace QuizApp.Infrastructure
                     break;
 
                 case TrueFalseQuestion tfq:
-                    if (tfq.IsTrue == (bool)userAnswer)
+                    if (tfq.IsTrue() == (bool)userAnswer)
                         PointsPerRound += 10;
                     break;
 
@@ -125,16 +122,18 @@ namespace QuizApp.Infrastructure
                     break;
 
                 case SortQuestion sq:
-                    if (sq.CorrectOrder.SequenceEqual((List<string>)userAnswer))
+                    if ((bool)userAnswer)
                         PointsPerRound += 10;
                     break;
             }
 
-            Score += PointsPerRound;
+            if (PointsPerRound > 0) PointsPerRound += Timer.RemainingSeconds / 3;
 
+            Score += PointsPerRound;
         }
 
         private void OnTimeUp()
-        { }
+        {
+        }
     }
 }

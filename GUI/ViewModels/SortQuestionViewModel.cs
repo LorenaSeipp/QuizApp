@@ -4,59 +4,23 @@ using CommunityToolkit.Mvvm.Input;
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
+using QuizApp.ViewModels;
 
-namespace QuizApp.ViewModels;
+namespace QuizApp.GUI.ViewModels;
 
-public partial class SortQuestionViewModel : BaseViewModel
+public partial class SortQuestionViewModel : TimedQuestionViewModel
 {
-    public partial class SortQuestionAnswer : ObservableObject
-    {
-        public string QuestionText { get; set; }
-        
-        [ObservableProperty]
-        private bool? _isCorrect;
-        
-    }
-
-    private SortQuestionAnswer? _selectedAnswer;
-    public SortQuestionAnswer? SelectedAnswer
-    {
-        get => _selectedAnswer;
-        set
-        {
-            if (_selectedAnswer != value)
-            {
-                _selectedAnswer = value;
-                OnPropertyChanged(nameof(SelectedAnswer));
-                NotifyCommands();
-            }
-        }
-    }
-    
-    private bool _hasAnswered;
-    public bool HasAnswered
-    {
-        get => _hasAnswered;
-        set
-        {
-            if (_hasAnswered != value)
-            {
-                _hasAnswered = value;
-                OnPropertyChanged(nameof(HasAnswered));
-                NotifyCommands();
-                CheckAnswerCommand.NotifyCanExecuteChanged();
-            }
-        }
-    }
+    private readonly SortQuestionAnswer[] _answersInCorrectOrder;
     private readonly NavigationStore _navigationStore;
     private readonly QuizManager _quizManager;
-    SortQuestion SortQuestion { get; set; }
-    public string QuestionText => SortQuestion.Question;
-    public bool IsRightOrder {get; set;}
-    public ObservableCollection<SortQuestionAnswer> ObservableCollection { get; set; }
-    private readonly SortQuestionAnswer[] _answersInCorrectOrder;
+    private int _earnedPoints;
 
-    public SortQuestionViewModel(SortQuestion sortQuestion, NavigationStore navigationStore, QuizManager quizManager)
+    private bool _hasAnswered;
+    private SortQuestionAnswer? _selectedAnswer;
+    public string FeedbackMessage = "";
+
+    public SortQuestionViewModel(SortQuestion sortQuestion, NavigationStore navigationStore, QuizManager quizManager) :
+        base(quizManager.Timer)
     {
         _quizManager = quizManager;
         _navigationStore = navigationStore;
@@ -71,6 +35,44 @@ public partial class SortQuestionViewModel : BaseViewModel
         SortQuestionAnswer[] answersInWrongOrder = ShuffleAnswers(_answersInCorrectOrder.ToArray());
         ObservableCollection = new ObservableCollection<SortQuestionAnswer>(answersInWrongOrder);
     }
+
+    public int EarnedPoints => _quizManager.PointsPerRound;
+
+    public int TotalPoints => _quizManager.Score;
+
+    public SortQuestionAnswer? SelectedAnswer
+    {
+        get => _selectedAnswer;
+        set
+        {
+            if (_selectedAnswer != value)
+            {
+                _selectedAnswer = value;
+                OnPropertyChanged(nameof(SelectedAnswer));
+                NotifyCommands();
+            }
+        }
+    }
+
+    public bool HasAnswered
+    {
+        get => _hasAnswered;
+        set
+        {
+            if (_hasAnswered != value)
+            {
+                _hasAnswered = value;
+                OnPropertyChanged(nameof(HasAnswered));
+                NotifyCommands();
+                SubmitAnswerCommand.NotifyCanExecuteChanged();
+            }
+        }
+    }
+
+    SortQuestion SortQuestion { get; set; }
+    public string QuestionText => SortQuestion.Question;
+    public bool IsRightOrder { get; set; }
+    public ObservableCollection<SortQuestionAnswer> ObservableCollection { get; set; }
 
     private bool CanMoveAnswerUp(SortQuestionAnswer? answer)
     {
@@ -99,7 +101,7 @@ public partial class SortQuestionViewModel : BaseViewModel
         ObservableCollection.Move(indexOfAnswer, indexOfAnswer - 1);
         NotifyCommands();
     }
-    
+
     [RelayCommand(CanExecute = nameof(CanMoveAnswerDown))]
     public void MoveAnswerDown(SortQuestionAnswer answer)
     {
@@ -119,6 +121,7 @@ public partial class SortQuestionViewModel : BaseViewModel
             array[i] = array[j];
             array[j] = temp;
         }
+
         return array;
     }
 
@@ -126,9 +129,9 @@ public partial class SortQuestionViewModel : BaseViewModel
     {
         return !HasAnswered;
     }
-    
+
     [RelayCommand(CanExecute = nameof(CanCheckAnswer))]
-    public void CheckAnswer()
+    public override async void SubmitAnswer()
     {
         if (CanCheckAnswer())
         {
@@ -139,17 +142,47 @@ public partial class SortQuestionViewModel : BaseViewModel
                 string userOrder = ObservableCollection[i].QuestionText.Trim();
                 bool isCorrect = string.Equals(correctOrder, userOrder, StringComparison.OrdinalIgnoreCase);
                 ObservableCollection[i].IsCorrect = isCorrect;
-                
+
                 if (!isCorrect)
                 {
                     IsRightOrder = false;
                 }
             }
-            
+
             HasAnswered = true;
             SelectedAnswer = null;
-            CheckAnswerCommand.NotifyCanExecuteChanged();
+            SubmitAnswerCommand.NotifyCanExecuteChanged();
             NotifyCommands();
+            _quizManager.SubmitAnswer(SortQuestion, IsRightOrder);
+            OnPropertyChanged(nameof(EarnedPoints));
+            OnPropertyChanged(nameof(TotalPoints));
+            WasTimeUp = false;
+            string message = $"Punkte: {EarnedPoints}";
+            FeedbackMessage = message;
+            await Task.Delay(3000);
+            await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
         }
+    }
+
+    protected override async void OnTimeUp()
+    {
+        OnPropertyChanged(nameof(EarnedPoints));
+        OnPropertyChanged(nameof(TotalPoints));
+
+        WasTimeUp = true;
+        string message = "Richtige Reihenfolge: \n";
+        foreach (SortQuestionAnswer answer in _answersInCorrectOrder) message += answer.QuestionText + "\n";
+
+        message += $"Zeit abgelaufen!\nPunkte: {EarnedPoints}";
+        FeedbackMessage = message;
+        await Task.Delay(3000);
+        await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
+    }
+
+    public partial class SortQuestionAnswer : ObservableObject
+    {
+        [ObservableProperty] private bool? _isCorrect;
+
+        public string QuestionText { get; set; }
     }
 }

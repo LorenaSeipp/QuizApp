@@ -3,11 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:views="clr-namespace:QuizApp.Views"
              xmlns:vm="clr-namespace:QuizApp.GUI.ViewModels"
-             xmlns:utils1="clr-namespace:QuizApp.GUI.utils"
-             xmlns:converters="clr-namespace:QuizApp.Converters">
+             xmlns:utils="clr-namespace:QuizApp.GUI.utils"
+             xmlns:converters="clr-namespace:QuizApp.Converters"
+             xmlns:viewModels="clr-namespace:QuizApp.ViewModels">
     <Application.Resources>
-        <utils:StringEqualityConverter x:Key="StringEqualityConverter" />
-        <utils1:InverseBoolConverter x:Key="InverseBoolConverter" />
+
+        <utils:InverseBoolConverter x:Key="InverseBoolConverter" />
         <utils:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:EqualityToBrushMultiConverter x:Key="EqualityToBrushConverter" />
         <Style x:Key="QuizRadioButtonStyle" TargetType="RadioButton">
@@ -58,7 +59,7 @@
             <views:SortQuestionView />
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type vm:EstimateQuestionViewModel}">
+        <DataTemplate DataType="{x:Type viewModels:EstimateQuestionViewModel}">
             <views:EstimateQuestionView />
         </DataTemplate>
     </Application.Resources>

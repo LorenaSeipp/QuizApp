@@ -7,15 +7,17 @@ using QuizApp.ViewModels;
 
 namespace QuizApp.GUI.ViewModels
 {
-    public class TrueFalseQuestionViewModel : QuestionViewModel
+    public class TrueFalseQuestionViewModel : TimedQuestionViewModel
     {
         private readonly NavigationStore _navigationStore;
         private readonly TrueFalseQuestion _question;
         private readonly QuizManager _quizManager;
+        private int _earnedPoints;
         private bool? _userAnswer;
+        public string FeedbackMessage = "";
 
         public TrueFalseQuestionViewModel(TrueFalseQuestion question,
-            NavigationStore navigationStore, QuizManager quizManager)
+            NavigationStore navigationStore, QuizManager quizManager) : base(quizManager.Timer)
         {
             _question = question;
             _quizManager = quizManager;
@@ -23,6 +25,10 @@ namespace QuizApp.GUI.ViewModels
 
             SubmitAnswerCommand = new RelayCommand(SubmitAnswer, () => UserAnswer.HasValue);
         }
+
+        public int EarnedPoints => _quizManager.PointsPerRound;
+
+        public int TotalPoints => _quizManager.Score;
 
         public string QuestionText => _question.Question;
 
@@ -43,14 +49,27 @@ namespace QuizApp.GUI.ViewModels
 
         public ICommand SubmitAnswerCommand { get; }
 
-        private void SubmitAnswer()
+        public override async void SubmitAnswer()
         {
             if (UserAnswer.HasValue) _quizManager.SubmitAnswer(_question, UserAnswer.Value);
 
-            QuizViewModel quizViewModel = new(_navigationStore, _quizManager);
-            _navigationStore.CurrentViewModel = quizViewModel;
+            OnPropertyChanged(nameof(EarnedPoints));
+            OnPropertyChanged(nameof(TotalPoints));
+            WasTimeUp = false;
+            string message = $"Richtige Antwort: {_question.TrueFalse} \nPunkte: {EarnedPoints}";
+            FeedbackMessage = message;
+            await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
         }
 
-        //TODO SubmitAnswer -> Button und Logik zur Überprüfung der Antwort 
+        protected override async void OnTimeUp()
+        {
+            OnPropertyChanged(nameof(EarnedPoints));
+            OnPropertyChanged(nameof(TotalPoints));
+
+            WasTimeUp = true;
+            string message = $"Richtige Antwort: {_question.TrueFalse} \n Zeit abgelaufen!\nPunkte: {EarnedPoints}";
+            FeedbackMessage = message;
+            await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
+        }
     }
 }

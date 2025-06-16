@@ -1,6 +1,4 @@
 -- SORT QUESTIONS
-DELETE FROM SortQuestion;
-
 -- Informatik
 INSERT INTO SortQuestion (Question, Typ, Difficulty, Category, Place1, Place2, Place3, Place4)
 VALUES ('Ordne diese Programmiersprachen nach ihrem Erscheinungsjahr (alt → neu):', 'Sort', 0, 'Informatik', 'C', 'Java', 'Python', 'Go');
@@ -222,8 +220,9 @@ VALUES ('Wie viele Menschen starben beim Ausbruch des Vesuvs in Pompeji (geschä
 INSERT INTO EstimateQuestion (Question, Typ, Difficulty, Category, RightAnswer) 
 VALUES ('In welchem Jahr endete das Römische Reich (Westrom)?', 'Estimate', 2, 'Geschichte', 476);
 
-INSERT INTO EstimateQuestion (Question, Typ, Difficulty, Category, RightAnswer) 
-VALUES ('Wie viele Jahre dauerte das Römische Reich insgesamt (von 27 v. Chr. bis 1453)?', 'Estimate', 2, 'Geschichte', 1480);
+INSERT INTO EstimateQuestion (Question, Typ, Difficulty, Category, RightAnswer)
+VALUES ('Wie viele Jahre dauerte das Römische Reich insgesamt (von 27 v.Chr. bis 1453)?', 'Estimate', 2, 'Geschichte',
+        1480);
 
 
 -- Estimate Questions: Funfacts
@@ -235,9 +234,6 @@ VALUES ('Wie viele Augen hat eine Biene?', 'Estimate', 0, 'Funfacts', 5);
 
 INSERT INTO EstimateQuestion (Question, Typ, Difficulty, Category, RightAnswer) 
 VALUES ('Wie viele Tage hat ein Schaltjahr?', 'Estimate', 0, 'Funfacts', 366);
-
-INSERT INTO EstimateQuestion (Question, Typ, Difficulty, Category, RightAnswer) 
-VALUES ('Wie viele LEGO-Steine gibt es weltweit (geschätzt)?', 'Estimate', 1, 'Funfacts', 400000000000);
 
 INSERT INTO EstimateQuestion (Question, Typ, Difficulty, Category, RightAnswer) 
 VALUES ('Wie viele Liter Wasser passen in ein olympisches Schwimmbecken?', 'Estimate', 1, 'Funfacts', 2500000);
@@ -322,11 +318,11 @@ VALUES ('Welche Tierart nutzt ihren eigenen Po als Notfall-Atemgerät?', 'Multip
 
 INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
                                     FalseAnswer3)
-VALUES ('Was passiert, wenn man eine Banane mit einem Geigerzähler untersucht?', 'MultipleChoice', 0, 'Fun-Facts',
+VALUES ('Was passiert, wenn man eine Banane mit einem Geigerzähler untersucht?', 'MultipleChoice', 1, 'Fun-Facts',
         'Sie zeigt eine geringe Radioaktivität', 'Sie explodiert bei 88 Bananen pro Stunde',
         'Sie sendet Morsezeichen aus', 'Sie wird plötzlich grün vor Neid');
 
 INSERT INTO MultipleChoiceQuestion (Question, Typ, Difficulty, Category, CorrectAnswer, FalseAnswer1, FalseAnswer2,
                                     FalseAnswer3)
-VALUES ('Welche Tierart kann Monate ohne Kopf weiterleben?', 'MultipleChoice', 0, 'Fun-Facts', 'Kakerlaken', 'Frösche',
+VALUES ('Welche Tierart kann Monate ohne Kopf weiterleben?', 'MultipleChoice', 2, 'Fun-Facts', 'Kakerlaken', 'Frösche',
         'Mäuse', 'Kolibris');

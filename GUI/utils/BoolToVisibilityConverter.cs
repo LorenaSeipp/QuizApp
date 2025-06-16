@@ -2,9 +2,9 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace QuizApp.utils;
+namespace QuizApp.GUI.utils;
 
-public class BoolToVisibilityConverter: IValueConverter
+public class BoolToVisibilityConverter : IValueConverter
 {
     public bool Invert { get; set; }
 
