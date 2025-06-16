@@ -21,7 +21,7 @@ public partial class App : Application
         IConfigurationBuilder builder = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("appsettings.json", false, true);
-
+        
         Configuration = builder.Build();
         ConnectionString = Configuration.GetConnectionString("OracleDb");
 
@@ -29,9 +29,8 @@ public partial class App : Application
         OracleDatabaseService dbService = new(ConnectionString);
         dbService.InitializeDatabase();
         UserService userService = new(ConnectionString);
-
         QuestionRepository repository = new(ConnectionString);
-
+        
         // Admin erstellen 
         AdminCreator adminCreator = new(ConnectionString);
         //adminCreator.CreateAdmin("Admin", "admin123", "System");
