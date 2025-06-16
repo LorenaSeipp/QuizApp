@@ -81,7 +81,7 @@ public class UserLoginViewModel : BaseViewModel
             {
                 _loginAttempts++;
                 MessageBox.Show(
-                    $"Benutzer nicht gefunden. Versuche verbleibend: {MaxLoginAttempts - _loginAttempts} Neuer Nutzer? Registrieren klicken!");
+                    $"Benutzername oder Passwort falsch. \n. Versuche verbleibend: {MaxLoginAttempts - _loginAttempts} Neuer Nutzer? Registrieren klicken!");
                 return;
             }
 
@@ -102,6 +102,9 @@ public class UserLoginViewModel : BaseViewModel
             }
             else if (user.Role == UserRole.Player)
             {
+                if (user is Player player)
+                    _quizManager.SetCurrentPlayer(player); // Spieler setzen in QuizManager NEU NEU NEU 16.06.2025
+
                 _navigationStore.CurrentViewModel = new SettingsViewModel(_navigationStore, _quizManager);
             }
         }
@@ -117,12 +120,23 @@ public class UserLoginViewModel : BaseViewModel
         }
     }
 
-
     private void RegisterPlayer()
     {
         if (_userService.GetUserByName(Username) != null)
         {
             MessageBox.Show("Benutzername existiert bereits.");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
+        {
+            MessageBox.Show("Bitte Benutzername und Passwort eingeben.");
+            return;
+        }
+
+        if (Password.Length < 12)
+        {
+            MessageBox.Show("Passwort muss mindestens 12 Zeichen lang sein.");
             return;
         }
 

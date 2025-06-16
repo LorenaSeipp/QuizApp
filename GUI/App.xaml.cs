@@ -38,7 +38,7 @@ public partial class App : Application
 
         // SETUP UI
         QuizTimer quizTimer = new QuizTimer(30);
-        QuizManager quizManager = new(ConnectionString, quizTimer);
+        QuizManager quizManager = new(ConnectionString, quizTimer, userService);
 
         NavigationStore navigationStore = new NavigationStore();
         navigationStore.CurrentViewModel = new HomeViewModel(navigationStore, quizManager);
