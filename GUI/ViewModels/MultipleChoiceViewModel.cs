@@ -35,6 +35,8 @@ public class MultipleChoiceQuestionViewModel : QuestionViewModel
         SubmitAnswerCommand = new RelayCommand(SubmitAnswer, () => !string.IsNullOrEmpty(SelectedAnswer));
     }
 
+    public string QuestionText => _question.Question;
+
     public List<string> Answers { get; }
 
     public string SelectedAnswer
