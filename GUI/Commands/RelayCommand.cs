@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Windows;
 using System.Windows.Input;
 
 namespace QuizApp.Commands;
@@ -9,23 +11,49 @@ public class RelayCommand : ICommand
 
     public RelayCommand(Action execute, Func<bool> canExecute = null)
     {
-        _execute = execute;
-        _canExecute = canExecute;
+        _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+        _canExecute = canExecute ?? (() => true);
     }
+
+    public event EventHandler CanExecuteChanged;
 
     public bool CanExecute(object parameter)
     {
-        return _canExecute == null || _canExecute();
+        try
+        {
+            return _canExecute();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[RelayCommand.CanExecute] Fehler: {ex.Message}");
+            return false;
+        }
     }
 
     public void Execute(object parameter)
     {
-        _execute();
+        try
+        {
+            _execute();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[RelayCommand.Execute] Ausnahme: {ex}");
+
+            MessageBox.Show("Beim Ausführen des Befehls ist ein Fehler aufgetreten.", "Fehler", MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
     }
 
-    public event EventHandler CanExecuteChanged
+    public void RaiseCanExecuteChanged()
     {
-        add => CommandManager.RequerySuggested += value;
-        remove => CommandManager.RequerySuggested -= value;
+        try
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[RelayCommand.RaiseCanExecuteChanged] Fehler: {ex.Message}");
+        }
     }
 }

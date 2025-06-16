@@ -27,7 +27,9 @@
             <DataTemplate DataType="{x:Type viewmodels:AdminDashboardViewModel}">
                 <views:AdminDashboardView />
             </DataTemplate>
-
+            <DataTemplate DataType="{x:Type viewmodels:EndScreenViewModel}">
+                <views:EndScreenView />
+            </DataTemplate>
         </ContentControl.Resources>
     </ContentControl>
 </Window>

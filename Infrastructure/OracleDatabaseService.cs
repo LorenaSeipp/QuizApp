@@ -1,15 +1,14 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 using Dapper;
-using Microsoft.Extensions.Configuration;
 using Oracle.ManagedDataAccess.Client;
+using QuizApp.Core.Exceptions;
 
 namespace QuizApp.Infrastructure
 {
     public class OracleDatabaseService
     {
         private readonly string _connectionString;
+
         private readonly string[] _requiredTables = new[]
         {
             "SortQuestion",
@@ -26,33 +25,53 @@ namespace QuizApp.Infrastructure
         {
             this._connectionString = _connectionString;
         }
-        
+
         public void InitializeDatabase()
         {
             if (!TableExists())
             {
-                runSQLScript("init-schema.sql");
-                Console.WriteLine("Database initialized successfully.");
+                try
+                {
+                    runSQLScript("init-schema.sql");
+                    Console.WriteLine("Database initialized successfully.");
+                }
+                catch (FileNotFoundException ex)
+                {
+                    throw new DatabaseInitializationException("SQL-Skript zum Initialisieren der Datenbank nicht gefunden.", ex);
+                }
+                catch (Exception ex)
+                {
+                    throw new DatabaseInitializationException("Fehler beim Initialisieren der Datenbank.", ex);
+                }
             }
-            runSQLScript("init-data.sql");
-            Console.WriteLine("Data loaded successfully.");
+
+            try
+            {
+                runSQLScript("init-data.sql");
+                Console.WriteLine("Data loaded successfully.");
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new DataLoadingException("SQL-Skript zum Befüllen der Datenbank nicht gefunden.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new DataLoadingException("Fehler beim Befüllen der Tabellen mit Daten.", ex);
+            }
         }
-        
+
         public void runSQLScript(string fileName)
         {
-            
             string sqlFilePath = Path.Combine(AppContext.BaseDirectory, fileName);
             if (!File.Exists(sqlFilePath))
             {
-                Console.WriteLine($"SQL file not found: {sqlFilePath}");
-                return;
+                throw new FileNotFoundException($"SQL File {fileName} not found in the path: {sqlFilePath}");
             }
 
             string sqlScript = File.ReadAllText(sqlFilePath, Encoding.UTF8);
             string[] commands = sqlScript.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             
-
-            using OracleConnection  connection = new OracleConnection(_connectionString);
+            using OracleConnection connection = new OracleConnection(_connectionString);
             connection.Open();
 
             for (int i = 0; i < commands.Length; i++)
@@ -65,14 +84,20 @@ namespace QuizApp.Infrastructure
 
                 if (commandText.Length > 0)
                 {
-                    OracleCommand command = new OracleCommand(commandText, connection);
-                    command.ExecuteNonQuery();
+                    try
+                    {
+                        OracleCommand command = new OracleCommand(commandText, connection);
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new SqlExecutionException(commandText, ex);
+                    }
                 }
             }
             connection.Close();
-            
         }
-        
+
         private bool TableExists()
         {
             using OracleConnection connection = new OracleConnection(_connectionString);

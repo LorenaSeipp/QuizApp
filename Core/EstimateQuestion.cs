@@ -2,20 +2,31 @@ namespace QuizApp.Core
 {
     public class EstimateQuestion : IQuestion
     {
+        public EstimateQuestion()
+        {
+        }
+
+        public EstimateQuestion(string question, QuestionEnums.Difficulty difficulty, string category, int rightAnswer)
+        {
+            Question = question;
+            Typ = QuestionEnums.QuestionTyp.Estimate;
+            Difficulty = difficulty;
+            Category = category;
+            RightAnswer = rightAnswer;
+        }
+
         public int Id { get; set; }
         public string Question { get; set; }
-        public string Typ { get; set; }
-        public int Difficulty { get; set; }
+        public QuestionEnums.QuestionTyp Typ { get; set; }
+        public QuestionEnums.Difficulty Difficulty { get; set; }
         public string Category { get; set; }
-        public string RightAnswer { get; set; }
-
-        public int CorrectValue { get; set; }
+        public int RightAnswer { get; set; }
 
         public int CalculatePoints(double userGuess)
         {
             bool isYearQuestion = Question.Contains("Jahr") || Question.Contains("Wann") || Question.Contains("wurde");
 
-            double diff = Math.Abs(userGuess - CorrectValue);
+            double diff = Math.Abs(userGuess - RightAnswer);
 
             if (isYearQuestion)
             {
@@ -28,7 +39,7 @@ namespace QuizApp.Core
             }
             else
             {
-                double percentOff = diff / CorrectValue * 100;
+                double percentOff = diff / RightAnswer * 100;
 
                 if (percentOff == 0) return 10;
                 else if (percentOff <= 5) return 8;
