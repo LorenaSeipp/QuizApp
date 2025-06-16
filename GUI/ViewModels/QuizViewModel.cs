@@ -34,7 +34,7 @@ public class QuizViewModel : BaseViewModel
 
         if (nextQuestion == null)
         {
-            _navigationStore.CurrentViewModel = new ResultViewModel(_navigationStore, _quizManager);
+            _navigationStore.CurrentViewModel = new EndScreenViewModel(_navigationStore, _quizManager);
             return;
         }
 

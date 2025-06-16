@@ -8,6 +8,7 @@ namespace QuizApp.Infrastructure;
 public class QuestionRepository : IQuestionRepository
 {
     private readonly string _connectionString;
+    private IQuestionRepository _questionRepositoryImplementation;
 
     public QuestionRepository(string connectionString)
     {
@@ -65,54 +66,40 @@ public class QuestionRepository : IQuestionRepository
         }
     }
 
-    public List<MultipleChoiceQuestion> GetMultipleChoiceQuestionsByCategory(string category)
+    public List<MultipleChoiceQuestion> GetMultipleChoiceQuestionsByCategoryAndDifficulty(string category,
+        int difficulty)
     {
-        using (IDbConnection db = new OracleConnection(_connectionString))
-        {
-            string sql = "SELECT * FROM MultipleChoiceQuestion WHERE Category = @Category";
-            List<MultipleChoiceQuestion> questions = db.Query<MultipleChoiceQuestion>(sql).AsList();
-            return questions;
-        }
+        using IDbConnection db = new OracleConnection(_connectionString);
+        string sql = "SELECT * FROM MultipleChoiceQuestion WHERE Category = :category AND Difficulty = :difficulty";
+        return db.Query<MultipleChoiceQuestion>(sql, new { category, difficulty }).AsList();
     }
 
-    public List<OpenQuestion> GetOpenQuestionsByCategory(string category)
+    public List<OpenQuestion> GetOpenQuestionsByCategoryAndDifficulty(string category, int difficulty)
     {
-        using (IDbConnection db = new OracleConnection(_connectionString))
-        {
-            string sql = "SELECT * FROM OpenQuestion WHERE Category = @Category";
-            List<OpenQuestion> questions = db.Query<OpenQuestion>(sql).AsList();
-            return questions;
-        }
+        using IDbConnection db = new OracleConnection(_connectionString);
+        string sql = "SELECT * FROM OpenQuestion WHERE Category = :category AND Difficulty = :difficulty";
+        return db.Query<OpenQuestion>(sql, new { category, difficulty }).AsList();
     }
 
-    public List<EstimateQuestion> GetEstimateQuestionsByCategory(string category)
+    public List<EstimateQuestion> GetEstimateQuestionsByCategoryAndDifficulty(string category, int difficulty)
     {
-        using (IDbConnection db = new OracleConnection(_connectionString))
-        {
-            string sql = "SELECT * FROM EstimateQuestion WHERE Category = @Category";
-            List<EstimateQuestion> questions = db.Query<EstimateQuestion>(sql).AsList();
-            return questions;
-        }
+        using IDbConnection db = new OracleConnection(_connectionString);
+        string sql = "SELECT * FROM EstimateQuestion WHERE Category = :category AND Difficulty = :difficulty";
+        return db.Query<EstimateQuestion>(sql, new { category, difficulty }).AsList();
     }
 
-    public List<TrueFalseQuestion> GetTrueFalseQuestionsByCategory(string category)
+    public List<TrueFalseQuestion> GetTrueFalseQuestionsByCategoryAndDifficulty(string category, int difficulty)
     {
-        using (IDbConnection db = new OracleConnection(_connectionString))
-        {
-            string sql = "SELECT * FROM TrueFalseQuestion WHERE Category = @Category";
-            List<TrueFalseQuestion> questions = db.Query<TrueFalseQuestion>(sql).AsList();
-            return questions;
-        }
+        using IDbConnection db = new OracleConnection(_connectionString);
+        string sql = "SELECT * FROM TrueFalseQuestion WHERE Category = :category AND Difficulty = :difficulty";
+        return db.Query<TrueFalseQuestion>(sql, new { category, difficulty }).AsList();
     }
 
-    public List<SortQuestion> GetSortQuestionsByCategory(string category)
+    public List<SortQuestion> GetSortQuestionsByCategoryAndDifficulty(string category, int difficulty)
     {
-        using (IDbConnection db = new OracleConnection(_connectionString))
-        {
-            string sql = "SELECT * FROM SortQuestion WHERE Category = @Category";
-            List<SortQuestion> questions = db.Query<SortQuestion>(sql).AsList();
-            return questions;
-        }
+        using IDbConnection db = new OracleConnection(_connectionString);
+        string sql = "SELECT * FROM SortQuestion WHERE Category = :category AND Difficulty = :difficulty";
+        return db.Query<SortQuestion>(sql, new { category, difficulty }).AsList();
     }
 
 

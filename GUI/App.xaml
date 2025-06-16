@@ -4,8 +4,7 @@
              xmlns:views="clr-namespace:QuizApp.Views"
              xmlns:vm="clr-namespace:QuizApp.GUI.ViewModels"
              xmlns:utils="clr-namespace:QuizApp.GUI.utils"
-             xmlns:converters="clr-namespace:QuizApp.Converters"
-             xmlns:viewModels="clr-namespace:QuizApp.ViewModels">
+             xmlns:converters="clr-namespace:QuizApp.Converters">
     <Application.Resources>
 
         <utils:InverseBoolConverter x:Key="InverseBoolConverter" />
@@ -59,7 +58,7 @@
             <views:SortQuestionView />
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type viewModels:EstimateQuestionViewModel}">
+        <DataTemplate DataType="{x:Type vm:EstimateQuestionViewModel}">
             <views:EstimateQuestionView />
         </DataTemplate>
     </Application.Resources>

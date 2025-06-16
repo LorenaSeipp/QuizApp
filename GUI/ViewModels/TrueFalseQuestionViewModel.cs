@@ -23,7 +23,7 @@ namespace QuizApp.GUI.ViewModels
             _quizManager = quizManager;
             _navigationStore = navigationStore;
 
-            SubmitAnswerCommand = new RelayCommand(SubmitAnswer, () => UserAnswer.HasValue);
+            SubmitAnswerCommand = new RelayCommand(SubmitAnswer);
         }
 
         public int EarnedPoints => _quizManager.PointsPerRound;

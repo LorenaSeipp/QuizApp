@@ -8,6 +8,7 @@ public class QuestionEnums
         Musik,
         Geografie,
         FunFacts,
+        Gemischt
     }
 
     public enum Difficulty

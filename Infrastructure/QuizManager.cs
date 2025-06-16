@@ -6,6 +6,7 @@ namespace QuizApp.Infrastructure
     {
         private List<IQuestion> _allQuestions;
         private Stack<IQuestion> _questions;
+        public List<IQuestion> allQuestions = new();
 
         public QuizManager(string connectionString, IQuizTimer timer)
         {
@@ -25,60 +26,56 @@ namespace QuizApp.Infrastructure
         public int TotalQuestions => _allQuestions.Count;
         public int QuestionsAnswered => TotalQuestions - _questions.Count;
         public QuestionEnums.Difficulty Difficulty { get; set; }
-        public string Category { get; set; } = "Gemischt"; // z.B. "Musik", "Informatik", "Gemischt"
-        public int NumberOfQuestions { get; set; } = 5; // Default Wert
-
+        public QuestionEnums.Category Category { get; set; }
+        public int NumberOfQuestions { get; set; } = 5;
 
         private List<IQuestion> LoadAllQuestions(QuestionRepository repo)
         {
-            var allQuestions = new List<IQuestion>();
-
-            allQuestions.AddRange(repo.GetAllMultipleChoiceQuestions());
-            allQuestions.AddRange(repo.GetAllTrueFalseQuestions());
-            allQuestions.AddRange(repo.GetAllEstimateQuestions());
-            allQuestions.AddRange(repo.GetAllSortQuestions());
-            allQuestions.AddRange(repo.GetAllOpenQuestions());
-
-            return allQuestions;
+            List<IQuestion> all = new();
+            all.AddRange(repo.GetAllMultipleChoiceQuestions());
+            all.AddRange(repo.GetAllTrueFalseQuestions());
+            all.AddRange(repo.GetAllEstimateQuestions());
+            all.AddRange(repo.GetAllSortQuestions());
+            all.AddRange(repo.GetAllOpenQuestions());
+            return all;
         }
 
-
-        public void LoadQuestions(QuestionRepository repo, string category, QuestionEnums.Difficulty difficulty)
+        public void LoadQuestions(QuestionRepository repo, QuestionEnums.Category category,
+            QuestionEnums.Difficulty difficulty)
         {
-            var allQuestions = new List<IQuestion>();
+            List<IQuestion> questionsToLoad = new();
+            int difficultyInt = (int)difficulty;
 
-            if (category == "Gemischt")
+            if (category == QuestionEnums.Category.Gemischt)
             {
-                // Alle Kategorien laden
-                allQuestions.AddRange(repo.GetAllMultipleChoiceQuestions());
-                allQuestions.AddRange(repo.GetAllTrueFalseQuestions());
-                allQuestions.AddRange(repo.GetAllEstimateQuestions());
-                allQuestions.AddRange(repo.GetAllSortQuestions());
-                allQuestions.AddRange(repo.GetAllOpenQuestions());
+                // Hole alle Fragen aus allen Kategorien und filtere sie anschließend nach Difficulty
+                questionsToLoad.AddRange(repo.GetAllMultipleChoiceQuestions()
+                    .Where(q => (int)q.Difficulty == difficultyInt));
+                questionsToLoad.AddRange(repo.GetAllTrueFalseQuestions()
+                    .Where(q => (int)q.Difficulty == difficultyInt));
+                questionsToLoad.AddRange(repo.GetAllEstimateQuestions().Where(q => (int)q.Difficulty == difficultyInt));
+                questionsToLoad.AddRange(repo.GetAllSortQuestions().Where(q => (int)q.Difficulty == difficultyInt));
+                questionsToLoad.AddRange(repo.GetAllOpenQuestions().Where(q => (int)q.Difficulty == difficultyInt));
             }
             else
             {
-                allQuestions.AddRange(repo.GetMultipleChoiceQuestionsByCategory(category));
-                allQuestions.AddRange(repo.GetTrueFalseQuestionsByCategory(category));
-                allQuestions.AddRange(repo.GetEstimateQuestionsByCategory(category));
-                allQuestions.AddRange(repo.GetSortQuestionsByCategory(category));
-                allQuestions.AddRange(repo.GetOpenQuestionsByCategory(category));
+                string categoryStr = category.ToString();
+
+                questionsToLoad.AddRange(
+                    repo.GetMultipleChoiceQuestionsByCategoryAndDifficulty(categoryStr, difficultyInt));
+                questionsToLoad.AddRange(repo.GetTrueFalseQuestionsByCategoryAndDifficulty(categoryStr, difficultyInt));
+                questionsToLoad.AddRange(repo.GetEstimateQuestionsByCategoryAndDifficulty(categoryStr, difficultyInt));
+                questionsToLoad.AddRange(repo.GetSortQuestionsByCategoryAndDifficulty(categoryStr, difficultyInt));
+                questionsToLoad.AddRange(repo.GetOpenQuestionsByCategoryAndDifficulty(categoryStr, difficultyInt));
             }
 
-            // Schwierigkeitslevel filtern, wenn nicht Gemischt
-            if (Enum.IsDefined(typeof(QuestionEnums.Difficulty), difficulty))
-            {
-                allQuestions = allQuestions.Where(q => q.Difficulty == (QuestionEnums.Difficulty)difficulty).ToList();
-            }
-
-            _allQuestions = allQuestions.OrderBy(q => Guid.NewGuid())
+            _allQuestions = questionsToLoad.OrderBy(q => Guid.NewGuid())
                 .Take(NumberOfQuestions)
                 .ToList();
 
             _questions = new Stack<IQuestion>(_allQuestions);
             Score = 0;
         }
-
 
         public IQuestion? GetNextQuestion()
         {
@@ -93,41 +90,33 @@ namespace QuizApp.Infrastructure
         {
             Timer.Stop();
             PointsPerRound = 0;
-            if (wasTimeUp)
-            {
-                return;
-            }
+            if (wasTimeUp) return;
 
             switch (question)
             {
                 case EstimateQuestion eq:
-                    int points = eq.CalculatePoints((int)userAnswer);
-                    PointsPerRound += points;
+                    PointsPerRound += eq.CalculatePoints((int)userAnswer);
                     break;
-
                 case MultipleChoiceQuestion mcq:
                     if (mcq.CorrectAnswer.Equals(userAnswer))
                         PointsPerRound += 10;
                     break;
-
                 case TrueFalseQuestion tfq:
                     if (tfq.IsTrue() == (bool)userAnswer)
                         PointsPerRound += 10;
                     break;
-
                 case OpenQuestion oq:
-                    if (oq.Answer.Trim()
-                        .Equals(userAnswer.ToString()?.Trim(), StringComparison.OrdinalIgnoreCase))
+                    if (oq.Answer.Trim().Equals(userAnswer?.ToString()?.Trim(), StringComparison.OrdinalIgnoreCase))
                         PointsPerRound += 10;
                     break;
-
                 case SortQuestion sq:
                     if ((bool)userAnswer)
                         PointsPerRound += 10;
                     break;
             }
 
-            if (PointsPerRound > 0) PointsPerRound += Timer.RemainingSeconds / 3;
+            if (PointsPerRound > 0)
+                PointsPerRound += Timer.RemainingSeconds / 3;
 
             Score += PointsPerRound;
         }

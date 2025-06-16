@@ -3,8 +3,9 @@ using QuizApp.Commands;
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
+using QuizApp.ViewModels;
 
-namespace QuizApp.ViewModels
+namespace QuizApp.GUI.ViewModels
 {
     public class EstimateQuestionViewModel : TimedQuestionViewModel
     {
@@ -13,7 +14,6 @@ namespace QuizApp.ViewModels
         private readonly QuizManager _quizManager;
 
         private int _earnedPoints;
-
         private int? _userAnswer;
         public string FeedbackMessage = "";
 
@@ -23,13 +23,14 @@ namespace QuizApp.ViewModels
             _question = question;
             _quizManager = quizManager;
             _navigationStore = navigationStore;
+            SubmitAnswerCommand = new RelayCommand(SubmitAnswer);
         }
+
+        public ICommand SubmitAnswerCommand { get; }
 
         public int EarnedPoints => _quizManager.PointsPerRound;
 
         public int TotalPoints => _quizManager.Score;
-
-        public ICommand SubmitAnswerCommand => new RelayCommand(SubmitAnswer, () => UserAnswer.HasValue);
 
         public string QuestionText => _question.Question;
 
@@ -48,9 +49,6 @@ namespace QuizApp.ViewModels
 
         public override async void SubmitAnswer()
         {
-            if (UserAnswer == null)
-                return; // oder Fehler anzeigen
-
             _quizManager.SubmitAnswer(_question, UserAnswer.Value);
             OnPropertyChanged(nameof(EarnedPoints));
             OnPropertyChanged(nameof(TotalPoints));
