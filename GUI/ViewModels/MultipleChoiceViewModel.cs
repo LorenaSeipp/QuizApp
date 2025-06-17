@@ -55,19 +55,6 @@ public class MultipleChoiceQuestionViewModel : TimedQuestionViewModel
         }
     }
 
-    /*public ICommand SubmitAnswerCommand { get; }
-
-    public override async void SubmitAnswer()
-    {
-        _quizManager.SubmitAnswer(_question, SelectedAnswer);
-        OnPropertyChanged(nameof(EarnedPoints));
-        OnPropertyChanged(nameof(TotalPoints));
-        WasTimeUp = false;
-        string message = $"Richtige Antwort: {_question.CorrectAnswer} \nPunkte: {EarnedPoints}";
-        FeedbackMessage = message;
-        await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
-    } */
-
     public ICommand SubmitAnswerCommand { get; }
 
     private void SubmitAnswerInternalCommand()
@@ -77,10 +64,7 @@ public class MultipleChoiceQuestionViewModel : TimedQuestionViewModel
 
     protected override async void OnTimeUp()
     {
-        // Logik für Zeit abgelaufen, aber rufe dann die Basis-Methode zum Fortfahren auf
-        _quizManager.SubmitAnswer(_question, null, true); // Sende Null-Antwort bei Zeitablauf
-        // OnPropertyChanged(nameof(EarnedPoints)); // Diese sollten schon im Basis-VM aktualisiert werden
-        // OnPropertyChanged(nameof(TotalPoints));   // Diese sollten schon im Basis-VM aktualisiert werden
+        _quizManager.SubmitAnswer(_question, null, true);
 
         string message =
             $"Richtige Antwort: {_question.CorrectAnswer} \n Zeit abgelaufen!\nPunkte: {_quizManager.PointsPerRound}";
