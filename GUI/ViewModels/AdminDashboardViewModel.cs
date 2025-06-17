@@ -21,7 +21,6 @@ public class AdminDashboardViewModel : BaseViewModel
 
     private string _selectedQuestionType;
 
-    // TrueFalse Property
     private bool _trueFalse;
 
     private string _trueFalseString;

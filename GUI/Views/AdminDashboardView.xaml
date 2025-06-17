@@ -1,6 +1,10 @@
 <UserControl x:Class="QuizApp.Views.AdminDashboardView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="1024" d:DesignWidth="1920"
              Background="#FF1A1A40" Foreground="White">
 
 
@@ -8,7 +12,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </UserControl.Resources>
 
-    <Grid Margin="20">
+    <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -18,11 +22,11 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" Margin="0,0,0,20">
-            <TextBlock Text="Frage hinzufügen" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" />
+        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" Margin="0,0,0,10">
+            <TextBlock Text="Admin Dashboard - Fragen" FontSize="80" FontWeight="Bold" Margin="0,0,0,5" />
 
             <TextBlock Text="Kategorie:" />
-            <ComboBox Width="100" Margin="0,0,0,10"
+            <ComboBox Width="800" Margin="0,-10,0,0"
                       SelectedValue="{Binding Category, UpdateSourceTrigger=PropertyChanged}"
                       SelectedValuePath="Content">
                 <ComboBoxItem Content="Musik" />
@@ -32,7 +36,7 @@
             </ComboBox>
 
             <TextBlock Text="Schwierigkeitsgrad:" />
-            <ComboBox Width="100" Margin="0,0,0,0"
+            <ComboBox Width="800" Margin="0,0,0,0"
                       SelectedValue="{Binding DifficultyString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <ComboBoxItem Content="leicht" />
                 <ComboBoxItem Content="mittel" />
@@ -41,7 +45,7 @@
 
             <!-- Frage-Typ Auswahl -->
             <TextBlock Text="Fragetyp:" />
-            <ComboBox Width="200" Margin="0,0,0,10"
+            <ComboBox Width="800" Margin="0,0,0,5"
                       SelectedValue="{Binding SelectedQuestionType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       SelectedValuePath="Content">
                 <ComboBoxItem Content="MultipleChoice" />
@@ -52,28 +56,28 @@
             </ComboBox>
 
             <TextBlock Text="Frage:" />
-            <TextBox Width="400" Margin="0,0,0,10"
+            <TextBox Width="800" Margin="0,0,0,5"
                      Text="{Binding QuestionText, UpdateSourceTrigger=PropertyChanged}" />
 
             <!-- Multiple Choice Antworten -->
             <StackPanel Visibility="{Binding IsMultipleChoiceVisible, Converter={StaticResource BoolToVis}}"
                         Margin="0,5,0,0">
                 <TextBlock Text="Richtige Antwort:" />
-                <TextBox Width="400" Margin="0,0,0,5"
+                <TextBox Width="900" Margin="0,0,0,5"
                          Text="{Binding RightAnswer, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="Falsche Antworten:" />
-                <TextBox Width="400" Margin="0,0,0,3"
+                <TextBox Width="900" Margin="0,0,0,3"
                          Text="{Binding FalseAnswer1, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBox Width="400" Margin="0,0,0,3"
+                <TextBox Width="900" Margin="0,0,0,3"
                          Text="{Binding FalseAnswer2, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBox Width="400" Margin="0,0,0,3"
+                <TextBox Width="900" Margin="0,0,0,3"
                          Text="{Binding FalseAnswer3, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
 
             <!-- Estimate Antwort -->
             <StackPanel Visibility="{Binding IsEstimateVisible, Converter={StaticResource BoolToVis}}" Margin="0,5,0,0">
                 <TextBlock Text="Richtige Schätzung:" />
-                <TextBox Width="400" Margin="0,0,0,5"
+                <TextBox Width="900" Margin="0,0,0,5"
                          Text="{Binding RightAnswer, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
 
@@ -81,7 +85,7 @@
             <StackPanel Visibility="{Binding IsTrueFalseVisible, Converter={StaticResource BoolToVis}}"
                         Margin="0,5,0,0">
                 <TextBlock Text="Ist die Aussage wahr?" />
-                <ComboBox Width="100"
+                <ComboBox Width="900"
                           SelectedValue="{Binding TrueFalseString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           SelectedValuePath="Content">
                     <ComboBoxItem Content="Wahr" />
@@ -93,16 +97,16 @@
             <!-- Sort Antwort -->
             <StackPanel Visibility="{Binding IsSortVisible, Converter={StaticResource BoolToVis}}" Margin="0,5,0,0">
                 <TextBlock Text="Platz 1:" />
-                <TextBox Width="400" Margin="0,0,0,5"
+                <TextBox Width="900" Margin="0,-10,0,3"
                          Text="{Binding SortPlace1, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="Platz 2:" />
-                <TextBox Width="400" Margin="0,0,0,5"
+                <TextBox Width="900" Margin="0,-10,0,3"
                          Text="{Binding SortPlace2, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="Platz 3:" />
-                <TextBox Width="400" Margin="0,0,0,5"
+                <TextBox Width="900" Margin="0,-10,0,3"
                          Text="{Binding SortPlace3, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="Platz 4:" />
-                <TextBox Width="400" Margin="0,0,0,5"
+                <TextBox Width="900" Margin="0,-10,0,3"
                          Text="{Binding SortPlace4, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
 
@@ -113,9 +117,29 @@
                          Text="{Binding OpenAnswer, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
 
-            <Button Content="Frage speichern" Width="150" Margin="0,10,0,0" Command="{Binding SaveQuestionCommand}"
+            <Button Content="Frage speichern" FontWeight="Bold" FontSize="36" Width="500" Height="100"
+                    Margin="0,10,0,0" Command="{Binding SaveQuestionCommand}"
                     Foreground="White" Background="#009688" />
         </StackPanel>
+
+        <!-- Home-Button rechts oben -->
+        <Button
+            Grid.Row="0"
+            Grid.Column="1"
+            Content="🏠 Home"
+            Command="{Binding NavigateHomeCommand}"
+            Height="60"
+            Width="180"
+            FontSize="36"
+            Background="#FFCC3300"
+            Foreground="White"
+            FontWeight="Bold"
+            Cursor="Hand"
+            Margin="0,0,0,10"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            BorderThickness="0"
+            Padding="4,2" />
     </Grid>
 
 </UserControl>

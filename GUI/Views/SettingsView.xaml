@@ -5,13 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:QuizApp.Converters"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="1024" d:DesignWidth="1920"
              Background="#FF1A1A40" Foreground="White">
 
     <UserControl.Resources>
         <local:EqualityToBrushMultiConverter x:Key="EqualityToBrushMultiConverter"
                                              TrueBrush="DodgerBlue"
-                                             FalseBrush="Gray"/>
+                                             FalseBrush="Gray" />
     </UserControl.Resources>
 
     <Grid Margin="20">
@@ -36,7 +36,8 @@
                                     Foreground="White">
                                 <Button.Background>
                                     <MultiBinding Converter="{StaticResource EqualityToBrushMultiConverter}">
-                                        <Binding Path="DataContext.SelectedCategory" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                        <Binding Path="DataContext.SelectedCategory"
+                                                 RelativeSource="{RelativeSource AncestorType=UserControl}" />
                                         <Binding />
                                     </MultiBinding>
                                 </Button.Background>
@@ -65,7 +66,8 @@
                                     Foreground="White">
                                 <Button.Background>
                                     <MultiBinding Converter="{StaticResource EqualityToBrushMultiConverter}">
-                                        <Binding Path="DataContext.SelectedDifficulty" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                        <Binding Path="DataContext.SelectedDifficulty"
+                                                 RelativeSource="{RelativeSource AncestorType=UserControl}" />
                                         <Binding />
                                     </MultiBinding>
                                 </Button.Background>
@@ -94,7 +96,8 @@
                                     Foreground="White">
                                 <Button.Background>
                                     <MultiBinding Converter="{StaticResource EqualityToBrushMultiConverter}">
-                                        <Binding Path="DataContext.SelectedQuestionCount" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                        <Binding Path="DataContext.SelectedQuestionCount"
+                                                 RelativeSource="{RelativeSource AncestorType=UserControl}" />
                                         <Binding />
                                     </MultiBinding>
                                 </Button.Background>
@@ -106,8 +109,8 @@
 
             <Button Content="Quiz starten"
                     Command="{Binding NavigateQuizCommand}"
-                    Width="Auto" Height="Auto" HorizontalAlignment="Center"
-                    IsEnabled="{Binding CanStartQuiz}" />
+                    Width="300" Height="100" HorizontalAlignment="Center"
+                    FontWeight="Bold" IsEnabled="{Binding CanStartQuiz}" Foreground="White" Background="#009688" />
         </StackPanel>
     </Grid>
 </UserControl>
