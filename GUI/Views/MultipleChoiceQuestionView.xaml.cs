@@ -1,6 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
-using QuizApp.GUI.ViewModels;
+using QuizApp.ViewModels;
 
 namespace QuizApp.Views;
 

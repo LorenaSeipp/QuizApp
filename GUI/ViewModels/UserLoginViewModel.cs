@@ -1,3 +1,5 @@
+// QuizApp.ViewModels/UserLoginViewModel.cs
+
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
@@ -8,14 +10,15 @@ using QuizApp.Core.Models.utils;
 using QuizApp.Infrastructure;
 using QuizApp.Logic;
 using QuizApp.Stores;
+// Make sure this is included
 
 namespace QuizApp.ViewModels;
 
 public class UserLoginViewModel : BaseViewModel
 {
     private const int MaxLoginAttempts = 3;
-    private readonly NavigationStore _navigationStore;
-    private readonly QuizManager _quizManager;
+    private readonly NavigationStore _navigationStore; // Still needed for initializing commands
+    private readonly QuizManager _quizManager; // Still needed for initializing commands
     private readonly UserService _userService;
     private int _loginAttempts;
     private string _password;
@@ -26,18 +29,23 @@ public class UserLoginViewModel : BaseViewModel
     {
         _quizManager = quizManager;
         _navigationStore = navigationStore;
-        LoginCommand = new RelayCommand(LoginUser);
+
         _userService = new UserService(App.ConnectionString);
-        LoginCommand = new RelayCommand(LoginUser);
-        RegisterPlayerCommand = new RelayCommand(RegisterPlayer);
+
+        // Initialize commands
+        LoginCommand = new RelayCommand(LoginUser); // This command stays as it performs authentication logic
+        RegisterPlayerCommand = new RelayCommand(RegisterPlayer); // This command stays
         NavigateSettingsCommand = new NavigateSettingsCommand(_navigationStore, _quizManager);
         QuitCommand = new QuitCommand();
         NavigateHomeCommand = new NavigateHomeCommand(_navigationStore, _quizManager);
+        // NEW: Initialize NavigateAdminDashboardCommand
+        NavigateAdminDashboardCommand = new NavigateAdminDashboardCommand(_navigationStore, _quizManager);
     }
 
     public ICommand NavigateSettingsCommand { get; }
     public ICommand QuitCommand { get; }
     public ICommand NavigateHomeCommand { get; }
+    public ICommand NavigateAdminDashboardCommand { get; } // NEW property for the command
 
 
     public string Username
@@ -63,7 +71,8 @@ public class UserLoginViewModel : BaseViewModel
     public ICommand LoginCommand { get; }
     public ICommand RegisterPlayerCommand { get; }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler
+        PropertyChanged; // This seems redundant if BaseViewModel already handles it
 
     private void LoginUser()
     {
@@ -97,26 +106,25 @@ public class UserLoginViewModel : BaseViewModel
 
             if (user.Role == UserRole.Admin)
             {
-                _navigationStore.CurrentViewModel =
-                    new AdminDashboardViewModel(App.ConnectionString, _quizManager, _navigationStore);
+                NavigateAdminDashboardCommand.Execute(null); // Or pass user data if needed
             }
             else if (user.Role == UserRole.Player)
             {
                 if (user is Player player)
-                    _quizManager.SetCurrentPlayer(player); // Spieler setzen in QuizManager NEU NEU NEU 16.06.2025
+                    _quizManager.SetCurrentPlayer(player);
 
-                _navigationStore.CurrentViewModel = new SettingsViewModel(_navigationStore, _quizManager);
+                NavigateSettingsCommand.Execute(null);
             }
         }
         catch (OracleException ex)
         {
             MessageBox.Show("Datenbankfehler beim Login");
-            _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore, _quizManager);
+            NavigateHomeCommand.Execute(null); // Use the command here too
         }
         catch (Exception ex)
         {
             MessageBox.Show("Fehler beim Login");
-            _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore, _quizManager);
+            NavigateHomeCommand.Execute(null); // Use the command here too
         }
     }
 

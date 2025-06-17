@@ -2,9 +2,8 @@ using System.Windows.Input;
 using QuizApp.Commands;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
-using QuizApp.ViewModels;
 
-namespace QuizApp.GUI.ViewModels;
+namespace QuizApp.ViewModels;
 
 public class MultipleChoiceQuestionViewModel : TimedQuestionViewModel
 {

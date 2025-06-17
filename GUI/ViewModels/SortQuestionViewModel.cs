@@ -4,9 +4,8 @@ using CommunityToolkit.Mvvm.Input;
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
-using QuizApp.ViewModels;
 
-namespace QuizApp.GUI.ViewModels;
+namespace QuizApp.ViewModels;
 
 public partial class SortQuestionViewModel : TimedQuestionViewModel
 {

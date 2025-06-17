@@ -1,7 +1,8 @@
 ﻿using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
-using QuizApp.ViewModels;
+
+namespace QuizApp.ViewModels;
 
 public class QuizViewModel : BaseViewModel
 {

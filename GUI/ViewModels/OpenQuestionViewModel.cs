@@ -3,9 +3,8 @@ using QuizApp.Commands;
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
-using QuizApp.ViewModels;
 
-namespace QuizApp.GUI.ViewModels
+namespace QuizApp.ViewModels
 {
     public class OpenQuestionViewModel : TimedQuestionViewModel
     {

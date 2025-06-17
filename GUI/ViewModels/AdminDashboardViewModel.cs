@@ -13,18 +13,12 @@ public class AdminDashboardViewModel : BaseViewModel
     private readonly QuestionRepository _questionRepository;
     private readonly QuizManager _quizManager;
     private readonly RelayCommand _saveQuestionCommand;
-
     private string _category;
     private string _difficultyString;
-
     private string _questionText;
-
     private string _selectedQuestionType;
-
     private bool _trueFalse;
-
     private string _trueFalseString;
-
     public QuestionEnums.Difficulty Difficulty;
 
     public AdminDashboardViewModel(string connectionString, QuizManager quizManager, NavigationStore navigationStore)
@@ -38,7 +32,8 @@ public class AdminDashboardViewModel : BaseViewModel
     }
 
     public ICommand SaveQuestionCommand => _saveQuestionCommand;
-    public ICommand NavigateHomeCommand { get; }
+    public ICommand NavigateHomeCommand { get; } // Change to NavigateHomeCommand
+
 
     public string SelectedQuestionType
     {

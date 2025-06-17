@@ -1,8 +1,8 @@
 using QuizApp.Core;
-using QuizApp.GUI.ViewModels;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
-using QuizApp.ViewModels;
+
+namespace QuizApp.ViewModels;
 
 public static class QuestionViewModelFactory
 {
