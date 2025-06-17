@@ -1,39 +1,31 @@
+using System.Windows.Input;
+using QuizApp.Commands;
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
-using QuizApp.ViewModels;
 
-namespace QuizApp.GUI.ViewModels
+namespace QuizApp.ViewModels
 {
-    public class EstimateQuestionViewModel : QuestionViewModel
+    public class EstimateQuestionViewModel : TimedQuestionViewModel
     {
-        private readonly NavigationStore _navigationStore;
         private readonly EstimateQuestion _question;
-        private readonly QuizManager _quizManager;
-        private string? _selectedAnswer;
 
         private int? _userAnswer;
 
-        public EstimateQuestionViewModel(EstimateQuestion question, NavigationStore navigationStore, QuizManager quizManager)
+        public EstimateQuestionViewModel(
+            EstimateQuestion question,
+            NavigationStore navigationStore,
+            QuizManager quizManager,
+            Action onQuestionHandled)
+            : base(navigationStore, quizManager, onQuestionHandled) // Pass all parameters to the base constructor
         {
             _question = question;
-            _quizManager = quizManager;
-            _navigationStore = navigationStore;
+            SubmitAnswerCommand = new RelayCommand(ExecuteSubmitAnswerCommand, () => UserAnswer.HasValue);
         }
 
-        public string? SelectedAnswer
-        {
-            get => _selectedAnswer;
-            set
-            {
-                _selectedAnswer = value;
-                OnPropertyChanged();
-            }
-        }
+        public ICommand SubmitAnswerCommand { get; }
 
         public string QuestionText => _question.Question;
-
-        public int AllowedMargin => _question.AllowedMargin;
 
         public int? UserAnswer
         {
@@ -44,18 +36,36 @@ namespace QuizApp.GUI.ViewModels
                 {
                     _userAnswer = value;
                     OnPropertyChanged();
+                    ((RelayCommand)SubmitAnswerCommand).RaiseCanExecuteChanged();
                 }
             }
         }
 
-        private void SubmitAnswer()
+        private void ExecuteSubmitAnswerCommand()
         {
-            _quizManager.SubmitAnswer(_question, SelectedAnswer ?? string.Empty);
-
-            QuizViewModel quizViewModel = new(_navigationStore, _quizManager);
-            _navigationStore.CurrentViewModel = quizViewModel;
+            // Ensure UserAnswer has a value before attempting to submit
+            if (UserAnswer.HasValue) SubmitAnswerInternal(_question, UserAnswer.Value);
         }
 
-        //TODO SubmitAnswer -> Button und Logik zur Überprüfung der Antwort (Abweichung UserAntwort zu korrektem Wert berechnen
+        protected override async void OnTimeUp()
+        {
+            _quizManager.SubmitAnswer(_question, null, wasTimeUp: true);
+
+            WasTimeUp = true;
+
+            string message =
+                $"Zeit abgelaufen!\nRichtige Antwort: {_question.RightAnswer}\nPunkte: {_quizManager.PointsPerRound}";
+
+            await ShowFeedbackAndProceedAsync(message, true);
+        }
+
+        protected override string GetCorrectAnswerForQuestion(IQuestion question)
+        {
+            // Safely cast the IQuestion to EstimateQuestion to access its specific properties
+            if (question is EstimateQuestion eq) return eq.RightAnswer.ToString();
+
+            // Fallback to the base class's implementation if the question type is not as expected
+            return base.GetCorrectAnswerForQuestion(question);
+        }
     }
 }

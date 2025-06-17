@@ -3,25 +3,21 @@ using QuizApp.Commands;
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
-using QuizApp.ViewModels;
 
-namespace QuizApp.GUI.ViewModels
+namespace QuizApp.ViewModels
 {
-    public class TrueFalseQuestionViewModel : QuestionViewModel
+    public class TrueFalseQuestionViewModel : TimedQuestionViewModel
     {
-        private readonly NavigationStore _navigationStore;
         private readonly TrueFalseQuestion _question;
-        private readonly QuizManager _quizManager;
         private bool? _userAnswer;
 
         public TrueFalseQuestionViewModel(TrueFalseQuestion question,
-            NavigationStore navigationStore, QuizManager quizManager)
+            NavigationStore navigationStore, QuizManager quizManager, Action onQuestionHandled)
+            : base(navigationStore, quizManager, onQuestionHandled)
         {
             _question = question;
-            _quizManager = quizManager;
-            _navigationStore = navigationStore;
 
-            SubmitAnswerCommand = new RelayCommand(SubmitAnswer, () => UserAnswer.HasValue);
+            SubmitAnswerCommand = new RelayCommand(ExecuteSubmitAnswerCommand, () => UserAnswer.HasValue);
         }
 
         public string QuestionText => _question.Question;
@@ -35,22 +31,33 @@ namespace QuizApp.GUI.ViewModels
                 {
                     _userAnswer = value;
                     OnPropertyChanged();
-
-                    CommandManager.InvalidateRequerySuggested();
+                    ((RelayCommand)SubmitAnswerCommand).RaiseCanExecuteChanged();
                 }
             }
         }
 
         public ICommand SubmitAnswerCommand { get; }
 
-        private void SubmitAnswer()
+        private void ExecuteSubmitAnswerCommand()
         {
-            if (UserAnswer.HasValue) _quizManager.SubmitAnswer(_question, UserAnswer.Value);
-
-            QuizViewModel quizViewModel = new(_navigationStore, _quizManager);
-            _navigationStore.CurrentViewModel = quizViewModel;
+            if (UserAnswer.HasValue) SubmitAnswerInternal(_question, UserAnswer.Value);
         }
 
-        //TODO SubmitAnswer -> Button und Logik zur Überprüfung der Antwort 
+        protected override async void OnTimeUp()
+        {
+            _quizManager.SubmitAnswer(_question, null, true);
+
+            WasTimeUp = true;
+            string message =
+                $"Richtige Antwort: {_question.TrueFalse} \n Zeit abgelaufen!\nPunkte: {_quizManager.PointsPerRound}";
+            await ShowFeedbackAndProceedAsync(message, true);
+        }
+
+        protected override string GetCorrectAnswerForQuestion(IQuestion question)
+        {
+            if (question is TrueFalseQuestion tfq) return tfq.IsTrue().ToString();
+
+            return base.GetCorrectAnswerForQuestion(question);
+        }
     }
 }

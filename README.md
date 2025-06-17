@@ -1,3 +1,45 @@
+# Anleitung
+- Docker installieren
+- Docker Engine starten
+- `cd Infrastructure/docker`
+- `docker-compose up -d`
+- Für den ersten Start in Infrastructure/OracleDatabaseService.cs in Zeile 51 das initiale Laden der Daten aktiviert werden (nach den ersten Start muss der Befehl dann wieder deaktiviert sein um doppelte Daten zu vermeiden)
+- App starten (GUI Projekt)
+- Mit Username und Passwort registrieren 
+- Mit Username und Passwort anmelden (Spieler1/passwort1234 ist zb schon vorregistriert mit Highscore)
+- Gewünschte Einstellungen treffen und starten
+
+Ebenfalls kann man sich als Admin anmelden und eigene Fragen erstellen.
+
+## Datenbank zurücksetzen:
+- Im Docker container in die shell gehen (entweder per docker Desktop oder per cmd: `docker exec -it oracle-db bash`)
+- In der Shell: `sqlplus system/oraclepw`
+
+Folgende Commands ausführen:
+```
+DROP TABLE SORTQUESTION;
+DROP TABLE ESTIMATEQUESTION;
+DROP TABLE MULTIPLECHOICEQUESTION;
+DROP TABLE TRUEFALSEQUESTION;
+DROP TABLE OPENQUESTION;
+DROP TABLE USERS CASCADE CONSTRAINTS;
+DROP TABLE PLAYERS CASCADE CONSTRAINTS;
+DROP TABLE ADMINS CASCADE CONSTRAINTS;
+```
+### !!! Wichtig !!!
+Nachdem die Datenbank gecleart wurde muss die oben genannte Zeile mit 'init-data.sql' wieder für den 1. Start aktiviert werden
+
+# Funktionalität (technisch)
+Die Anzeige wird über ein MVVM (Model-View-ViewModel) Pattern gesteuert.
+
+Die Settings (Schwierigkeit, Category, Anzahl der Fragen) werden mit Bindings vom Frontend an das Backend geschickt. 
+Danach werden die Fragen für das Quiz aus der DB geholt und der QuizManager initialisiert.
+
+Die Buttons zeigen auf ein Event, was den aktuell angezeigten View abändert und z.B. persistente Datenobjekte wie den Quizmanager weitergibt.
+Während des Quizzes wird auf den Typen der nächsten Frage auf dem FragenStack im QuizManager geguckt und der entsprechende View wird erstellt (siehe QuestionViewModelFactory).
+
+Wenn alle Fragen ausgeschöpft sind wird der Endscreen mit Highscore vom gerade spielenden Nutzer angezeigt.
+
 # Projektplan: QuizApp – Meilenstein 03
 
 **Gruppe 7:** Kristina Ruf, Lorena Seipp, Jan Sobotta, Benedict Volz

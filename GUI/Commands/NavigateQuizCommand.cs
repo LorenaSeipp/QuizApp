@@ -2,6 +2,7 @@
 using QuizApp;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
+using QuizApp.ViewModels;
 
 public class NavigateQuizCommand : ICommand
 {

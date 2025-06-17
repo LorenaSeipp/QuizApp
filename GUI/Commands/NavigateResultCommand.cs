@@ -17,7 +17,7 @@ namespace QuizApp.Commands
 
         public override void Execute(object parameter)
         {
-            _navigationStore.CurrentViewModel = new ResultViewModel(_navigationStore, _quizManager);
+            _navigationStore.CurrentViewModel = new EndScreenViewModel(_navigationStore, _quizManager);
         }
     }
 }

@@ -4,7 +4,7 @@ CREATE TABLE MultipleChoiceQuestion (
                                         Typ VARCHAR2(20),
                                         Difficulty NUMBER CHECK (Difficulty IN (0,1,2)),
                                         Category VARCHAR2(50),
-                                        RightAnswer VARCHAR2(255),
+                                        CorrectAnswer VARCHAR2(255),
                                         FalseAnswer1 VARCHAR2(255),
                                         FalseAnswer2 VARCHAR2(255),
                                         FalseAnswer3 VARCHAR2(255)
@@ -16,7 +16,7 @@ CREATE TABLE EstimateQuestion (
                                   Typ VARCHAR2(20),
                                   Difficulty NUMBER CHECK (Difficulty IN (0,1,2)),
                                   Category VARCHAR2(50),
-                                  RightAnswer VARCHAR2(255)
+                                  RightAnswer NUMBER
 );
 
 CREATE TABLE TrueFalseQuestion (
@@ -76,7 +76,7 @@ CREATE TABLE Admins
     CONSTRAINT fk_admin_user FOREIGN KEY (Id) REFERENCES Users (UserId)
 );
 
-
+COMMIT; 
 
 
 

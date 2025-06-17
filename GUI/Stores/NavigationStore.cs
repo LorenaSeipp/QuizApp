@@ -1,17 +1,12 @@
 ﻿using QuizApp.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizApp.Stores
 {
     public class NavigationStore
     {
-        public event Action CurrentViewModelChanged;
         private BaseViewModel _currentViewModel;
-        public BaseViewModel CurrentViewModel 
+
+        public BaseViewModel CurrentViewModel
         {
             get => _currentViewModel;
             set
@@ -19,8 +14,9 @@ namespace QuizApp.Stores
                 _currentViewModel = value;
                 OnCurrentViewModelChanged();
             }
-        
         }
+
+        public event Action CurrentViewModelChanged;
 
         private void OnCurrentViewModelChanged()
         {

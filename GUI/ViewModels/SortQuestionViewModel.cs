@@ -1,50 +1,181 @@
 using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
-using QuizApp.ViewModels;
 
-namespace QuizApp.GUI.ViewModels;
+namespace QuizApp.ViewModels;
 
-public class SortQuestionViewModel : QuestionViewModel
+public partial class SortQuestionViewModel : TimedQuestionViewModel
 {
-    private readonly NavigationStore _navigationStore;
-    private readonly SortQuestion _question;
-    private readonly QuizManager _quizManager;
+    private readonly SortQuestionAnswer[] _answersInCorrectOrder;
+    private bool _hasAnswered;
+    private SortQuestionAnswer? _selectedAnswer;
 
-    private ObservableCollection<string> _userSortOrder;
-
-    public SortQuestionViewModel(SortQuestion question, NavigationStore navigationStore,  QuizManager quizManager)
+    public SortQuestionViewModel(SortQuestion sortQuestion, NavigationStore navigationStore, QuizManager quizManager,
+        Action onQuestionHandled)
+        : base(navigationStore, quizManager, onQuestionHandled)
     {
-        _question = question;
-        _quizManager = quizManager;
-        _navigationStore = navigationStore;
-
-        // Die korrekte Reihenfolge aus der DB
-        var correctOrder = new[] { _question.Place1, _question.Place2, _question.Place3, _question.Place4 };
-
-        // Items, die der User sortieren soll, zufällig gemischt als Startpunkt
-        var shuffled = correctOrder.OrderBy(x => Guid.NewGuid()).ToList();
-
-        SortItems = new ObservableCollection<string>(shuffled);
-        UserSortOrder = new ObservableCollection<string>(shuffled);
+        SortQuestion = sortQuestion;
+        _answersInCorrectOrder = new[]
+        {
+            new SortQuestionAnswer { QuestionText = sortQuestion.Place1 },
+            new SortQuestionAnswer { QuestionText = sortQuestion.Place2 },
+            new SortQuestionAnswer { QuestionText = sortQuestion.Place3 },
+            new SortQuestionAnswer { QuestionText = sortQuestion.Place4 }
+        };
+        SortQuestionAnswer[] answersInWrongOrder = ShuffleAnswers(_answersInCorrectOrder.ToArray());
+        ObservableCollection = new ObservableCollection<SortQuestionAnswer>(answersInWrongOrder);
     }
 
-    // ObservableCollection für die Items, die der User sortieren kann
-    public ObservableCollection<string> SortItems { get; }
-
-    public ObservableCollection<string> UserSortOrder
+    public SortQuestionAnswer? SelectedAnswer
     {
-        get => _userSortOrder;
+        get => _selectedAnswer;
         set
         {
-            if (_userSortOrder != value)
+            if (_selectedAnswer != value)
             {
-                _userSortOrder = value;
-                OnPropertyChanged();
+                _selectedAnswer = value;
+                OnPropertyChanged(nameof(SelectedAnswer));
+                NotifyCommands();
             }
         }
     }
 
-    public string QuestionText => _question.Question;
+    public bool HasAnswered
+    {
+        get => _hasAnswered;
+        set
+        {
+            if (_hasAnswered != value)
+            {
+                _hasAnswered = value;
+                OnPropertyChanged(nameof(HasAnswered));
+                NotifyCommands();
+                SubmitAnswerCommand.NotifyCanExecuteChanged();
+            }
+        }
+    }
+
+    public SortQuestion SortQuestion { get; set; }
+    public string QuestionText => SortQuestion.Question;
+    public bool IsRightOrder { get; set; }
+    public ObservableCollection<SortQuestionAnswer> ObservableCollection { get; set; }
+
+    private bool CanMoveAnswerUp(SortQuestionAnswer? answer)
+    {
+        if (HasAnswered || answer == null) return false;
+        int index = ObservableCollection.IndexOf(answer);
+        return index > 0;
+    }
+
+    private bool CanMoveAnswerDown(SortQuestionAnswer? answer)
+    {
+        if (HasAnswered || answer == null) return false;
+        int index = ObservableCollection.IndexOf(answer);
+        return index < ObservableCollection.Count - 1;
+    }
+
+    private void NotifyCommands()
+    {
+        MoveAnswerUpCommand.NotifyCanExecuteChanged();
+        MoveAnswerDownCommand.NotifyCanExecuteChanged();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanMoveAnswerUp))]
+    public void MoveAnswerUp(SortQuestionAnswer answer)
+    {
+        int indexOfAnswer = ObservableCollection.IndexOf(answer);
+        ObservableCollection.Move(indexOfAnswer, indexOfAnswer - 1);
+        NotifyCommands();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanMoveAnswerDown))]
+    public void MoveAnswerDown(SortQuestionAnswer answer)
+    {
+        int indexOfAnswer = ObservableCollection.IndexOf(answer);
+        ObservableCollection.Move(indexOfAnswer, indexOfAnswer + 1);
+        NotifyCommands();
+    }
+
+    public SortQuestionAnswer[] ShuffleAnswers(SortQuestionAnswer[] array)
+    {
+        Random random = new Random();
+        for (int i = array.Length - 1; i > 0; i--)
+        {
+            int j = random.Next(i + 1);
+            SortQuestionAnswer temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+
+        return array;
+    }
+
+    private bool CanCheckAnswer()
+    {
+        return !HasAnswered;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanCheckAnswer))]
+    public async void SubmitAnswer()
+    {
+        if (CanCheckAnswer())
+        {
+            IsRightOrder = true;
+            for (int i = 0; i < ObservableCollection.Count; i++)
+            {
+                string correctOrder = _answersInCorrectOrder[i].QuestionText.Trim();
+                string userOrder = ObservableCollection[i].QuestionText.Trim();
+                bool isCorrect = string.Equals(correctOrder, userOrder, StringComparison.OrdinalIgnoreCase);
+                ObservableCollection[i].IsCorrect = isCorrect;
+
+                if (!isCorrect)
+                {
+                    IsRightOrder = false;
+                }
+            }
+
+            HasAnswered = true;
+            SelectedAnswer = null;
+            SubmitAnswerCommand.NotifyCanExecuteChanged();
+            NotifyCommands();
+
+            // Submit the answer through the base class's internal method
+            SubmitAnswerInternal(SortQuestion, IsRightOrder);
+            // The remaining logic (OnPropertyChanged, WasTimeUp, message, await Task.Delay,
+            // and ShowFeedbackAndProceedAsync) is now handled by SubmitAnswerInternal
+        }
+    }
+
+    protected override async void OnTimeUp()
+    {
+        // Inform the QuizManager about time-up
+        _quizManager.SubmitAnswer(SortQuestion, null, true);
+
+        WasTimeUp = true;
+        string message = "Richtige Reihenfolge: \n";
+        foreach (SortQuestionAnswer answer in _answersInCorrectOrder) message += answer.QuestionText + "\n";
+        message += $"Zeit abgelaufen!\nPunkte: {_quizManager.PointsPerRound}";
+
+        // Use the base class method to show feedback and proceed
+        await ShowFeedbackAndProceedAsync(message, true);
+    }
+
+    protected override string GetCorrectAnswerForQuestion(IQuestion question)
+    {
+        if (question is SortQuestion sq)
+            // You might want to return a formatted string of the correct order
+            return string.Join(" -> ", _answersInCorrectOrder.Select(a => a.QuestionText));
+
+        return base.GetCorrectAnswerForQuestion(question);
+    }
+
+    public partial class SortQuestionAnswer : ObservableObject
+    {
+        [ObservableProperty] private bool? _isCorrect;
+
+        public string QuestionText { get; set; }
+    }
 }

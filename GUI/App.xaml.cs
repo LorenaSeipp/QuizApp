@@ -1,8 +1,9 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.Configuration;
-using QuizApp.Core;
 using QuizApp.Infrastructure;
+using QuizApp.Logic;
 using QuizApp.Stores;
+using QuizApp.utils;
 using QuizApp.ViewModels;
 
 namespace QuizApp;
@@ -29,18 +30,16 @@ public partial class App : Application
         OracleDatabaseService dbService = new(ConnectionString);
         dbService.InitializeDatabase();
         UserService userService = new(ConnectionString);
-        
         QuestionRepository repository = new(ConnectionString);
-        //repository.AddSortQuestion(new SortQuestion("Test", (int)QuestionEnums.Difficulty.leicht, QuestionEnums.Category.FunFacts.ToString(), "1", "2", "3", "4"));
 
         // Admin erstellen 
-        AdminCreator adminCreator = new(ConnectionString);
-        //adminCreator.CreateAdmin("Admin", "admin123", "System");
+        /* AdminCreator adminCreator = new(ConnectionString);
+        adminCreator.CreateAdmin("admin", "admin", "System"); */
 
         // SETUP UI
-        
-        QuizManager quizManager = new(ConnectionString);
-        
+        QuizTimer quizTimer = new QuizTimer(30);
+        QuizManager quizManager = new(ConnectionString, quizTimer, userService);
+
         NavigationStore navigationStore = new NavigationStore();
         navigationStore.CurrentViewModel = new HomeViewModel(navigationStore, quizManager);
         MainWindow = new MainWindow()

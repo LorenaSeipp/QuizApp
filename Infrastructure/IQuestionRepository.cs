@@ -10,9 +10,14 @@ public interface IQuestionRepository
     List<TrueFalseQuestion> GetAllTrueFalseQuestions();
     List<OpenQuestion> GetAllOpenQuestions();
 
-    List<SortQuestion> GetSortQuestionsByCategory(string category);
-    List<OpenQuestion> GetOpenQuestionsByCategory(string category);
-    List<MultipleChoiceQuestion> GetMultipleChoiceQuestionsByCategory(string category);
-    List<EstimateQuestion> GetEstimateQuestionsByCategory(string category);
-    List<TrueFalseQuestion> GetTrueFalseQuestionsByCategory(string category);
+    public List<MultipleChoiceQuestion> GetMultipleChoiceQuestionsByCategoryAndDifficulty(string category,
+        int difficulty);
+
+    public List<OpenQuestion> GetOpenQuestionsByCategoryAndDifficulty(string category, int difficulty);
+
+    public List<EstimateQuestion> GetEstimateQuestionsByCategoryAndDifficulty(string category, int difficulty);
+
+    public List<TrueFalseQuestion> GetTrueFalseQuestionsByCategoryAndDifficulty(string category, int difficulty);
+
+    public List<SortQuestion> GetSortQuestionsByCategoryAndDifficulty(string category, int difficulty);
 }

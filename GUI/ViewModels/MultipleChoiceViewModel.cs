@@ -1,35 +1,47 @@
 using System.Windows.Input;
 using QuizApp.Commands;
-using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
-using QuizApp.ViewModels;
 
-namespace QuizApp.GUI.ViewModels;
+namespace QuizApp.ViewModels;
 
-public class MultipleChoiceQuestionViewModel : QuestionViewModel
+public class MultipleChoiceQuestionViewModel : TimedQuestionViewModel
 {
     private readonly NavigationStore _navigationStore;
     private readonly MultipleChoiceQuestion _question;
     private readonly QuizManager _quizManager;
-
+    private int _earnedPoints;
     private string _selectedAnswer;
 
-    public MultipleChoiceQuestionViewModel(MultipleChoiceQuestion question, NavigationStore navigationStore, QuizManager quizManager)
+    public MultipleChoiceQuestionViewModel(
+        MultipleChoiceQuestion question,
+        NavigationStore navigationStore,
+        QuizManager quizManager,
+        Action onQuestionHandled) : base(navigationStore, quizManager, onQuestionHandled)
     {
         _question = question;
         _quizManager = quizManager;
         _navigationStore = navigationStore;
 
-        QuestionText = question.Question;
+        // Alle Antworten mischen
         Answers = new List<string>
-            { question.CorrectAnswer, question.FalseAnswer1, question.FalseAnswer2, question.FalseAnswer3 };
-        Answers = Answers.OrderBy(_ => Guid.NewGuid()).ToList();
+        {
+            _question.CorrectAnswer,
+            _question.FalseAnswer1,
+            _question.FalseAnswer2,
+            _question.FalseAnswer3
+        }.OrderBy(_ => Guid.NewGuid()).ToList();
 
-        SubmitAnswerCommand = new RelayCommand(SubmitAnswer, () => !string.IsNullOrEmpty(SelectedAnswer));
+        SubmitAnswerCommand =
+            new RelayCommand(SubmitAnswerInternalCommand, () => !string.IsNullOrEmpty(SelectedAnswer));
     }
 
-    public string QuestionText { get; }
+    public int EarnedPoints => _quizManager.PointsPerRound;
+
+    public int TotalPoints => _quizManager.Score;
+
+    public string QuestionText => _question.Question;
+
     public List<string> Answers { get; }
 
     public string SelectedAnswer
@@ -39,15 +51,23 @@ public class MultipleChoiceQuestionViewModel : QuestionViewModel
         {
             _selectedAnswer = value;
             OnPropertyChanged();
-            CommandManager.InvalidateRequerySuggested();
+            ((RelayCommand)SubmitAnswerCommand).RaiseCanExecuteChanged();
         }
     }
 
     public ICommand SubmitAnswerCommand { get; }
 
-    private void SubmitAnswer()
+    private void SubmitAnswerInternalCommand()
     {
-        _quizManager.SubmitAnswer(_question, SelectedAnswer);
-        _navigationStore.CurrentViewModel = new QuizViewModel(_navigationStore, _quizManager);
+        SubmitAnswerInternal(_question, SelectedAnswer);
+    }
+
+    protected override async void OnTimeUp()
+    {
+        _quizManager.SubmitAnswer(_question, null, true);
+
+        string message =
+            $"Richtige Antwort: {_question.CorrectAnswer} \n Zeit abgelaufen!\nPunkte: {_quizManager.PointsPerRound}";
+        await ShowFeedbackAndProceedAsync(message, true);
     }
 }
