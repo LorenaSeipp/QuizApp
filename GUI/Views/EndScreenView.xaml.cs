@@ -1,3 +1,5 @@
+// QuizApp.Views/EndScreenView.xaml.cs
+
 using System.Windows.Controls;
 
 namespace QuizApp.Views;

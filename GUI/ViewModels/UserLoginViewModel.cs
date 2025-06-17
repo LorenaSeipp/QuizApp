@@ -10,6 +10,7 @@ using QuizApp.Core.Models.utils;
 using QuizApp.Infrastructure;
 using QuizApp.Logic;
 using QuizApp.Stores;
+
 // Make sure this is included
 
 namespace QuizApp.ViewModels;
@@ -111,7 +112,10 @@ public class UserLoginViewModel : BaseViewModel
             else if (user.Role == UserRole.Player)
             {
                 if (user is Player player)
+                {
                     _quizManager.SetCurrentPlayer(player);
+                    MessageBox.Show($"Willkommen, {player.Name}!");
+                }
 
                 NavigateSettingsCommand.Execute(null);
             }

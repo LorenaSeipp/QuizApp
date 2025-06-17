@@ -1,15 +1,15 @@
-﻿using QuizApp.Core;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using QuizApp.Core;
 using QuizApp.Core.Models;
 using QuizApp.Logic;
 
 namespace QuizApp.Infrastructure
 {
-    public class QuizManager
+    public class QuizManager : INotifyPropertyChanged
     {
         private readonly UserService _userService;
         private List<IQuestion> _allQuestions;
-
-        //*********** SPIELER ÄNDERUNGEN (SPIELER VON LOGIN MERKEN & Score va EndGame Methode durchreichen)*************
         private Stack<IQuestion> _questions;
         public List<IQuestion> AllQuestions = new();
 
@@ -35,7 +35,22 @@ namespace QuizApp.Infrastructure
         public QuestionEnums.Difficulty Difficulty { get; set; }
         public QuestionEnums.Category Category { get; set; }
         public int NumberOfQuestions { get; set; } = 5;
-        public Player CurrentPlayer { get; private set; }
+        private Player _currentPlayer { get; set; }
+
+        public Player CurrentPlayer
+        {
+            get => _currentPlayer;
+            set
+            {
+                if (_currentPlayer != value)
+                {
+                    _currentPlayer = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private List<IQuestion> LoadAllQuestions(QuestionRepository repo)
         {
@@ -89,12 +104,29 @@ namespace QuizApp.Infrastructure
         {
             if (_questions.Count == 0)
             {
-                int finalScore = Score;
-                _userService.UpdatePlayerStats(CurrentPlayer.Id, finalScore);
+                Timer.Stop();
+                // *** Hier ist der entscheidende Punkt: Spielstatistiken aktualisieren ***
+                int finalScore = Score; // Der aktuelle Score des gerade beendeten Spiels
+
+                if (CurrentPlayer != null)
+                {
+                    // Aktualisiere den Highscore, falls der aktuelle Score höher ist
+                    if (finalScore > CurrentPlayer.Highscore) CurrentPlayer.Highscore = finalScore;
+
+                    CurrentPlayer.GamesPlayed++;
+
+                    CurrentPlayer.LastPlayed = DateTime.UtcNow;
+
+                    // Speichere die aktualisierten Player-Daten in der Datenbank
+                    _userService.UpdatePlayerStats(CurrentPlayer);
+                    OnPropertyChanged(nameof(CurrentPlayer));
+                }
+
                 return null;
             }
 
             Timer.Reset();
+            Timer.Start();
             return _questions.Pop();
         }
 
@@ -123,6 +155,7 @@ namespace QuizApp.Infrastructure
                         if (oq.Answer.Trim().ToLower().Split(',').Contains(userAnswer?.ToString().Trim().ToLower()))
                             PointsPerRound += 10;
                     }
+
                     break;
                 case SortQuestion sq:
                     if ((bool)userAnswer)
@@ -144,6 +177,19 @@ namespace QuizApp.Infrastructure
         public void SetCurrentPlayer(Player player)
         {
             CurrentPlayer = player;
+        }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
         }
     }
 }

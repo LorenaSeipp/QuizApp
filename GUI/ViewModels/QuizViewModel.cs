@@ -39,6 +39,7 @@ public class QuizViewModel : BaseViewModel
             return;
         }
 
-        CurrentQuestion = QuestionViewModelFactory.Create(nextQuestion, _navigationStore, _quizManager);
+        CurrentQuestion =
+            QuestionViewModelFactory.Create(nextQuestion, _navigationStore, _quizManager, LoadNextQuestion);
     }
 }

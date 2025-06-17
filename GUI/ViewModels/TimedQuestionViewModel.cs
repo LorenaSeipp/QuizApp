@@ -1,29 +1,36 @@
-﻿using QuizApp.Infrastructure;
+﻿using QuizApp.Core;
+using QuizApp.Infrastructure;
 using QuizApp.Stores;
 
 namespace QuizApp.ViewModels;
 
 public abstract class TimedQuestionViewModel : BaseViewModel
 {
+    protected readonly NavigationStore _navigationStore;
+
+    private readonly Action _onQuestionHandled;
+    protected readonly QuizManager _quizManager;
     protected readonly IQuizTimer _timer;
 
     private string _feedbackMessage;
-
     private bool _isFeedbackVisible;
-
     private bool _wasTimeUp;
 
-    public TimedQuestionViewModel()
+    // EINZIGER Konstruktor für TimedQuestionViewModel
+    public TimedQuestionViewModel(NavigationStore navigationStore, QuizManager quizManager, Action onQuestionHandled)
     {
-    }
+        _navigationStore = navigationStore;
+        _quizManager = quizManager;
+        _onQuestionHandled = onQuestionHandled; // Diese Action ist der Call-Back zum QuizViewModel
 
-    public TimedQuestionViewModel(IQuizTimer timer)
-    {
-        _timer = timer;
+        _timer = quizManager.Timer; // Timer vom QuizManager holen
         _timer.TimerTick += OnTimerTick;
         _timer.TimeUp += OnTimeUp;
-        _timer.Start();
+        _timer.Start(); // Timer starten, wenn die Frage geladen wird
     }
+
+    public int EarnedPoints => _quizManager.PointsPerRound;
+    public int TotalPoints => _quizManager.Score;
 
     public int RemainingSeconds => _timer.RemainingSeconds;
 
@@ -66,15 +73,43 @@ public abstract class TimedQuestionViewModel : BaseViewModel
     {
     }
 
-    protected async Task ShowFeedbackAndLoadNextAsync(string message, NavigationStore navStore, QuizManager quizManager)
+    protected async Task ShowFeedbackAndProceedAsync(string message, bool fromTimeUp)
     {
         FeedbackMessage = message;
         IsFeedbackVisible = true;
+        WasTimeUp = fromTimeUp;
+
+        _timer.Stop(); // Timer stoppen, sobald Feedback angezeigt wird
+
         await Task.Delay(5000); // 5 Sekunden anzeigen
         IsFeedbackVisible = false;
 
-        navStore.CurrentViewModel = new QuizViewModel(navStore, quizManager);
+        // Hier wird NICHT direkt navigiert, sondern die Action aufgerufen,
+        _onQuestionHandled?.Invoke();
     }
 
-    public abstract void SubmitAnswer();
+    protected async void SubmitAnswerInternal(IQuestion question, object? userAnswer)
+    {
+        _quizManager.SubmitAnswer(question, userAnswer);
+        // Now you can call OnPropertyChanged for these in the base class:
+        OnPropertyChanged(nameof(EarnedPoints));
+        OnPropertyChanged(nameof(TotalPoints));
+
+        string message =
+            $"Richtige Antwort: {GetCorrectAnswerForQuestion(question)} \nPunkte: {_quizManager.PointsPerRound}";
+        await ShowFeedbackAndProceedAsync(message, false);
+    }
+
+    // Hilfsmethode, um die korrekte Antwort zu bekommen (kann in den spezifischen ViewModels überschrieben werden)
+    protected virtual string GetCorrectAnswerForQuestion(IQuestion question)
+    {
+        return question switch
+        {
+            MultipleChoiceQuestion mcq => mcq.CorrectAnswer,
+            TrueFalseQuestion tfq => tfq.IsTrue().ToString(),
+            EstimateQuestion eq => eq.RightAnswer.ToString(),
+            OpenQuestion oq => oq.Answer,
+            _ => "Unbekannt"
+        };
+    }
 }

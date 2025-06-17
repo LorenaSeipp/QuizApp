@@ -174,7 +174,7 @@ public class UserService
     /// <summary>
     ///     Aktualisiert die Spielerstatistiken nach einem Spiel.
     /// </summary>
-    public void UpdatePlayerStats(int playerId, int newScore)
+    public void UpdatePlayerStats(Player player)
     {
         using OracleConnection conn = new(_connectionString);
         conn.Open();
@@ -182,53 +182,32 @@ public class UserService
 
         try
         {
-            int gamesPlayed = 0;
-            int highScore = 0;
-            double avgScore = 0;
-
-            using (OracleCommand selectCmd = conn.CreateCommand())
-            {
-                selectCmd.CommandText = @"SELECT GamesPlayed, HighScore, AverageScore FROM Players WHERE Id = :id";
-                selectCmd.Parameters.Add(":id", playerId);
-
-                using OracleDataReader reader = selectCmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    gamesPlayed = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
-                    highScore = reader.IsDBNull(1) ? 0 : reader.GetInt32(1);
-                    avgScore = reader.IsDBNull(2) ? 0 : reader.GetDouble(2);
-                }
-            }
-
-            gamesPlayed++;
-            highScore = Math.Max(highScore, newScore);
-            avgScore = (avgScore * (gamesPlayed - 1) + newScore) / gamesPlayed;
-
             using (OracleCommand updateCmd = conn.CreateCommand())
             {
                 updateCmd.CommandText = @"
-                    UPDATE Players 
-                    SET GamesPlayed = :gamesPlayed,
-                        HighScore = :highScore,
-                        AverageScore = :averageScore,
-                        LastPlayed = :lastPlayed
-                    WHERE Id = :id";
+                UPDATE Players
+                SET GamesPlayed = :gamesPlayed,
+                    HighScore = :highScore,
+                    AverageScore = :averageScore,
+                    LastPlayed = :lastPlayed
+                WHERE Id = :id";
 
-                updateCmd.Parameters.Add(":gamesPlayed", gamesPlayed);
-                updateCmd.Parameters.Add(":highScore", highScore);
-                updateCmd.Parameters.Add(":averageScore", avgScore);
-                updateCmd.Parameters.Add(":lastPlayed", DateTime.UtcNow);
-                updateCmd.Parameters.Add(":id", playerId);
+                updateCmd.Parameters.Add(":gamesPlayed", player.GamesPlayed);
+                updateCmd.Parameters.Add(":highScore", player.Highscore);
+                updateCmd.Parameters.Add(":averageScore",
+                    player.AverageScore); // Annahme: Du berechnest AverageScore im Player
+                updateCmd.Parameters.Add(":lastPlayed", player.LastPlayed);
+                updateCmd.Parameters.Add(":id", player.Id);
 
                 updateCmd.ExecuteNonQuery();
             }
 
             trans.Commit();
         }
-        catch
+        catch (Exception ex) // Fange die spezifische Exception hier
         {
             trans.Rollback();
-            throw new ApplicationException("Fehler beim Aktualisieren der Spielerstatistiken.");
+            throw new ApplicationException("Fehler beim Aktualisieren der Spielerstatistiken.", ex);
         }
     }
 

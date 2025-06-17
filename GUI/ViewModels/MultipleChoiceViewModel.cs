@@ -11,14 +11,13 @@ public class MultipleChoiceQuestionViewModel : TimedQuestionViewModel
     private readonly MultipleChoiceQuestion _question;
     private readonly QuizManager _quizManager;
     private int _earnedPoints;
-
     private string _selectedAnswer;
-    public string FeedbackMessage = "";
 
     public MultipleChoiceQuestionViewModel(
         MultipleChoiceQuestion question,
         NavigationStore navigationStore,
-        QuizManager quizManager) : base(quizManager.Timer)
+        QuizManager quizManager,
+        Action onQuestionHandled) : base(navigationStore, quizManager, onQuestionHandled)
     {
         _question = question;
         _quizManager = quizManager;
@@ -33,7 +32,8 @@ public class MultipleChoiceQuestionViewModel : TimedQuestionViewModel
             _question.FalseAnswer3
         }.OrderBy(_ => Guid.NewGuid()).ToList();
 
-        SubmitAnswerCommand = new RelayCommand(SubmitAnswer, () => !string.IsNullOrEmpty(SelectedAnswer));
+        SubmitAnswerCommand =
+            new RelayCommand(SubmitAnswerInternalCommand, () => !string.IsNullOrEmpty(SelectedAnswer));
     }
 
     public int EarnedPoints => _quizManager.PointsPerRound;
@@ -55,7 +55,7 @@ public class MultipleChoiceQuestionViewModel : TimedQuestionViewModel
         }
     }
 
-    public ICommand SubmitAnswerCommand { get; }
+    /*public ICommand SubmitAnswerCommand { get; }
 
     public override async void SubmitAnswer()
     {
@@ -66,16 +66,24 @@ public class MultipleChoiceQuestionViewModel : TimedQuestionViewModel
         string message = $"Richtige Antwort: {_question.CorrectAnswer} \nPunkte: {EarnedPoints}";
         FeedbackMessage = message;
         await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
+    } */
+
+    public ICommand SubmitAnswerCommand { get; }
+
+    private void SubmitAnswerInternalCommand()
+    {
+        SubmitAnswerInternal(_question, SelectedAnswer);
     }
 
     protected override async void OnTimeUp()
     {
-        OnPropertyChanged(nameof(EarnedPoints));
-        OnPropertyChanged(nameof(TotalPoints));
+        // Logik für Zeit abgelaufen, aber rufe dann die Basis-Methode zum Fortfahren auf
+        _quizManager.SubmitAnswer(_question, null, true); // Sende Null-Antwort bei Zeitablauf
+        // OnPropertyChanged(nameof(EarnedPoints)); // Diese sollten schon im Basis-VM aktualisiert werden
+        // OnPropertyChanged(nameof(TotalPoints));   // Diese sollten schon im Basis-VM aktualisiert werden
 
-        WasTimeUp = true;
-        string message = $"Richtige Antwort: {_question.CorrectAnswer} \n Zeit abgelaufen!\nPunkte: {EarnedPoints}";
-        FeedbackMessage = message;
-        await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
+        string message =
+            $"Richtige Antwort: {_question.CorrectAnswer} \n Zeit abgelaufen!\nPunkte: {_quizManager.PointsPerRound}";
+        await ShowFeedbackAndProceedAsync(message, true);
     }
 }

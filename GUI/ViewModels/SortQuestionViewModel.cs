@@ -10,19 +10,13 @@ namespace QuizApp.ViewModels;
 public partial class SortQuestionViewModel : TimedQuestionViewModel
 {
     private readonly SortQuestionAnswer[] _answersInCorrectOrder;
-    private readonly NavigationStore _navigationStore;
-    private readonly QuizManager _quizManager;
-    private int _earnedPoints;
-
     private bool _hasAnswered;
     private SortQuestionAnswer? _selectedAnswer;
-    public string FeedbackMessage = "";
 
-    public SortQuestionViewModel(SortQuestion sortQuestion, NavigationStore navigationStore, QuizManager quizManager) :
-        base(quizManager.Timer)
+    public SortQuestionViewModel(SortQuestion sortQuestion, NavigationStore navigationStore, QuizManager quizManager,
+        Action onQuestionHandled)
+        : base(navigationStore, quizManager, onQuestionHandled)
     {
-        _quizManager = quizManager;
-        _navigationStore = navigationStore;
         SortQuestion = sortQuestion;
         _answersInCorrectOrder = new[]
         {
@@ -34,10 +28,6 @@ public partial class SortQuestionViewModel : TimedQuestionViewModel
         SortQuestionAnswer[] answersInWrongOrder = ShuffleAnswers(_answersInCorrectOrder.ToArray());
         ObservableCollection = new ObservableCollection<SortQuestionAnswer>(answersInWrongOrder);
     }
-
-    public int EarnedPoints => _quizManager.PointsPerRound;
-
-    public int TotalPoints => _quizManager.Score;
 
     public SortQuestionAnswer? SelectedAnswer
     {
@@ -68,7 +58,7 @@ public partial class SortQuestionViewModel : TimedQuestionViewModel
         }
     }
 
-    SortQuestion SortQuestion { get; set; }
+    public SortQuestion SortQuestion { get; set; }
     public string QuestionText => SortQuestion.Question;
     public bool IsRightOrder { get; set; }
     public ObservableCollection<SortQuestionAnswer> ObservableCollection { get; set; }
@@ -114,7 +104,6 @@ public partial class SortQuestionViewModel : TimedQuestionViewModel
         Random random = new Random();
         for (int i = array.Length - 1; i > 0; i--)
         {
-            //von 0 bis einschließlich i
             int j = random.Next(i + 1);
             SortQuestionAnswer temp = array[i];
             array[i] = array[j];
@@ -130,7 +119,7 @@ public partial class SortQuestionViewModel : TimedQuestionViewModel
     }
 
     [RelayCommand(CanExecute = nameof(CanCheckAnswer))]
-    public override async void SubmitAnswer()
+    public async void SubmitAnswer()
     {
         if (CanCheckAnswer())
         {
@@ -152,30 +141,35 @@ public partial class SortQuestionViewModel : TimedQuestionViewModel
             SelectedAnswer = null;
             SubmitAnswerCommand.NotifyCanExecuteChanged();
             NotifyCommands();
-            _quizManager.SubmitAnswer(SortQuestion, IsRightOrder);
-            OnPropertyChanged(nameof(EarnedPoints));
-            OnPropertyChanged(nameof(TotalPoints));
-            WasTimeUp = false;
-            string message = $"Punkte: {EarnedPoints}";
-            FeedbackMessage = message;
-            await Task.Delay(3000);
-            await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
+
+            // Submit the answer through the base class's internal method
+            SubmitAnswerInternal(SortQuestion, IsRightOrder);
+            // The remaining logic (OnPropertyChanged, WasTimeUp, message, await Task.Delay,
+            // and ShowFeedbackAndProceedAsync) is now handled by SubmitAnswerInternal
         }
     }
 
     protected override async void OnTimeUp()
     {
-        OnPropertyChanged(nameof(EarnedPoints));
-        OnPropertyChanged(nameof(TotalPoints));
+        // Inform the QuizManager about time-up
+        _quizManager.SubmitAnswer(SortQuestion, null, true);
 
         WasTimeUp = true;
         string message = "Richtige Reihenfolge: \n";
         foreach (SortQuestionAnswer answer in _answersInCorrectOrder) message += answer.QuestionText + "\n";
+        message += $"Zeit abgelaufen!\nPunkte: {_quizManager.PointsPerRound}";
 
-        message += $"Zeit abgelaufen!\nPunkte: {EarnedPoints}";
-        FeedbackMessage = message;
-        await Task.Delay(3000);
-        await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
+        // Use the base class method to show feedback and proceed
+        await ShowFeedbackAndProceedAsync(message, true);
+    }
+
+    protected override string GetCorrectAnswerForQuestion(IQuestion question)
+    {
+        if (question is SortQuestion sq)
+            // You might want to return a formatted string of the correct order
+            return string.Join(" -> ", _answersInCorrectOrder.Select(a => a.QuestionText));
+
+        return base.GetCorrectAnswerForQuestion(question);
     }
 
     public partial class SortQuestionAnswer : ObservableObject

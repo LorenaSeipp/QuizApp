@@ -8,28 +8,22 @@ namespace QuizApp.ViewModels
 {
     public class EstimateQuestionViewModel : TimedQuestionViewModel
     {
-        private readonly NavigationStore _navigationStore;
         private readonly EstimateQuestion _question;
-        private readonly QuizManager _quizManager;
 
-        private int _earnedPoints;
         private int? _userAnswer;
-        public string FeedbackMessage = "";
 
-        public EstimateQuestionViewModel(EstimateQuestion question, NavigationStore navigationStore,
-            QuizManager quizManager) : base(quizManager.Timer)
+        public EstimateQuestionViewModel(
+            EstimateQuestion question,
+            NavigationStore navigationStore,
+            QuizManager quizManager,
+            Action onQuestionHandled)
+            : base(navigationStore, quizManager, onQuestionHandled) // Pass all parameters to the base constructor
         {
             _question = question;
-            _quizManager = quizManager;
-            _navigationStore = navigationStore;
-            SubmitAnswerCommand = new RelayCommand(SubmitAnswer);
+            SubmitAnswerCommand = new RelayCommand(ExecuteSubmitAnswerCommand, () => UserAnswer.HasValue);
         }
 
         public ICommand SubmitAnswerCommand { get; }
-
-        public int EarnedPoints => _quizManager.PointsPerRound;
-
-        public int TotalPoints => _quizManager.Score;
 
         public string QuestionText => _question.Question;
 
@@ -42,34 +36,36 @@ namespace QuizApp.ViewModels
                 {
                     _userAnswer = value;
                     OnPropertyChanged();
+                    ((RelayCommand)SubmitAnswerCommand).RaiseCanExecuteChanged();
                 }
             }
         }
 
-        public override async void SubmitAnswer()
+        private void ExecuteSubmitAnswerCommand()
         {
-            _quizManager.SubmitAnswer(_question, UserAnswer.Value);
-            OnPropertyChanged(nameof(EarnedPoints));
-            OnPropertyChanged(nameof(TotalPoints));
-            WasTimeUp = false;
-
-            string message = $"Richtige Antwort: {_question.RightAnswer}\nPunkte: {EarnedPoints}";
-            FeedbackMessage = message;
-            await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
+            // Ensure UserAnswer has a value before attempting to submit
+            if (UserAnswer.HasValue) SubmitAnswerInternal(_question, UserAnswer.Value);
         }
-
 
         protected override async void OnTimeUp()
         {
             _quizManager.SubmitAnswer(_question, null, wasTimeUp: true);
 
-            OnPropertyChanged(nameof(EarnedPoints));
-            OnPropertyChanged(nameof(TotalPoints));
-
             WasTimeUp = true;
-            string message = $"Zeit abgelaufen!\nRichtige Antwort: {_question.RightAnswer}\nPunkte: {EarnedPoints}";
-            FeedbackMessage = message;
-            await ShowFeedbackAndLoadNextAsync(message, _navigationStore, _quizManager);
+
+            string message =
+                $"Zeit abgelaufen!\nRichtige Antwort: {_question.RightAnswer}\nPunkte: {_quizManager.PointsPerRound}";
+
+            await ShowFeedbackAndProceedAsync(message, true);
+        }
+
+        protected override string GetCorrectAnswerForQuestion(IQuestion question)
+        {
+            // Safely cast the IQuestion to EstimateQuestion to access its specific properties
+            if (question is EstimateQuestion eq) return eq.RightAnswer.ToString();
+
+            // Fallback to the base class's implementation if the question type is not as expected
+            return base.GetCorrectAnswerForQuestion(question);
         }
     }
 }
