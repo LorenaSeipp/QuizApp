@@ -47,6 +47,8 @@ namespace QuizApp.ViewModels
         {
             _quizManager.SubmitAnswer(_question, null, true);
 
+            OnPropertyChanged(nameof(EarnedPoints));
+            OnPropertyChanged(nameof(TotalPoints));
             WasTimeUp = true;
             string message =
                 $"Richtige Antwort: {_question.TrueFalse} \n Zeit abgelaufen!\nPunkte: {_quizManager.PointsPerRound}";

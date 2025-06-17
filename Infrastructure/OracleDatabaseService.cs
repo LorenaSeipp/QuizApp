@@ -48,7 +48,8 @@ namespace QuizApp.Infrastructure
 
             try
             {
-                //runSQLScript("init-data.sql");
+                //DIESE ZEILE DARF NUR BEIM ERSTEN BEFÜLLEN DER DB AUSGEFÜHRT WERDEN
+                runSQLScript("init-data.sql");
                 Console.WriteLine("Data loaded successfully.");
             }
             catch (FileNotFoundException ex)

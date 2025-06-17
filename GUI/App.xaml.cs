@@ -32,10 +32,6 @@ public partial class App : Application
         UserService userService = new(ConnectionString);
         QuestionRepository repository = new(ConnectionString);
 
-        // Admin erstellen 
-        /* AdminCreator adminCreator = new(ConnectionString);
-        adminCreator.CreateAdmin("admin", "admin", "System"); */
-
         // SETUP UI
         QuizTimer quizTimer = new QuizTimer(30);
         QuizManager quizManager = new(ConnectionString, quizTimer, userService);

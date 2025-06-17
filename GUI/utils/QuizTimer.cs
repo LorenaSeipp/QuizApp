@@ -1,4 +1,5 @@
-﻿using System.Windows.Threading;
+﻿using System.Diagnostics;
+using System.Windows.Threading;
 using QuizApp.Infrastructure;
 
 namespace QuizApp.utils;
@@ -39,10 +40,7 @@ public class QuizTimer: IQuizTimer
 
     public void Reset()
     {
-        Stop();
         _remainingSeconds = _duration;
-        Start();
-        TimerTick?.Invoke();
     }
 
     public void OnTick(object sender, EventArgs e)
@@ -50,7 +48,6 @@ public class QuizTimer: IQuizTimer
         _remainingSeconds--;
         if (_remainingSeconds <= 0)
         {
-            Stop();
             TimeUp?.Invoke();
         }
         TimerTick?.Invoke();

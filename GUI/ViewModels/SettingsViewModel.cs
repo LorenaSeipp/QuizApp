@@ -39,7 +39,6 @@ namespace QuizApp.ViewModels
 
             QuestionCounts = new ObservableCollection<int> { 5, 10, 15, 20 };
 
-            // Default Werte (optional)
             SelectedCategory = null;
             SelectedDifficulty = null;
             SelectedQuestionCount = null;

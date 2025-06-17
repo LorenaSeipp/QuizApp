@@ -16,7 +16,6 @@ public abstract class TimedQuestionViewModel : BaseViewModel
     private bool _isFeedbackVisible;
     private bool _wasTimeUp;
 
-    // EINZIGER Konstruktor für TimedQuestionViewModel
     public TimedQuestionViewModel(NavigationStore navigationStore, QuizManager quizManager, Action onQuestionHandled)
     {
         _navigationStore = navigationStore;
@@ -33,6 +32,11 @@ public abstract class TimedQuestionViewModel : BaseViewModel
     public int TotalPoints => _quizManager.Score;
 
     public int RemainingSeconds => _timer.RemainingSeconds;
+    public void DestructTimer()
+    {
+        _timer.TimerTick -= OnTimerTick;
+        _timer.TimeUp -= OnTimeUp;
+    }
 
     public bool IsFeedbackVisible
     {
@@ -79,7 +83,7 @@ public abstract class TimedQuestionViewModel : BaseViewModel
         IsFeedbackVisible = true;
         WasTimeUp = fromTimeUp;
 
-        _timer.Stop(); // Timer stoppen, sobald Feedback angezeigt wird
+        DestructTimer();
 
         await Task.Delay(5000); // 5 Sekunden anzeigen
         IsFeedbackVisible = false;

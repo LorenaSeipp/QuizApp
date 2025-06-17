@@ -1,6 +1,7 @@
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
+using System.Diagnostics;
 
 namespace QuizApp.ViewModels;
 

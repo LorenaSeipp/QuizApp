@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using QuizApp.Core;
 using QuizApp.Core.Models;
@@ -126,7 +127,6 @@ namespace QuizApp.Infrastructure
             }
 
             Timer.Reset();
-            Timer.Start();
             return _questions.Pop();
         }
 
