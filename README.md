@@ -1,3 +1,14 @@
+# Anleitung
+- Docker installieren
+- Docker Engine starten
+- `cd Infrastructure/docker`
+- `docker-compose up -d`
+- Für den ersten Start in Infrastructure/OracleDatabaseService.cs in Zeile 51 das initiale Laden der Daten ent-auskommentieren(?) (nach den ersten Start muss der Befehl dann wieder auskommentiert sein)
+- App starten (GUI Projekt)
+- Mit Username und Passwort registrieren
+- Mit Username und Passwort anmelden
+- Gewünschte Einstellungen treffen und starten
+
 # Projektplan: QuizApp – Meilenstein 03
 
 **Gruppe 7:** Kristina Ruf, Lorena Seipp, Jan Sobotta, Benedict Volz
