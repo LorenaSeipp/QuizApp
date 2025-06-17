@@ -134,6 +134,7 @@ namespace QuizApp.Infrastructure
         {
             Timer.Stop();
             PointsPerRound = 0;
+            //no points awarded when time runs out
             if (wasTimeUp) return;
 
             switch (question)
@@ -152,6 +153,7 @@ namespace QuizApp.Infrastructure
                 case OpenQuestion oq:
                     if (userAnswer != null)
                     {
+                        //Check if given normalized answer is among the accepted normalized answers
                         if (oq.Answer.Trim().ToLower().Split(',').Contains(userAnswer?.ToString().Trim().ToLower()))
                             PointsPerRound += 10;
                     }

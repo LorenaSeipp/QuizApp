@@ -22,12 +22,14 @@ namespace QuizApp.Core
         public string Category { get; set; }
         public int RightAnswer { get; set; }
 
+        //calculates points based on how close the guess was to the expected answer
         public int CalculatePoints(double userGuess)
         {
-            bool isYearQuestion = Question.Contains("Jahr") || Question.Contains("Wann") || Question.Contains("wurde");
+            bool isYearQuestion = Question.Contains("Jahr") || Question.Contains("Wann");
 
             double diff = Math.Abs(userGuess - RightAnswer);
 
+            //flat margin for years
             if (isYearQuestion)
             {
                 if (diff == 0) return 10;
@@ -37,6 +39,7 @@ namespace QuizApp.Core
                 else if (diff <= 50) return 2;
                 else return 0;
             }
+            //percentage margin for everything else
             else
             {
                 double percentOff = diff / RightAnswer * 100;
