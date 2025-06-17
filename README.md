@@ -115,14 +115,9 @@ Ziel ist eine QuizApp mit GUI, in der Benutzer Fragen aus verschiedenen Kategori
 | 3 | Vererbung: Fragetypen (Multiple Choice, Freitext, Schätzfrage) und Frageneditor implementieren (Benutzer in Player/Admin unterscheiden) |
 | 4 | ER-Diagramm für Datenbank. Oracle DB in Docker-Container: Speicherung & Abfragen. Verbindung zur App |
 | 5 | GUI (Startseite, Quizseite, Auswertung) & Admin-Frageneditor mit WPF erstellen |
-| 6 | Punktesystem, Timer (Delegates), Exception Handling |
+| 6 | Punktesystem, Timer , Exception Handling |
 | 7 | Statistiken, Benutzerverwaltung, Highscore-Funktionalität |
 | 8 | Docker-Container erstellen, App testweise deployen und testen |
 | 9 | Finale Tests, Code Cleanup, Präsentationsvorbereitung |
 
 ---
-
-## 📘 Klassendiagramm
-
-![Klassendiagramm](docs/Klassendiagramm.png)
-
