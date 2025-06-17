@@ -1,12 +1,9 @@
-namespace QuizApp.Core;
+using QuizApp.Core;
 
 public class MultipleChoiceQuestion : IQuestion
 {
-    public MultipleChoiceQuestion()
-    {
-    }
-
-    public MultipleChoiceQuestion(string question, int difficulty, string category, string correctAnswer,
+    public MultipleChoiceQuestion(string question, QuestionEnums.Difficulty difficulty, string category,
+        string correctAnswer,
         string falseAnswer1, string falseAnswer2, string falseAnswer3)
     {
         Question = question;
@@ -19,10 +16,14 @@ public class MultipleChoiceQuestion : IQuestion
         FalseAnswer3 = falseAnswer3;
     }
 
+    public MultipleChoiceQuestion()
+    {
+    }
+
     public int Id { get; set; }
     public string Question { get; set; }
     public QuestionEnums.QuestionTyp Typ { get; set; }
-    public int Difficulty { get; set; }
+    public QuestionEnums.Difficulty Difficulty { get; set; }
     public string Category { get; set; }
     public string CorrectAnswer { get; set; }
     public string FalseAnswer1 { get; set; }

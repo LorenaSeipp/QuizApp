@@ -13,46 +13,56 @@ namespace QuizApp.ViewModels
         private readonly QuizManager _quizManager;
 
         private string _selectedCategory;
-
         private string _selectedDifficulty;
+        private int? _selectedQuestionCount;
 
-        public SettingsViewModel(QuizManager quizManager, NavigationStore navigationStore)
+        public SettingsViewModel(NavigationStore navigationStore, QuizManager quizManager)
         {
             _quizManager = quizManager;
             _navigationStore = navigationStore;
 
-            SelectedCategory = _quizManager.Category;
-
-            // Schwierigkeitswerte initialisieren 
-            SelectedDifficulty = _quizManager.Difficulty switch
+            Categories = new ObservableCollection<string>
             {
-                QuestionEnums.Difficulty.leicht => "Einfach",
-                QuestionEnums.Difficulty.mittel => "Mittel",
-                QuestionEnums.Difficulty.schwer => "Schwer",
-                _ => "Einfach" // Fallback, falls ungültig
+                "Gemischt",
+                "Musik",
+                "Informatik",
+                "Geografie",
+                "Fun-Facts"
             };
+
+            Difficulties = new ObservableCollection<string>
+            {
+                "Einfach",
+                "Mittel",
+                "Schwer"
+            };
+
+            QuestionCounts = new ObservableCollection<int> { 5, 10, 15, 20 };
+
+            SelectedCategory = null;
+            SelectedDifficulty = null;
+            SelectedQuestionCount = null;
+
+            SelectCategoryCommand = new RelayCommandWithParam<string>(category => { SelectedCategory = category; });
+
+            SelectDifficultyCommand = new RelayCommandWithParam<string>(difficulty =>
+            {
+                SelectedDifficulty = difficulty;
+            });
+
+            SelectQuestionCountCommand = new RelayCommandWithParam<int>(count => { SelectedQuestionCount = count; });
 
             NavigateQuizCommand = new NavigateQuizCommand(_navigationStore, _quizManager);
         }
 
         public ICommand NavigateQuizCommand { get; }
+        public ICommand SelectCategoryCommand { get; }
+        public ICommand SelectDifficultyCommand { get; }
+        public ICommand SelectQuestionCountCommand { get; }
 
-        // Kategorien + Schwierigkeitslevel als Properties
-        public ObservableCollection<string> Categories { get; } = new ObservableCollection<string>
-        {
-            "Gemischt",
-            "Musik",
-            "Informatik",
-            "Geografie",
-            "Fun-Facts"
-        };
-
-        public ObservableCollection<string> Difficulties { get; } = new ObservableCollection<string>
-        {
-            "Einfach",
-            "Mittel",
-            "Schwer"
-        };
+        public ObservableCollection<string> Categories { get; }
+        public ObservableCollection<string> Difficulties { get; }
+        public ObservableCollection<int> QuestionCounts { get; }
 
         public string SelectedCategory
         {
@@ -61,7 +71,8 @@ namespace QuizApp.ViewModels
             {
                 if (SetProperty(ref _selectedCategory, value))
                 {
-                    _quizManager.Category = value;
+                    _quizManager.Category = ConvertCategoryStringToEnum(value);
+                    OnPropertyChanged(nameof(CanStartQuiz));
                 }
             }
         }
@@ -74,9 +85,28 @@ namespace QuizApp.ViewModels
                 if (SetProperty(ref _selectedDifficulty, value))
                 {
                     _quizManager.Difficulty = ConvertDifficultyStringToEnum(value);
+                    OnPropertyChanged(nameof(CanStartQuiz));
                 }
             }
         }
+
+        public int? SelectedQuestionCount
+        {
+            get => _selectedQuestionCount;
+            set
+            {
+                if (SetProperty(ref _selectedQuestionCount, value))
+                {
+                    _quizManager.NumberOfQuestions = value ?? 0;
+                    OnPropertyChanged(nameof(CanStartQuiz));
+                }
+            }
+        }
+
+        public bool CanStartQuiz =>
+            !string.IsNullOrEmpty(SelectedCategory) &&
+            !string.IsNullOrEmpty(SelectedDifficulty) &&
+            SelectedQuestionCount.HasValue;
 
         private QuestionEnums.Difficulty ConvertDifficultyStringToEnum(string diff)
         {
@@ -86,6 +116,19 @@ namespace QuizApp.ViewModels
                 "Mittel" => QuestionEnums.Difficulty.mittel,
                 "Schwer" => QuestionEnums.Difficulty.schwer,
                 _ => throw new ArgumentException("Ungültiger Schwierigkeitswert")
+            };
+        }
+
+        private QuestionEnums.Category ConvertCategoryStringToEnum(string category)
+        {
+            return category switch
+            {
+                "Informatik" => QuestionEnums.Category.Informatik,
+                "Musik" => QuestionEnums.Category.Musik,
+                "Geografie" => QuestionEnums.Category.Geografie,
+                "Fun-Facts" => QuestionEnums.Category.FunFacts, // ← Fix hier
+                "Gemischt" => QuestionEnums.Category.Gemischt,
+                _ => throw new ArgumentException("Ungültiger Kategorienwert")
             };
         }
     }

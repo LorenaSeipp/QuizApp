@@ -7,9 +7,13 @@ namespace QuizApp.ViewModels
 {
     public class ResultViewModel : BaseViewModel
     {
-        public ResultViewModel(QuizManager quizmanager, NavigationStore navigationStore)
+        private readonly QuizManager _quizManager;
+        private readonly NavigationStore _navigationStore;
+        public ResultViewModel(NavigationStore navigationStore, QuizManager quizManager)
         {
-            NavigateHomeCommand = new NavigateHomeCommand(navigationStore);
+            _quizManager = quizManager;
+            _navigationStore = navigationStore;
+            NavigateHomeCommand = new NavigateHomeCommand(_navigationStore, _quizManager);
         }
 
         public ICommand NavigateHomeCommand { get; }

@@ -2,26 +2,38 @@ using System.Windows;
 using System.Windows.Input;
 using QuizApp.Commands;
 using QuizApp.Core;
-using QuizApp.Logic;
+using QuizApp.Infrastructure;
+using QuizApp.Stores;
 
 namespace QuizApp.ViewModels;
 
 public class AdminDashboardViewModel : BaseViewModel
 {
-    private readonly QuestionService _questionService;
-
-    private int _difficulty;
-
+    private readonly NavigationStore _navigationStore;
+    private readonly QuestionRepository _questionRepository;
+    private readonly QuizManager _quizManager;
+    private readonly RelayCommand _saveQuestionCommand;
+    private string _category;
+    private string _difficultyString;
+    private string _questionText;
     private string _selectedQuestionType;
+    private bool _trueFalse;
+    private string _trueFalseString;
+    public QuestionEnums.Difficulty Difficulty;
 
-    // TrueFalse Property
-    private string _trueFalseAnswer;
-
-    public AdminDashboardViewModel(string connectionString)
+    public AdminDashboardViewModel(string connectionString, QuizManager quizManager, NavigationStore navigationStore)
     {
-        _questionService = new QuestionService(connectionString);
-        SaveQuestionCommand = new RelayCommand(SaveQuestion, CanSaveQuestion);
+        _quizManager = quizManager;
+        _navigationStore = navigationStore;
+        _questionRepository = new QuestionRepository(connectionString);
+
+        _saveQuestionCommand = new RelayCommand(SaveQuestion, CanSaveQuestion);
+        NavigateHomeCommand = new NavigateHomeCommand(_navigationStore, _quizManager);
     }
+
+    public ICommand SaveQuestionCommand => _saveQuestionCommand;
+    public ICommand NavigateHomeCommand { get; } // Change to NavigateHomeCommand
+
 
     public string SelectedQuestionType
     {
@@ -37,6 +49,7 @@ public class AdminDashboardViewModel : BaseViewModel
                 OnPropertyChanged(nameof(IsTrueFalseVisible));
                 OnPropertyChanged(nameof(IsSortVisible));
                 OnPropertyChanged(nameof(IsOpenVisible));
+                _saveQuestionCommand.RaiseCanExecuteChanged();
             }
         }
     }
@@ -47,40 +60,83 @@ public class AdminDashboardViewModel : BaseViewModel
     public bool IsSortVisible => SelectedQuestionType == "Sort";
     public bool IsOpenVisible => SelectedQuestionType == "Open";
 
-    public string Category { get; set; }
-    public string QuestionText { get; set; }
-
-    public int Difficulty
+    public string Category
     {
-        get => _difficulty;
+        get => _category;
         set
         {
-            if (_difficulty != value)
+            if (_category != value)
             {
-                _difficulty = value;
-                OnPropertyChanged(nameof(Difficulty));
+                _category = value;
+                OnPropertyChanged();
+                _saveQuestionCommand.RaiseCanExecuteChanged();
+            }
+        }
+    }
+
+    public string QuestionText
+    {
+        get => _questionText;
+        set
+        {
+            if (_questionText != value)
+            {
+                _questionText = value;
+                OnPropertyChanged();
+                _saveQuestionCommand.RaiseCanExecuteChanged();
+            }
+        }
+    }
+
+    public string DifficultyString
+    {
+        get => _difficultyString;
+        set
+        {
+            if (_difficultyString != value)
+            {
+                _difficultyString = value;
+                OnPropertyChanged();
+                Difficulty = Enum.Parse<QuestionEnums.Difficulty>(_difficultyString);
+                _saveQuestionCommand.RaiseCanExecuteChanged();
             }
         }
     }
 
     // MultipleChoice Properties
-    public string RightAnswer { get; set; }
+    public string CorrectAnswer { get; set; }
     public string FalseAnswer1 { get; set; }
     public string FalseAnswer2 { get; set; }
     public string FalseAnswer3 { get; set; }
 
     // Estimate Property
-    public string EstimateAnswer { get; set; }
+    public int RightAnswer { get; set; }
 
-    public string TrueFalseAnswer
+    public bool TrueFalse
     {
-        get => _trueFalseAnswer;
+        get => _trueFalse;
         set
         {
-            if (_trueFalseAnswer != value)
+            if (_trueFalse != value)
             {
-                _trueFalseAnswer = value;
-                OnPropertyChanged(nameof(TrueFalseAnswer));
+                _trueFalse = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public string TrueFalseString
+    {
+        get => _trueFalseString;
+        set
+        {
+            if (_trueFalseString != value)
+            {
+                _trueFalseString = value;
+                OnPropertyChanged();
+
+                // Hier die Umwandlung in bool
+                TrueFalse = _trueFalseString?.ToLower() == "wahr";
             }
         }
     }
@@ -94,8 +150,6 @@ public class AdminDashboardViewModel : BaseViewModel
     // Open Property
     public string OpenAnswer { get; set; }
 
-    public ICommand SaveQuestionCommand { get; }
-
     private bool CanSaveQuestion()
     {
         return !string.IsNullOrWhiteSpace(QuestionText)
@@ -108,32 +162,36 @@ public class AdminDashboardViewModel : BaseViewModel
         switch (SelectedQuestionType)
         {
             case "MultipleChoice":
-                MultipleChoiceQuestion mcq = new(QuestionText, Difficulty, Category, RightAnswer, FalseAnswer1,
+                MultipleChoiceQuestion mcq = new(QuestionText, Difficulty, Category, CorrectAnswer, FalseAnswer1,
                     FalseAnswer2, FalseAnswer3);
-                _questionService.AddMultipleChoiceQuestion(mcq);
+                _questionRepository.AddMultipleChoiceQuestion(mcq);
                 MessageBox.Show(
-                    $"MultipleChoice Frage gespeichert:\n{QuestionText}\nRichtige Antwort: {RightAnswer}");
+                    $"MultipleChoice Frage gespeichert:\n{QuestionText}\nRichtige Antwort: {CorrectAnswer}");
                 break;
 
             case "Estimate":
-                // TODO: Speichern in DB (Methode in QuestionService & QuestionRepository)
-                MessageBox.Show($"Estimate Frage gespeichert:\n{QuestionText}\nAntwort: {EstimateAnswer}");
+                EstimateQuestion eq = new(QuestionText, Difficulty, Category, RightAnswer);
+                _questionRepository.AddEstimateQuestion(eq);
+                MessageBox.Show($"Estimate Frage gespeichert:\n{QuestionText}\nAntwort: {RightAnswer}");
                 break;
 
             case "TrueFalse":
-                bool isTrue = TrueFalseAnswer == "True";
-                // TODO: Speichern in DB (Methode in QuestionService & QuestionRepository)
-                MessageBox.Show($"True/False Frage gespeichert:\n{QuestionText}\nAntwort: {isTrue}");
+                TrueFalseQuestion tfq = new(QuestionText, Difficulty, Category, TrueFalse);
+                _questionRepository.AddTrueFalseQuestion(tfq);
+                MessageBox.Show($"True/False Frage gespeichert:\n{QuestionText}\nAntwort: {TrueFalse}");
                 break;
 
             case "Sort":
-                // TODO: Speichern in DB (Methode in QuestionService & QuestionRepository)
+                SortQuestion sq = new(QuestionText, Difficulty, Category, SortPlace1, SortPlace2, SortPlace3,
+                    SortPlace4);
+                _questionRepository.AddSortQuestion(sq);
                 MessageBox.Show(
                     $"Sort Frage gespeichert:\n{QuestionText}\nPlätze: {SortPlace1}, {SortPlace2}, {SortPlace3}, {SortPlace4}");
                 break;
 
             case "Open":
-                // TODO: Speichern in DB (Methode in QuestionService & QuestionRepository)
+                OpenQuestion oq = new(QuestionText, Difficulty, Category, OpenAnswer);
+                _questionRepository.AddOpenQuestion(oq);
                 MessageBox.Show($"Open Frage gespeichert:\n{QuestionText}\nAntwort: {OpenAnswer}");
                 break;
         }

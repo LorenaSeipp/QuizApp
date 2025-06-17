@@ -1,4 +1,8 @@
+// Wenn die Tables in der App zum ersten mal angelegt werden müssen die DROP statements in der 
+// init-schema.sql auskommentiert und die ';' entfernt werden
+
 //Docker Compose zum Laufen bringen
+cd Infrastructure/docker
 docker-compose up -d
 
 //Terminal innerhalb des Docker Containers

@@ -1,7 +1,9 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.Configuration;
 using QuizApp.Infrastructure;
+using QuizApp.Logic;
 using QuizApp.Stores;
+using QuizApp.utils;
 using QuizApp.ViewModels;
 
 namespace QuizApp;
@@ -25,22 +27,20 @@ public partial class App : Application
         ConnectionString = Configuration.GetConnectionString("OracleDb");
 
         // 2. Services erstellen
-        UserService userService = new(ConnectionString);
-        OracleDatabaseService dbService = new();
+        OracleDatabaseService dbService = new(ConnectionString);
         dbService.InitializeDatabase();
-
+        UserService userService = new(ConnectionString);
         QuestionRepository repository = new(ConnectionString);
 
-        // Admin erstellen 
-        AdminCreator adminCreator = new(ConnectionString);
-        adminCreator.CreateAdmin("Admin", "admin123", "System");
-
         // SETUP UI
+        QuizTimer quizTimer = new QuizTimer(30);
+        QuizManager quizManager = new(ConnectionString, quizTimer, userService);
+
         NavigationStore navigationStore = new NavigationStore();
-        navigationStore.CurrentViewModel = new HomeViewModel(navigationStore);
+        navigationStore.CurrentViewModel = new HomeViewModel(navigationStore, quizManager);
         MainWindow = new MainWindow()
         {
-            DataContext = new MainViewModel(navigationStore)
+            DataContext = new MainViewModel(navigationStore, quizManager)
         };
         MainWindow.Show();
         base.OnStartup(e);

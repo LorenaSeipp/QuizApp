@@ -1,33 +1,45 @@
-﻿using QuizApp.Infrastructure;
+﻿using QuizApp.Core;
+using QuizApp.Infrastructure;
 using QuizApp.Stores;
 
-namespace QuizApp.ViewModels
+namespace QuizApp.ViewModels;
+
+public class QuizViewModel : BaseViewModel
 {
-    public class QuizViewModel : BaseViewModel
+    private readonly NavigationStore _navigationStore;
+    private readonly QuizManager _quizManager;
+
+    private TimedQuestionViewModel? _currentQuestion;
+
+    public QuizViewModel(NavigationStore navigationStore, QuizManager quizManager)
     {
-        private readonly NavigationStore _navigationStore;
-        private readonly QuizManager _quizManager;
+        _quizManager = quizManager;
+        _navigationStore = navigationStore;
 
-        public QuizViewModel(QuizManager quizManager, NavigationStore navigationStore)
+        LoadNextQuestion();
+    }
+
+    public TimedQuestionViewModel? CurrentQuestion
+    {
+        get => _currentQuestion;
+        set
         {
-            _quizManager = quizManager;
-            _navigationStore = navigationStore;
+            _currentQuestion = value;
+            OnPropertyChanged();
+        }
+    }
 
-            LoadNextQuestion();
+    public void LoadNextQuestion()
+    {
+        IQuestion? nextQuestion = _quizManager.GetNextQuestion();
+
+        if (nextQuestion == null)
+        {
+            _navigationStore.CurrentViewModel = new EndScreenViewModel(_navigationStore, _quizManager);
+            return;
         }
 
-        private void LoadNextQuestion()
-        {
-            var nextQuestion = _quizManager.GetNextQuestion();
-            if (nextQuestion == null)
-            {
-                _navigationStore.CurrentViewModel = new ResultViewModel(_quizManager, _navigationStore);
-                return;
-            }
-
-            QuestionViewModel questionVM =
-                QuestionViewModelFactory.Create(nextQuestion, _quizManager, _navigationStore);
-            _navigationStore.CurrentViewModel = questionVM;
-        }
+        CurrentQuestion =
+            QuestionViewModelFactory.Create(nextQuestion, _navigationStore, _quizManager, LoadNextQuestion);
     }
 }

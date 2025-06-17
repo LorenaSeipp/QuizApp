@@ -1,19 +1,24 @@
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
-using QuizApp.ViewModels;
+using System.Diagnostics;
+
+namespace QuizApp.ViewModels;
 
 public static class QuestionViewModelFactory
 {
-    public static QuestionViewModel Create(object question, QuizManager quizManager, NavigationStore navigationStore)
+    public static TimedQuestionViewModel Create(object question, NavigationStore navigationStore,
+        QuizManager quizManager, Action onAnswerSubmitted)
     {
         return question switch
         {
-            MultipleChoiceQuestion mcq => new MultipleChoiceQuestionViewModel(mcq, quizManager, navigationStore),
-            TrueFalseQuestion tfq => new TrueFalseQuestionViewModel(tfq, quizManager, navigationStore),
-            EstimateQuestion eq => new EstimateQuestionViewModel(eq, quizManager, navigationStore),
-            SortQuestion sq => new SortQuestionViewModel(sq, quizManager, navigationStore),
-            OpenQuestion oq => new OpenQuestionViewModel(oq, quizManager, navigationStore),
+            MultipleChoiceQuestion mcq => new MultipleChoiceQuestionViewModel(mcq, navigationStore, quizManager,
+                onAnswerSubmitted),
+            TrueFalseQuestion tfq => new TrueFalseQuestionViewModel(tfq, navigationStore, quizManager,
+                onAnswerSubmitted),
+            EstimateQuestion eq => new EstimateQuestionViewModel(eq, navigationStore, quizManager, onAnswerSubmitted),
+            SortQuestion sq => new SortQuestionViewModel(sq, navigationStore, quizManager, onAnswerSubmitted),
+            OpenQuestion oq => new OpenQuestionViewModel(oq, navigationStore, quizManager, onAnswerSubmitted),
             _ => throw new ArgumentException("Unbekannter Fragetyp")
         };
     }

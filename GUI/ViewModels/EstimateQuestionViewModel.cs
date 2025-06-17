@@ -1,28 +1,31 @@
+using System.Windows.Input;
+using QuizApp.Commands;
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
 
 namespace QuizApp.ViewModels
 {
-    public class EstimateQuestionViewModel : QuestionViewModel
+    public class EstimateQuestionViewModel : TimedQuestionViewModel
     {
-        private readonly NavigationStore _navigationStore;
         private readonly EstimateQuestion _question;
-        private readonly QuizManager _quizManager;
 
         private int? _userAnswer;
 
-        public EstimateQuestionViewModel(EstimateQuestion question, QuizManager quizManager,
-            NavigationStore navigationStore)
+        public EstimateQuestionViewModel(
+            EstimateQuestion question,
+            NavigationStore navigationStore,
+            QuizManager quizManager,
+            Action onQuestionHandled)
+            : base(navigationStore, quizManager, onQuestionHandled) // Pass all parameters to the base constructor
         {
             _question = question;
-            _quizManager = quizManager;
-            _navigationStore = navigationStore;
+            SubmitAnswerCommand = new RelayCommand(ExecuteSubmitAnswerCommand, () => UserAnswer.HasValue);
         }
 
-        public string QuestionText => _question.Question;
+        public ICommand SubmitAnswerCommand { get; }
 
-        public int AllowedMargin => _question.AllowedMargin;
+        public string QuestionText => _question.Question;
 
         public int? UserAnswer
         {
@@ -33,8 +36,36 @@ namespace QuizApp.ViewModels
                 {
                     _userAnswer = value;
                     OnPropertyChanged();
+                    ((RelayCommand)SubmitAnswerCommand).RaiseCanExecuteChanged();
                 }
             }
+        }
+
+        private void ExecuteSubmitAnswerCommand()
+        {
+            // Ensure UserAnswer has a value before attempting to submit
+            if (UserAnswer.HasValue) SubmitAnswerInternal(_question, UserAnswer.Value);
+        }
+
+        protected override async void OnTimeUp()
+        {
+            _quizManager.SubmitAnswer(_question, null, wasTimeUp: true);
+
+            WasTimeUp = true;
+
+            string message =
+                $"Zeit abgelaufen!\nRichtige Antwort: {_question.RightAnswer}\nPunkte: {_quizManager.PointsPerRound}";
+
+            await ShowFeedbackAndProceedAsync(message, true);
+        }
+
+        protected override string GetCorrectAnswerForQuestion(IQuestion question)
+        {
+            // Safely cast the IQuestion to EstimateQuestion to access its specific properties
+            if (question is EstimateQuestion eq) return eq.RightAnswer.ToString();
+
+            // Fallback to the base class's implementation if the question type is not as expected
+            return base.GetCorrectAnswerForQuestion(question);
         }
     }
 }

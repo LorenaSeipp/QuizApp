@@ -1,23 +1,31 @@
+using System.Windows.Input;
+using QuizApp.Commands;
 using QuizApp.Core;
 using QuizApp.Infrastructure;
 using QuizApp.Stores;
 
 namespace QuizApp.ViewModels
 {
-    public class OpenQuestionViewModel : QuestionViewModel
+    public class OpenQuestionViewModel : TimedQuestionViewModel
     {
-        private readonly NavigationStore _navigationStore;
         private readonly OpenQuestion _question;
-        private readonly QuizManager _quizManager;
 
         private string _userAnswer;
 
-        public OpenQuestionViewModel(OpenQuestion question, QuizManager quizManager, NavigationStore navigationStore)
+        public OpenQuestionViewModel(
+            OpenQuestion question,
+            NavigationStore navigationStore,
+            QuizManager quizManager,
+            Action onQuestionHandled)
+            : base(navigationStore, quizManager, onQuestionHandled)
         {
             _question = question;
-            _quizManager = quizManager;
-            _navigationStore = navigationStore;
+            _userAnswer = string.Empty;
+
+            SubmitAnswerCommand = new RelayCommand(ExecuteSubmitAnswerCommand, () => !string.IsNullOrEmpty(UserAnswer));
         }
+
+        public ICommand SubmitAnswerCommand { get; }
 
         public string QuestionText => _question.Question;
 
@@ -30,8 +38,32 @@ namespace QuizApp.ViewModels
                 {
                     _userAnswer = value;
                     OnPropertyChanged();
+                    ((RelayCommand)SubmitAnswerCommand).RaiseCanExecuteChanged();
                 }
             }
+        }
+
+        private void ExecuteSubmitAnswerCommand()
+        {
+            SubmitAnswerInternal(_question, UserAnswer);
+        }
+
+        protected override async void OnTimeUp()
+        {
+            _quizManager.SubmitAnswer(_question, null, true);
+
+            WasTimeUp = true;
+            string message =
+                $"Zeit abgelaufen!\nRichtige Antwort: {_question.Answer}\nPunkte: {_quizManager.PointsPerRound}";
+
+            await ShowFeedbackAndProceedAsync(message, true);
+        }
+
+        protected override string GetCorrectAnswerForQuestion(IQuestion question)
+        {
+            if (question is OpenQuestion oq) return oq.Answer;
+
+            return base.GetCorrectAnswerForQuestion(question);
         }
     }
 }

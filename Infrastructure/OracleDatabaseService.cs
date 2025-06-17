@@ -1,85 +1,116 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 using Dapper;
-using Microsoft.Extensions.Configuration;
 using Oracle.ManagedDataAccess.Client;
+using QuizApp.Core.Exceptions;
 
 namespace QuizApp.Infrastructure
 {
     public class OracleDatabaseService
     {
         private readonly string _connectionString;
+
         private readonly string[] _requiredTables = new[]
         {
             "SortQuestion",
             "MultipleChoiceQuestion",
             "EstimateQuestion",
             "TrueFalseQuestion",
-            "OpenQuestion"
+            "OpenQuestion",
+            "Admins",
+            "Players",
+            "Users"
         };
 
-        public OracleDatabaseService()
+        public OracleDatabaseService(string _connectionString)
         {
-            IConfigurationBuilder  builder = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
-            IConfiguration config = builder.Build();
-
-            _connectionString = config.GetConnectionString("OracleDb");
+            this._connectionString = _connectionString;
         }
-        
+
         public void InitializeDatabase()
         {
             if (!TableExists())
             {
-                runSQLScript("init-schema.sql");
-                Console.WriteLine("Database initialized successfully.");
+                try
+                {
+                    runSQLScript("init-schema.sql");
+                    Console.WriteLine("Database initialized successfully.");
+                }
+                catch (FileNotFoundException ex)
+                {
+                    throw new DatabaseInitializationException(
+                        "SQL-Skript zum Initialisieren der Datenbank nicht gefunden.", ex);
+                }
+                catch (Exception ex)
+                {
+                    throw new DatabaseInitializationException("Fehler beim Initialisieren der Datenbank.", ex);
+                }
             }
-            runSQLScript("init-data.sql");
-            Console.WriteLine("One or more required tables already exist. Skipping initialization.");
+
+            try
+            {
+                //DIESE ZEILE DARF NUR BEIM ERSTEN BEFÜLLEN DER DB AUSGEFÜHRT WERDEN
+                runSQLScript("init-data.sql");
+                Console.WriteLine("Data loaded successfully.");
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new DataLoadingException("SQL-Skript zum Befüllen der Datenbank nicht gefunden.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new DataLoadingException("Fehler beim Befüllen der Tabellen mit Daten.", ex);
+            }
         }
-        
+
         public void runSQLScript(string fileName)
         {
-            
             string sqlFilePath = Path.Combine(AppContext.BaseDirectory, fileName);
             if (!File.Exists(sqlFilePath))
             {
-                Console.WriteLine($"SQL file not found: {sqlFilePath}");
-                return;
+                throw new FileNotFoundException($"SQL File {fileName} not found in the path: {sqlFilePath}");
             }
 
             string sqlScript = File.ReadAllText(sqlFilePath, Encoding.UTF8);
             string[] commands = sqlScript.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            
 
-            using OracleConnection  connection = new OracleConnection(_connectionString);
+            using OracleConnection connection = new OracleConnection(_connectionString);
             connection.Open();
 
             for (int i = 0; i < commands.Length; i++)
             {
                 string commandText = commands[i].Trim();
+                if (commandText.EndsWith(";"))
+                {
+                    commandText = commandText.Substring(0, commandText.Length - 1);
+                }
+
                 if (commandText.Length > 0)
                 {
-                    OracleCommand command = new OracleCommand(commandText, connection);
-                    command.ExecuteNonQuery();
+                    try
+                    {
+                        OracleCommand command = new OracleCommand(commandText, connection);
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new SqlExecutionException(commandText, ex);
+                    }
                 }
             }
+
             connection.Close();
-            
         }
-        
+
         private bool TableExists()
         {
             using OracleConnection connection = new OracleConnection(_connectionString);
             connection.Open();
 
             string inClause = string.Join(",", _requiredTables.Select(t => $"'{t.ToUpper()}'"));
-            string sql = $"SELECT COUNT(*) FROM user_tables WHERE table_name IN ({inClause})";
-            int count = connection.ExecuteScalar<int>(sql);
-            return count > 0;
+            string sql = $"SELECT table_name FROM user_tables WHERE table_name IN ({inClause})";
+            List<string> existingTables = connection.Query<string>(sql).ToList();
+
+            return _requiredTables.All(table => existingTables.Contains(table.ToUpper()));
         }
     }
 }

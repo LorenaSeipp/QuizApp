@@ -1,37 +1,174 @@
 <UserControl x:Class="QuizApp.Views.SortQuestionView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Background="#FF1A1A40" Foreground="White"
-             MinHeight="300" MinWidth="400">
+             Background="#FF1A1A40"
+             MinWidth="400" MinHeight="500">
+    <Grid>
+        <Border CornerRadius="15"
+                Background="#FF1A1A40"
+                Padding="20"
+                MaxHeight="1000"
+                MaxWidth="1200"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top">
+            <Grid Width="1000" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />       <!-- Frage -->
+                    <RowDefinition Height="*" />          <!-- Antworten -->
+                    <RowDefinition Height="Auto" />       <!-- Buttons für Verschieben -->
+                    <RowDefinition Height="Auto" />       <!-- Antworten Button -->
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+                <!-- Frage -->
+                <TextBlock Text="{Binding QuestionText}"
+                           FontWeight="Normal"
+                           Foreground="White"
+                           TextWrapping="Wrap"
+                           TextAlignment="Left"
+                           Grid.Row="0" />
 
-        <!-- Frage -->
-        <TextBlock Text="{Binding QuestionText}"
-                   FontSize="20"
-                   FontWeight="Bold"
-                   Margin="0,0,0,15" />
+                <!-- Antworten -->
+                <ListBox ItemsSource="{Binding ObservableCollection}"
+                         SelectedItem="{Binding SelectedAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         DisplayMemberPath="QuestionText"
+                         Margin="0,20,0,0"
+                         Background="Transparent"
+                         Foreground="White"
+                         BorderThickness="0"
+                         Grid.Row="1"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         MaxHeight="800">  <!-- max Höhe, damit scrollbar -->
 
-        <!-- Sortierbare Liste -->
-        <ListBox x:Name="SortListBox"
-                 ItemsSource="{Binding UserSortOrder}"
-                 SelectedIndex="0"
-                 Grid.Row="1"
-                 Background="#FF2A2A5A"
-                 BorderBrush="Gray"
-                 BorderThickness="1"
-                 FontSize="16"
-                 Margin="0,0,0,15" />
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Margin" Value="0,5" />
+                            <Setter Property="Padding" Value="10" />
+                            <Setter Property="BorderThickness" Value="2" />
+                            <Setter Property="Background" Value="#333355" />
+                            <Setter Property="BorderBrush" Value="Transparent" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsCorrect}" Value="True">
+                                    <Setter Property="BorderBrush" Value="Green" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsCorrect}" Value="False">
+                                    <Setter Property="BorderBrush" Value="Red" />
+                                </DataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}"
+                                                   Value="True" />
+                                        <Condition
+                                            Binding="{Binding DataContext.HasAnswered, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            Value="False" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="BorderBrush" Value="Yellow" />
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
 
-        <!-- Buttons zum Sortieren -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2">
-            <Button Content="↑ Nach oben" Width="100" Click="MoveUp_Click" />
-            <Button Content="↓ Nach unten" Width="100" Click="MoveDown_Click" />
-        </StackPanel>
+                <!-- Buttons für Verschieben -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0" Grid.Row="2">
+                    <Button Content="↑"
+                            Command="{Binding MoveAnswerUpCommand}"
+                            CommandParameter="{Binding SelectedAnswer}"
+                            Width="70"
+                            FontSize="30"
+                            Margin="5,0" />
+                    <Button Content="↓"
+                            Command="{Binding MoveAnswerDownCommand}"
+                            CommandParameter="{Binding SelectedAnswer}"
+                            Width="70"
+                            FontSize="30"
+                            Margin="5,0" />
+                </StackPanel>
+
+                <!-- Antworten Button -->
+                <Button Content="Antworten"
+                        Command="{Binding SubmitAnswerCommand}"
+                        FontWeight="Bold"
+                        Margin="0,20,0,0"
+                        Foreground="White"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Grid.Row="3">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#009688" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Cursor" Value="Hand" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border"
+                                                Background="{TemplateBinding Background}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                BorderBrush="{TemplateBinding BorderBrush}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="border" Property="Background" Value="Gray" />
+                                                <Setter Property="Foreground" Value="White" />
+                                                <Setter Property="Cursor" Value="Arrow" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <TextBlock Text="{Binding RemainingSeconds, StringFormat='Restzeit: {0} Sekunden'}"
+                           FontSize="30"
+                           FontWeight="Bold"
+                           Foreground="Orange"
+                           TextAlignment="Right"
+                           Margin="0,0,0,20"
+                           Grid.Row="4" />
+
+
+            </Grid>
+        </Border>
+        <Border Background="#AA000000"
+                Visibility="{Binding IsFeedbackVisible, Converter={StaticResource BoolToVisibilityConverter}}"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Border Background="White" Padding="20" CornerRadius="10"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel>
+                    <TextBlock Text="{Binding EarnedPoints, StringFormat='Erhaltene Punkte: +{0}'}"
+                               FontSize="30"
+                               Foreground="#009688"
+                               TextAlignment="Center"
+                               Margin="0,10,0,0" />
+
+                    <TextBlock Text="{Binding TotalPoints, StringFormat='Gesamtpunktzahl: {0}'}"
+                               FontSize="30"
+                               FontWeight="Bold"
+                               Foreground="Orange"
+                               TextAlignment="Center"
+                               Margin="0,5,0,20" />
+                    <TextBlock Text="{Binding FeedbackMessage}" Foreground="Black" FontSize="30" FontWeight="Bold"
+                               TextAlignment="Center" />
+                    <TextBlock Text="Zeit abgelaufen!" FontSize="30" Foreground="Red" TextAlignment="Center"
+                               Visibility="{Binding WasTimeUp, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </StackPanel>
+            </Border>
+        </Border>
     </Grid>
 </UserControl>
