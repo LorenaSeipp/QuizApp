@@ -1,3 +1,6 @@
+# Projekt im Rahmen des Moduls Objektorientierte Programmierung an der Technischen Hochschule Nürnberg 
+Die Gruppenarbeit fand ursprünglich in GitLab statt. 
+
 # Anleitung
 - Docker installieren
 - Docker Engine starten
